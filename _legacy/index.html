@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocktail Master</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>🍸 Cocktail Master</h1>
+        <p>Discover the perfect cocktail recipe</p>
+    </header>
+
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search for a cocktail...">
+        </div>
+
+        <div class="category-filter">
+            <button class="category-btn active" data-category="all">All Cocktails</button>
+            <button class="category-btn" data-category="vodka">Vodka</button>
+            <button class="category-btn" data-category="gin">Gin</button>
+            <button class="category-btn" data-category="rum">Rum</button>
+            <button class="category-btn" data-category="tequila">Tequila</button>
+            <button class="category-btn" data-category="whiskey">Whiskey</button>
+            <button class="category-btn" data-category="other">Other</button>
+	<button class="category-btn" data-category="Mocktail">Mocktails</button>
+        </div>
+
+        <div class="content">
+            <div class="cocktail-list">
+                <h2>Cocktails</h2>
+                <div id="cocktailButtons"></div>
+            </div>
+            <div class="cocktail-details">
+                <div id="cocktailInfo">
+                    <div class="placeholder">
+                        <p>Select a cocktail to see its details</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="cocktailData.js"></script>
+    <script src="script.js"></script>
+	
+	<footer>
+	<center>
+	<button>
+        <a href="https://naveenk1013.github.io/Portfolio" target="_blank"><p>&copy; 2023 Hotel Management Notes, by Naveen Kumar. All rights reserved.</p></a>
+    </button>
+	</center>
+	</footer>
+</body>
+</html>
