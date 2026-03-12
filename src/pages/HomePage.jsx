@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import LightPillar from '../components/LightPillar';
+import ShinyText from '../components/ShinyText';
 
 const CATEGORY_CARDS = [
   { icon: '🍸', name: 'Cocktails', path: '/beverages?cat=cocktail', count: '50+', colour: '#7c5cfc', desc: 'Classic & modern cocktail recipes' },
@@ -37,17 +39,46 @@ export default function HomePage() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="hero">
-        <div className="hero-bg" />
-        <div className="hero-badge">🎓 For Hotel Management & Bar Professionals</div>
-        <h1 className="hero-title animate-fade-up">
+      <section className="hero" style={{ position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 0.6 }}>
+          <LightPillar
+            topColor="#3a1b99"
+            bottomColor="#850980"
+            intensity={1.0}
+            rotationSpeed={0.3}
+            glowAmount={0.001}
+            pillarWidth={3.5}
+            pillarHeight={0.4}
+            noiseIntensity={0.5}
+            pillarRotation={25}
+            interactive={false}
+            mixBlendMode="lighten"
+            quality="high"
+          />
+        </div>
+        <div className="hero-bg" style={{ zIndex: 1, position: 'absolute', background: 'radial-gradient(circle at center, transparent 0%, rgba(10, 10, 15, 0.8) 100%)' }} />
+        <div className="hero-badge" style={{ position: 'relative', zIndex: 2 }}>
+          <ShinyText
+            text="🎓 For Hotel Management & Bar Professionals"
+            speed={3}
+            delay={0}
+            color="#b5b5b5"
+            shineColor="#ffffff"
+            spread={120}
+            direction="left"
+            yoyo={true}
+            pauseOnHover={false}
+            disabled={false}
+          />
+        </div>
+        <h1 className="hero-title animate-fade-up" style={{ position: 'relative', zIndex: 2 }}>
           The Complete<br /><span>Beverage Encyclopedia</span>
         </h1>
-        <p className="hero-subtitle animate-fade-up">
+        <p className="hero-subtitle animate-fade-up" style={{ position: 'relative', zIndex: 2 }}>
           Your definitive reference for cocktails, mocktails, spirits, wine, beer, bartending
           techniques and professional terminology — all in one place.
         </p>
-        <div className="hero-actions animate-fade-up">
+        <div className="hero-actions animate-fade-up" style={{ position: 'relative', zIndex: 2 }}>
           <button className="btn btn-primary" onClick={() => navigate('/beverages')}>
             🍹 Explore Beverages
           </button>
@@ -55,7 +86,7 @@ export default function HomePage() {
             🎓 Take the Quiz
           </button>
         </div>
-        <div className="hero-stats animate-fade-in">
+        <div className="hero-stats animate-fade-in" style={{ position: 'relative', zIndex: 2 }}>
           {[
             { n: '130+', l: 'Beverages' },
             { n: '20+', l: 'Categories' },
