@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useParams } from 'react-router-dom';
 import { cocktails } from '../data/cocktails.js';
 import { mocktails } from '../data/mocktails.js';
+import drinkImages from '../data/drink-images.json';
 import BeverageModal from '../components/BeverageModal';
 
 const ALL = [...cocktails, ...mocktails];
@@ -41,8 +42,9 @@ function Stars({ n }) {
 function BeverageCard({ bev, onClick, toggleFavourite, isFavourite }) {
   const cat = bev.category || 'cocktail';
   const fav = isFavourite(bev.id);
+  const thumbUrl = drinkImages[bev.name];
   return (
-    <article className={`bev-card ${cat} animate-fade-up`} onClick={() => onClick(bev)}>
+    <article className={`bev-card ${cat} ${thumbUrl ? 'has-thumb' : ''} animate-fade-up`} onClick={() => onClick(bev)}>
       <button
         className={`fav-btn ${fav ? 'active' : ''}`}
         onClick={e => { e.stopPropagation(); toggleFavourite(bev.id); }}
@@ -50,7 +52,13 @@ function BeverageCard({ bev, onClick, toggleFavourite, isFavourite }) {
       >
         {fav ? '❤️' : '🤍'}
       </button>
-      <div className="bev-card-icon">{cat === 'mocktail' ? '🥤' : '🍸'}</div>
+      {thumbUrl ? (
+        <div className="bev-card-thumb">
+          <img src={thumbUrl} alt={bev.name} loading="lazy" />
+        </div>
+      ) : (
+        <div className="bev-card-icon">{cat === 'mocktail' ? '🥤' : '🍸'}</div>
+      )}
       <div className="bev-card-name">{bev.name}</div>
       <div className="bev-card-flavour">{bev.flavour}</div>
       <div className="bev-card-meta">

@@ -1,14 +1,48 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import drinkImages from '../data/drink-images.json';
+import Lightbox from './Lightbox';
+
+const INGREDIENT_IMG_BASE = 'https://www.thecocktaildb.com/images/ingredients/';
+function IngredientThumb({ name, onZoom }) {
+  const [ok, setOk] = useState(true);
+  if (!ok) return null;
+  const src = `${INGREDIENT_IMG_BASE}${encodeURIComponent(name)}-Small.png`;
+  const fullSrc = `${INGREDIENT_IMG_BASE}${encodeURIComponent(name)}.png`;
+  
+  return (
+    <img 
+      className="ingredient-thumb" 
+      src={src} 
+      alt={name} 
+      loading="lazy" 
+      onError={() => setOk(false)} 
+      onClick={() => onZoom(fullSrc, name)}
+      title={`Click to enlarge ${name}`}
+    />
+  );
+}
 
 export default function BeverageModal({ item, onClose, toggleFavourite, isFavourite }) {
+  const [zoomedImage, setZoomedImage] = useState(null);
   const fav = isFavourite(item.id);
+  const drinkThumb = drinkImages[item.name];
 
   useEffect(() => {
-    const onKey = e => { if (e.key === 'Escape') onClose(); };
+    // Esc key needs to close the lightbox first, then the modal
+    const onKey = e => { 
+      if (e.key === 'Escape') {
+        if (zoomedImage) {
+          setZoomedImage(null);
+        } else {
+          onClose();
+        }
+      } 
+    };
     document.addEventListener('keydown', onKey);
-    document.body.style.overflow = 'hidden';
+    // Only lock modal background if lightbox isn't open (lightbox handles its own lock)
+    if (!zoomedImage) document.body.style.overflow = 'hidden';
     return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
-  }, [onClose]);
+  }, [onClose, zoomedImage]);
 
   // Determine category colour
   const catColour = {
@@ -44,6 +78,15 @@ export default function BeverageModal({ item, onClose, toggleFavourite, isFavour
         {/* Header */}
         <div className="modal-header" style={{ position: 'relative' }}>
           <button className="modal-close" onClick={onClose} aria-label="Close">✕</button>
+          {drinkThumb && (
+            <div 
+              className="modal-drink-thumb" 
+              onClick={() => setZoomedImage({ src: drinkThumb.replace('/medium', '/large'), alt: item.name })}
+              title="Click to enlarge"
+            >
+              <img src={drinkThumb.replace('/medium', '/large')} alt={item.name} />
+            </div>
+          )}
           <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
             <span className={`badge badge-${item.category}`}>{item.spirit || item.type || item.category}</span>
             {item.abv && <span className="text-muted" style={{ fontSize: '0.85rem' }}>ABV: {item.abv}</span>}
@@ -111,7 +154,13 @@ export default function BeverageModal({ item, onClose, toggleFavourite, isFavour
               <div className="ingredient-list">
                 {item.ingredients.map((ing, i) => (
                   <div key={i} className="ingredient-item">
-                    <span>{ing.item}</span>
+                    <div className="ingredient-info">
+                      <IngredientThumb 
+                        name={ing.item} 
+                        onZoom={(src, alt) => setZoomedImage({ src, alt })} 
+                      />
+                      <span>{ing.item}</span>
+                    </div>
                     {ing.qty && <span className="ingredient-qty">{ing.qty}</span>}
                   </div>
                 ))}
@@ -202,6 +251,15 @@ export default function BeverageModal({ item, onClose, toggleFavourite, isFavour
           )}
         </div>
       </div>
+
+      {/* Render Lightbox on top if an image is selected */}
+      {zoomedImage && (
+        <Lightbox 
+          src={zoomedImage.src} 
+          alt={zoomedImage.alt} 
+          onClose={() => setZoomedImage(null)} 
+        />
+      )}
     </div>
   );
 }
