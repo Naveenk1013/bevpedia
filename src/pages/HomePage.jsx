@@ -101,6 +101,43 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── Sponsorship & Growth Section ── */}
+      <section className="sponsorship-preview" style={{ 
+        padding: '3rem 0', 
+        background: 'linear-gradient(90deg, rgba(124, 92, 252, 0.05), rgba(48, 200, 138, 0.05))',
+        borderBottom: '1px solid rgba(255,255,255,0.05)'
+      }}>
+        <div className="container">
+          <div className="detail-card" style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center', 
+            padding: '2.5rem 3rem',
+            gap: '2rem',
+            border: '1px solid rgba(48, 200, 138, 0.2)',
+            background: 'rgba(48, 200, 138, 0.03)'
+          }}>
+            <div style={{ maxWidth: '750px' }}>
+              <div style={{ color: '#30c88a', fontWeight: 'bold', fontSize: '0.8rem', marginBottom: '0.5rem', letterSpacing: '2px' }}>GLOBAL INDUSTRY SOLUTIONS</div>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', marginBottom: '1rem' }}>Support the Future of Beverage Education</h2>
+              <p style={{ color: 'var(--clr-text-muted)', fontSize: '0.95rem', lineHeight: '1.6' }}>
+                We are bridging the hospitality talent gap with technology. Join us as a professional partner to support our 
+                sustainability and gain exclusive access to our certified candidate pool.
+              </p>
+            </div>
+            <div style={{ flexShrink: 0 }}>
+              <button 
+                className="btn btn-primary" 
+                onClick={() => navigate('/sponsors')}
+                style={{ background: '#30c88a', padding: '1rem 2.5rem', fontWeight: 'bold', boxShadow: '0 0 20px rgba(48, 200, 138, 0.2)' }}
+              >
+                💎 Sponsor & Fund
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Fun Fact ── */}
       <div className="container">
         <div className="facts-ticker">
