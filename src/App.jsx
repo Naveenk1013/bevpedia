@@ -10,6 +10,7 @@ import BeerPage from './pages/BeerPage';
 import TechniquesPage from './pages/TechniquesPage';
 import GlossaryPage from './pages/GlossaryPage';
 import QuizPage from './pages/QuizPage';
+import WSETMockTestPage from './pages/WSETMockTestPage';
 
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
@@ -47,6 +48,7 @@ export default function App() {
           <Route path="/techniques" element={<TechniquesPage />} />
           <Route path="/glossary" element={<GlossaryPage />} />
           <Route path="/quiz" element={<QuizPage />} />
+          <Route path="/wset" element={<WSETMockTestPage />} />
         </Routes>
       </main>
       <Footer />

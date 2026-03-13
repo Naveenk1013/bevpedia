@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { quizQuestions } from '../data/index.js';
 
 function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
@@ -63,6 +64,24 @@ export default function QuizPage() {
         <div className="page-hero" style={{ textAlign: 'center', padding: '2rem 0' }}>
           <h1>🎓 Custom Beverage Quiz</h1>
           <p className="page-hero-subtitle">Scale your knowledge at your own pace. Personalize your session below.</p>
+          
+          <Link to="/wset" style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            marginTop: '1.5rem',
+            padding: '12px 20px',
+            background: 'rgba(212, 175, 55, 0.1)',
+            border: '1px solid rgba(212, 175, 55, 0.3)',
+            borderRadius: '12px',
+            color: '#D4AF37',
+            textDecoration: 'none',
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            transition: 'all 0.2s ease'
+          }} className="wset-cta">
+            🎓 Preparing for WSET? View the Guide →
+          </Link>
         </div>
 
         <div className="quiz-score-card animate-fade-up" style={{ maxWidth: '800px', margin: '0 auto' }}>
