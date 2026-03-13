@@ -5,9 +5,14 @@ function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
 const QUIZ_LENGTH = 10;
 const CATEGORIES = ['All', 'cocktails', 'spirits', 'wine', 'beer', 'techniques', 'glossary'];
+const LEVELS = ['All', 'Beginner', 'Intermediate', 'Expert'];
+const LIMITS = [5, 10, 15, 20];
 
 export default function QuizPage() {
   const [catFilter, setCatFilter] = useState('All');
+  const [levelFilter, setLevelFilter] = useState('All');
+  const [questionLimit, setQuestionLimit] = useState(10);
+  
   const [questions, setQuestions] = useState([]);
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState(null);
@@ -17,8 +22,17 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState([]);
 
   const startQuiz = () => {
-    const pool = catFilter === 'All' ? quizQuestions : quizQuestions.filter(q => q.category === catFilter);
-    const shuffled = shuffle(pool).slice(0, Math.min(QUIZ_LENGTH, pool.length));
+    let pool = quizQuestions;
+    if (catFilter !== 'All') pool = pool.filter(q => q.category === catFilter);
+    if (levelFilter !== 'All') pool = pool.filter(q => q.level === levelFilter);
+    
+    // Fallback if no questions match the specific combo
+    if (pool.length === 0) {
+      alert("No questions found for this specific combination! Starting with default categories.");
+      pool = quizQuestions;
+    }
+
+    const shuffled = shuffle(pool).slice(0, Math.min(questionLimit, pool.length));
     setQuestions(shuffled);
     setCurrent(0);
     setSelected(null);
@@ -46,29 +60,60 @@ export default function QuizPage() {
   if (!started) {
     return (
       <div className="quiz-wrapper">
-        <div className="page-hero" style={{ textAlign: 'center', padding: '3rem 0' }}>
-          <h1>🎓 Beverage Quiz</h1>
-          <p className="page-hero-subtitle">Test your knowledge of cocktails, spirits, wine, beer, techniques and terminology.</p>
+        <div className="page-hero" style={{ textAlign: 'center', padding: '2rem 0' }}>
+          <h1>🎓 Custom Beverage Quiz</h1>
+          <p className="page-hero-subtitle">Scale your knowledge at your own pace. Personalize your session below.</p>
         </div>
-        <div className="quiz-score-card">
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🍸</div>
-          <h2 style={{ fontFamily: 'var(--font-display)', marginBottom: '1.5rem' }}>Ready to Test Yourself?</h2>
-          <p style={{ color: 'var(--clr-text-muted)', marginBottom: '1.5rem' }}>
-            Choose a category, or select "All" for a mixed quiz covering all beverage topics.
-          </p>
-          <div className="filter-bar" style={{ justifyContent: 'center', marginBottom: '1.5rem' }}>
-            {CATEGORIES.map(c => (
-              <button key={c} className={`filter-pill ${catFilter === c ? 'active' : ''}`} onClick={() => setCatFilter(c)}>
-                {c.charAt(0).toUpperCase() + c.slice(1)}
+
+        <div className="quiz-score-card animate-fade-up" style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gap: '2rem', textAlign: 'left' }}>
+            
+            {/* Limit Selector */}
+            <section>
+              <h3 style={{ marginBottom: '1rem', opacity: 0.9 }}>1. Question Count</h3>
+              <div className="filter-bar" style={{ flexWrap: 'wrap' }}>
+                {LIMITS.map(l => (
+                  <button key={l} className={`filter-pill ${questionLimit === l ? 'active' : ''}`} onClick={() => setQuestionLimit(l)}>
+                    {l} Questions
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            {/* Level Selector */}
+            <section>
+              <h3 style={{ marginBottom: '1rem', opacity: 0.9 }}>2. Difficulty Level</h3>
+              <div className="filter-bar" style={{ flexWrap: 'wrap' }}>
+                {LEVELS.map(l => (
+                  <button key={l} className={`filter-pill ${levelFilter === l ? 'active' : ''}`} onClick={() => setLevelFilter(l)}>
+                    {l}
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            {/* Category Selector */}
+            <section>
+              <h3 style={{ marginBottom: '1rem', opacity: 0.9 }}>3. Knowledge Area</h3>
+              <div className="filter-bar" style={{ flexWrap: 'wrap' }}>
+                {CATEGORIES.map(c => (
+                  <button key={c} className={`filter-pill ${catFilter === c ? 'active' : ''}`} onClick={() => setCatFilter(c)}>
+                    {c.charAt(0).toUpperCase() + c.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </section>
+
+            <div style={{ textAlign: 'center', paddingTop: '1rem', borderTop: '1px solid var(--clr-border)' }}>
+              <button 
+                className="btn btn-primary" 
+                style={{ fontSize: '1.25rem', padding: '1rem 4rem' }} 
+                onClick={startQuiz}
+              >
+                Let's Go! 🚀
               </button>
-            ))}
+            </div>
           </div>
-          <p className="text-muted" style={{ marginBottom: '1.5rem' }}>
-            {catFilter === 'All' ? quizQuestions.length : quizQuestions.filter(q => q.category === catFilter).length} questions available. Quiz is {QUIZ_LENGTH} questions.
-          </p>
-          <button className="btn btn-primary" style={{ fontSize: '1.1rem', padding: '0.9rem 2.5rem' }} onClick={startQuiz}>
-            Start Quiz 🚀
-          </button>
         </div>
       </div>
     );
@@ -80,25 +125,26 @@ export default function QuizPage() {
         <div className="quiz-score-card animate-fade-up">
           <div className="quiz-score-num">{score}/{questions.length}</div>
           <h2 style={{ fontFamily: 'var(--font-display)', margin: '0.5rem 0' }}>{grade}</h2>
-          <p className="text-muted" style={{ marginBottom: '2rem' }}>You scored {pct}%</p>
+          <p className="text-muted" style={{ marginBottom: '2rem' }}>You completed a {levelFilter} {catFilter} quiz.</p>
           <div style={{ background: 'var(--clr-surface2)', borderRadius: 'var(--radius-md)', height: '12px', marginBottom: '2rem', overflow: 'hidden' }}>
             <div style={{ width: `${pct}%`, height: '100%', background: pct >= 70 ? 'var(--clr-accent3)' : 'var(--clr-accent)', borderRadius: 'var(--radius-full)', transition: 'width 1s ease' }} />
           </div>
 
-          {/* Answer Review */}
           <div style={{ textAlign: 'left', marginBottom: '2rem' }}>
             <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: '1rem' }}>Review Your Answers</h3>
-            {answers.map((a, i) => (
-              <div key={i} style={{ marginBottom: '0.75rem', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: a.right ? 'rgba(48,200,138,0.08)' : 'rgba(224,92,92,0.07)', border: `1px solid ${a.right ? 'var(--clr-accent3)' : 'var(--clr-danger)'}22` }}>
-                <p style={{ fontSize: '0.85rem', fontWeight: 600 }}>{a.right ? '✅' : '❌'} {a.q}</p>
-                {!a.right && <p style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', marginTop: '2px' }}>Correct: <strong>{a.correct}</strong></p>}
-              </div>
-            ))}
+            <div style={{ maxHeight: '400px', overflowY: 'auto', paddingRight: '1rem' }}>
+              {answers.map((a, i) => (
+                <div key={i} style={{ marginBottom: '0.75rem', padding: '0.75rem', borderRadius: 'var(--radius-md)', background: a.right ? 'rgba(48,200,138,0.08)' : 'rgba(224,92,92,0.07)', border: `1px solid ${a.right ? 'var(--clr-accent3)' : 'var(--clr-danger)'}22` }}>
+                  <p style={{ fontSize: '0.85rem', fontWeight: 600 }}>{a.right ? '✅' : '❌'} {a.q}</p>
+                  {!a.right && <p style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', marginTop: '2px' }}>Correct: <strong>{a.correct}</strong></p>}
+                </div>
+              ))}
+            </div>
           </div>
 
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button className="btn btn-primary" onClick={startQuiz}>Try Again 🔄</button>
-            <button className="btn btn-outline" onClick={() => setStarted(false)}>Change Category</button>
+            <button className="btn btn-outline" onClick={() => setStarted(false)}>Configure New Quiz</button>
           </div>
         </div>
       </div>
@@ -112,7 +158,10 @@ export default function QuizPage() {
     <div className="quiz-wrapper">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
         <span className="text-muted" style={{ fontSize: '0.85rem' }}>Question {current + 1} of {questions.length}</span>
-        <span className="badge badge-cocktail">{q.category}</span>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <span className="badge" style={{ background: 'rgba(255,255,255,0.05)' }}>{q.level}</span>
+          <span className="badge badge-cocktail">{q.category}</span>
+        </div>
       </div>
       <div className="quiz-progress">
         <div className="quiz-progress-bar" style={{ width: `${progress}%` }} />
@@ -133,8 +182,8 @@ export default function QuizPage() {
         })}
       </div>
       {selected && (
-        <p style={{ marginTop: '1rem', textAlign: 'center', color: selected === q.a ? 'var(--clr-accent3)' : 'var(--clr-danger)', fontWeight: 600 }}>
-          {selected === q.a ? '✅ Correct!' : `❌ The answer is: ${q.a}`}
+        <p className="animate-fade-in" style={{ marginTop: '1rem', textAlign: 'center', padding: '1rem', borderRadius: 'var(--radius-md)', background: 'var(--clr-surface2)', color: selected === q.a ? 'var(--clr-accent3)' : 'var(--clr-danger)', fontWeight: 600 }}>
+          {selected === q.a ? '✅ Correct!' : `❌ The correct answer is: ${q.a}`}
         </p>
       )}
     </div>

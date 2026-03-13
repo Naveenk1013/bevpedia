@@ -34,6 +34,51 @@ export default function WinePage({ toggleFavourite, isFavourite }) {
           </p>
         </div>
       </div>
+      
+      {/* Partner Banner */}
+      <a 
+        href="https://wofw.netlify.app/" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="wine-partner-banner animate-fade-up"
+        style={{
+          display: 'block',
+          textDecoration: 'none',
+          marginTop: '1.5rem',
+          marginBottom: '2rem',
+          padding: '1.5rem',
+          borderRadius: '16px',
+          background: 'linear-gradient(135deg, #c0407a 0%, #722f37 100%)',
+          color: 'white',
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: '0 8px 32px rgba(192, 64, 122, 0.25)',
+          transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+        }}
+      >
+        <div style={{ position: 'relative', zIndex: 2 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🌍</span>
+            <h2 style={{ margin: 0, fontSize: '1.25rem', color: 'white', fontFamily: 'var(--font-display)' }}>World of Wine</h2>
+          </div>
+          <p style={{ margin: 0, opacity: 0.95, lineHeight: '1.5', fontSize: '0.95rem', maxWidth: '600px' }}>
+            Dive deep into wine and the world of wines with interactive and in-depth detailed oriented content.
+          </p>
+          <div style={{ marginTop: '1rem', display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.85rem', fontWeight: 'bold', background: 'rgba(255,255,255,0.2)', padding: '6px 12px', borderRadius: '20px' }}>
+            Explore Now ↗
+          </div>
+        </div>
+        {/* Decorative background element */}
+        <div style={{ 
+          position: 'absolute', 
+          right: '-20px', 
+          bottom: '-20px', 
+          fontSize: '8rem', 
+          opacity: 0.1, 
+          transform: 'rotate(-15deg)',
+          pointerEvents: 'none'
+        }}>🍷</div>
+      </a>
 
       {/* Wine type tabs */}
       <div className="filter-bar">
