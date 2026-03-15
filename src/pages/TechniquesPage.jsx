@@ -1,23 +1,42 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { techniques, glassware } from '../data/techniques.js';
+import { glossary } from '../data/glossary.js';   
 
-const TABS = ['techniques', 'glassware'];
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 export default function TechniquesPage() {
-  const [tab, setTab] = useState('techniques');
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const initialTab = queryParams.get('tab') || 'techniques';
+
+  const [tab, setTab] = useState(initialTab);
   const [expanded, setExpanded] = useState(null);
+  const [query, setQuery] = useState('');
+  const [letter, setLetter] = useState('');
+
+  const filteredGlossary = useMemo(() => {
+    const q = query.toLowerCase();
+    return glossary
+      .filter(g =>
+        (!letter || g.term.toUpperCase().startsWith(letter)) &&
+        (!q || g.term.toLowerCase().includes(q) || g.definition.toLowerCase().includes(q))
+      )
+      .sort((a, b) => a.term.localeCompare(b.term));
+  }, [query, letter]);
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>⚗️ Techniques &amp; Glassware</h1>
-        <p className="page-hero-subtitle">Professional bartending methods with step-by-step instructions, plus the complete glassware guide.</p>
+        <p className="page-hero-subtitle">Professional bartending methods with step-by-step instructions, plus the complete glassware guide and glossary.</p>
       </div>
 
       {/* Tabs */}
       <div className="filter-bar" style={{ marginBottom: '1.5rem' }}>
         <button className={`filter-pill ${tab === 'techniques' ? 'active' : ''}`} onClick={() => setTab('techniques')}>⚗️ Techniques ({techniques.length})</button>
         <button className={`filter-pill ${tab === 'glassware' ? 'active' : ''}`} onClick={() => setTab('glassware')}>🥃 Glassware ({glassware.length})</button>
+        <button className={`filter-pill ${tab === 'glossary' ? 'active' : ''}`} onClick={() => setTab('glossary')}>📖 Glossary ({glossary.length})</button>
       </div>
 
       {tab === 'techniques' && (
@@ -84,6 +103,50 @@ export default function TechniquesPage() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {tab === 'glossary' && (
+        <div className="animate-fade-in">
+          {/* Search */}
+          <div className="search-wrapper" style={{ marginBottom: '1rem' }}>
+            <span className="search-icon">🔍</span>
+            <input className="search-input" placeholder="Search terms or definitions…" value={query} onChange={e => { setQuery(e.target.value); setLetter(''); }} aria-label="Search glossary" />
+          </div>
+
+          {/* A–Z jump */}
+          <div className="alpha-jump">
+            <button className={`alpha-btn ${!letter ? 'active' : ''}`} onClick={() => setLetter('')} style={!letter ? { borderColor: 'var(--clr-accent)', color: 'var(--clr-accent)' } : {}}>All</button>
+            {ALPHABET.map(l => {
+              const has = glossary.some(g => g.term.toUpperCase().startsWith(l));
+              return (
+                <button
+                  key={l}
+                  className={`alpha-btn ${letter === l ? 'active' : ''}`}
+                  style={!has ? { opacity: 0.25 } : letter === l ? { borderColor: 'var(--clr-accent)', color: 'var(--clr-accent)' } : {}}
+                  onClick={() => has && setLetter(l === letter ? '' : l)}
+                  disabled={!has}
+                >{l}</button>
+              );
+            })}
+          </div>
+
+          <p className="text-muted" style={{ marginBottom: '1rem' }}>Showing {filteredGlossary.length} of {glossary.length} terms</p>
+
+          <div className="glossary-list">
+            {filteredGlossary.map(g => (
+              <div key={g.term} className="glossary-item animate-fade-up">
+                <div className="glossary-term">{g.term}</div>
+                <div className="glossary-def">{g.definition}</div>
+              </div>
+            ))}
+            {filteredGlossary.length === 0 && (
+              <div className="empty-state">
+                <div className="empty-state-icon">🔤</div>
+                <p>No terms found. Try a different search.</p>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

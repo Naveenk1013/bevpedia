@@ -165,12 +165,7 @@ export default function WSETMockTestPage() {
         ))}
       </div>
 
-      <div className="wset-content-grid animate-fade-up" style={{ 
-        marginTop: '2rem', 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-        gap: '2rem' 
-      }}>
+      <div className="wset-content-grid animate-fade-up">
         
         {/* Main Info Card */}
         <div className="detail-card" style={{ borderTop: `4px solid ${currentLevel.color}` }}>
@@ -469,35 +464,10 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
   const q = questions[currentIdx];
 
   return (
-    <div className="cbt-overlay" style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      background: 'var(--clr-bg)',
-      zIndex: 9999,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '2rem'
-    }}>
-      <div className="cbt-container animate-fade-in" style={{ 
-        width: '100%',
-        maxWidth: '1200px',
-        display: 'grid', 
-        gridTemplateColumns: '1fr 320px', 
-        gap: '2rem',
-        background: 'rgba(255,255,255,0.03)',
-        borderRadius: '32px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        backdropFilter: 'blur(10px)',
-        padding: '3rem',
-        height: '90vh',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
-      }}>
+    <div className="cbt-overlay">
+      <div className="cbt-container animate-fade-in">
         {/* Main Examination View */}
-        <div className="cbt-main" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <div className="cbt-main">
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--clr-border)', paddingBottom: '1.5rem', marginBottom: '2rem' }}>
             <div>
               <span style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', letterSpacing: '1px' }}>WSET LEVEL {activeLevel} MOCK</span>
@@ -576,7 +546,7 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
         </div>
 
         {/* Question Palette Sidebar */}
-        <aside className="cbt-sidebar" style={{ borderLeft: '1px solid rgba(255,255,255,0.1)', paddingLeft: '2rem', display: 'flex', flexDirection: 'column' }}>
+        <aside className="cbt-sidebar">
           <h4 style={{ marginBottom: '1.5rem', fontFamily: 'var(--font-display)', fontSize: '1.2rem' }}>Exam Dashboard</h4>
           <div style={{ flexGrow: 1, overflowY: 'auto' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.6rem', marginBottom: '2rem' }}>
@@ -630,6 +600,26 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div style={{ width: '12px', height: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '3px' }} /> Not Answered
             </div>
+          </div>
+
+          <div style={{ marginTop: 'auto', paddingTop: '2rem' }}>
+            <button 
+              className="btn btn-primary" 
+              onClick={() => {
+                if (window.confirm('Are you sure you want to finish and submit your examination? This action cannot be undone.')) {
+                  finishExam();
+                }
+              }}
+              style={{ 
+                width: '100%', 
+                background: '#30C88A', 
+                padding: '1.25rem',
+                fontWeight: 'bold',
+                boxShadow: '0 0 20px rgba(48, 200, 138, 0.2)'
+              }}
+            >
+              FINISH & SUBMIT
+            </button>
           </div>
         </aside>
       </div>

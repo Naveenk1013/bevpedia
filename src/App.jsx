@@ -8,7 +8,6 @@ import SpiritsPage from './pages/SpiritsPage';
 import WinePage from './pages/WinePage';
 import BeerPage from './pages/BeerPage';
 import TechniquesPage from './pages/TechniquesPage';
-import GlossaryPage from './pages/GlossaryPage';
 import QuizPage from './pages/QuizPage';
 import WSETMockTestPage from './pages/WSETMockTestPage';
 import AboutPage from './pages/AboutPage';
@@ -48,7 +47,6 @@ export default function App() {
           <Route path="/wine" element={<WinePage toggleFavourite={toggleFavourite} isFavourite={isFavourite} />} />
           <Route path="/beer" element={<BeerPage toggleFavourite={toggleFavourite} isFavourite={isFavourite} />} />
           <Route path="/techniques" element={<TechniquesPage />} />
-          <Route path="/glossary" element={<GlossaryPage />} />
           <Route path="/quiz" element={<QuizPage />} />
           <Route path="/wset" element={<WSETMockTestPage />} />
           <Route path="/about" element={<AboutPage />} />

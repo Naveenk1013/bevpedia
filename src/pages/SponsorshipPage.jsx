@@ -25,14 +25,14 @@ export default function SponsorshipPage() {
           </motion.p>
         </header>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '3rem', alignItems: 'start' }}>
+        <div className="sponsorship-grid">
           {/* Left Side: Proposal & Vision */}
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             className="proposal-content"
           >
-            <div className="detail-card" style={{ padding: '3rem', marginBottom: '2rem', border: '1px solid var(--clr-accent)' }}>
+            <div className="detail-card sponsorship-card" style={{ padding: '3rem', marginBottom: '2rem', border: '1px solid var(--clr-accent)' }}>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', marginBottom: '1.5rem', color: 'var(--clr-accent)' }}>Funding for Sustainability</h2>
               <p style={{ lineHeight: '1.8', color: 'var(--clr-text-muted)', marginBottom: '2rem', fontSize: '1.1rem' }}>
                 To keep this platform running, expanding its database, and maintaining its high standard of quality, <strong>we are actively seeking financial sponsorship.</strong> Your funding will directly support:
@@ -40,16 +40,16 @@ export default function SponsorshipPage() {
               
               <div style={{ display: 'grid', gap: '1.5rem', marginBottom: '2rem' }}>
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                  <div style={{ width: '40px', height: '40px', background: 'rgba(48, 200, 138, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#30C88A' }}>✓</div>
-                  <span>Official Domain & Professional Hosting</span>
+                  <div style={{ width: '40px', height: '40px', background: 'rgba(48, 200, 138, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#30C88A', flexShrink: 0 }}>✓</div>
+                  <span style={{ fontSize: '0.95rem' }}>Official Domain & Professional Hosting</span>
                 </div>
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                  <div style={{ width: '40px', height: '40px', background: 'rgba(48, 200, 138, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#30C88A' }}>✓</div>
-                  <span>Advanced Backend & Database Infrastructure</span>
+                  <div style={{ width: '40px', height: '40px', background: 'rgba(48, 200, 138, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#30C88A', flexShrink: 0 }}>✓</div>
+                  <span style={{ fontSize: '0.95rem' }}>Advanced Backend & Database Infrastructure</span>
                 </div>
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                  <div style={{ width: '40px', height: '40px', background: 'rgba(48, 200, 138, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#30C88A' }}>✓</div>
-                  <span>Continuous Data Research & Content Updates</span>
+                  <div style={{ width: '40px', height: '40px', background: 'rgba(48, 200, 138, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#30C88A', flexShrink: 0 }}>✓</div>
+                  <span style={{ fontSize: '0.95rem' }}>Continuous Data Research & Content Updates</span>
                 </div>
               </div>
             </div>
@@ -79,44 +79,47 @@ export default function SponsorshipPage() {
           >
             <div className="detail-card" style={{ padding: '3rem', position: 'sticky', top: '2rem' }}>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', marginBottom: '1.5rem', textAlign: 'center' }}>Get in Touch</h2>
-              <p className="text-muted" style={{ textAlign: 'center', marginBottom: '2.5rem', fontSize: '0.95rem' }}>
+              <p className="text-muted" style={{ textAlign: 'center', marginBottom: '2.5rem', fontSize: '0.95rem', lineHeight: '1.6' }}>
                 Describe how you can benefit from our platform and how you'd like to collaborate.
               </p>
 
               <form action="https://formspree.io/f/xeerzqyj" method="POST" style={{ display: 'grid', gap: '1.5rem' }}>
                 <div className="form-group">
-                  <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.6rem', opacity: 0.8 }}>FULL NAME / ORGANIZATION</label>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '0.6rem', color: 'var(--clr-text-muted)', letterSpacing: '0.5px' }}>FULL NAME / ORGANIZATION</label>
                   <input type="text" name="name" required style={{ 
                     width: '100%', 
                     padding: '1rem', 
                     background: 'rgba(255,255,255,0.03)', 
                     border: '1px solid var(--clr-border)', 
                     borderRadius: '12px',
-                    color: 'white'
+                    color: 'white',
+                    fontSize: '1rem'
                   }} placeholder="Enter your name..." />
                 </div>
 
                 <div className="form-group">
-                  <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.6rem', opacity: 0.8 }}>EMAIL ADDRESS</label>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '0.6rem', color: 'var(--clr-text-muted)', letterSpacing: '0.5px' }}>EMAIL ADDRESS</label>
                   <input type="email" name="email" required style={{ 
                     width: '100%', 
                     padding: '1rem', 
                     background: 'rgba(255,255,255,0.03)', 
                     border: '1px solid var(--clr-border)', 
                     borderRadius: '12px',
-                    color: 'white'
+                    color: 'white',
+                    fontSize: '1rem'
                   }} placeholder="your@email.com" />
                 </div>
 
                 <div className="form-group">
-                  <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.6rem', opacity: 0.8 }}>INTERESTED IN...</label>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '0.6rem', color: 'var(--clr-text-muted)', letterSpacing: '0.5px' }}>INTERESTED IN...</label>
                   <select name="type" style={{ 
                     width: '100%', 
                     padding: '1rem', 
                     background: 'rgba(255,255,255,0.03)', 
                     border: '1px solid var(--clr-border)', 
                     borderRadius: '12px',
-                    color: 'white'
+                    color: 'white',
+                    fontSize: '1rem'
                   }}>
                     <option value="sponsorship" style={{ background: '#1a1a1a' }}>Professional Sponsorship</option>
                     <option value="recruitment" style={{ background: '#1a1a1a' }}>Talent Recruitment / Talent Pool</option>
@@ -126,16 +129,17 @@ export default function SponsorshipPage() {
                 </div>
 
                 <div className="form-group">
-                  <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.6rem', opacity: 0.8 }}>MESSAGE / PROPOSAL</label>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 'bold', marginBottom: '0.6rem', color: 'var(--clr-text-muted)', letterSpacing: '0.5px' }}>MESSAGE / PROPOSAL</label>
                   <textarea name="message" required style={{ 
                     width: '100%', 
                     padding: '1rem', 
-                    minHeight: '150px',
+                    minHeight: '120px',
                     background: 'rgba(255,255,255,0.03)', 
                     border: '1px solid var(--clr-border)', 
                     borderRadius: '12px',
                     color: 'white',
-                    resize: 'vertical'
+                    resize: 'none',
+                    fontSize: '1rem'
                   }} placeholder="Tell us how we can work together..."></textarea>
                 </div>
 
@@ -143,8 +147,10 @@ export default function SponsorshipPage() {
                   padding: '1.25rem', 
                   fontSize: '1rem', 
                   fontWeight: 'bold', 
-                  marginTop: '1rem',
-                  letterSpacing: '1px'
+                  marginTop: '0.5rem',
+                  letterSpacing: '1px',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}>
                   SEND PROPOSAL
                 </button>

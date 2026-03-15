@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import LightPillar from '../components/LightPillar';
 import ShinyText from '../components/ShinyText';
@@ -57,6 +57,7 @@ export default function HomePage() {
           />
         </div>
         <div className="hero-bg" style={{ zIndex: 1, position: 'absolute', background: 'radial-gradient(circle at center, transparent 0%, rgba(10, 10, 15, 0.8) 100%)' }} />
+        
         <div className="hero-badge" style={{ position: 'relative', zIndex: 2 }}>
           <ShinyText
             text="🎓 For Hotel Management & Bar Professionals"
@@ -99,25 +100,44 @@ export default function HomePage() {
             </div>
           ))}
         </div>
+
+        <Link to="/wset" className="hero-marquee-wrapper" style={{ textDecoration: 'none', cursor: 'pointer', display: 'block', marginTop: 'auto' }}>
+          <div className="hero-marquee-content">
+            {[1, 2, 3].map(i => (
+              <div key={i} style={{ display: 'flex' }}>
+                <div className="hero-marquee-item">
+                  <ShinyText text="✨ NEW: WSET Mock examination now available!" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
+                </div>
+                <div className="hero-marquee-item">
+                  <ShinyText text="🎓 CAREER: Boost your career with professional certifications" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
+                </div>
+                <div className="hero-marquee-item">
+                  <ShinyText text="🏆 COMPETENCY: Test your knowledge in our professional CBT environment" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </Link>
       </section>
 
-      {/* ── Sponsorship & Growth Section ── */}
       <section className="sponsorship-preview" style={{ 
         padding: '3rem 0', 
         background: 'linear-gradient(90deg, rgba(124, 92, 252, 0.05), rgba(48, 200, 138, 0.05))',
         borderBottom: '1px solid rgba(255,255,255,0.05)'
       }}>
         <div className="container">
-          <div className="detail-card" style={{ 
-            display: 'flex', 
+          <div className="detail-card sponsorship-card" style={{ 
+            display: 'flex',
+            flexDirection: 'row',
             justifyContent: 'space-between', 
             alignItems: 'center', 
             padding: '2.5rem 3rem',
             gap: '2rem',
             border: '1px solid rgba(48, 200, 138, 0.2)',
-            background: 'rgba(48, 200, 138, 0.03)'
+            background: 'rgba(48, 200, 138, 0.03)',
+            borderRadius: 'var(--radius-lg)'
           }}>
-            <div style={{ maxWidth: '750px' }}>
+            <div className="sponsorship-content" style={{ maxWidth: '750px' }}>
               <div style={{ color: '#30c88a', fontWeight: 'bold', fontSize: '0.8rem', marginBottom: '0.5rem', letterSpacing: '2px' }}>GLOBAL INDUSTRY SOLUTIONS</div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', marginBottom: '1rem' }}>Support the Future of Beverage Education</h2>
               <p style={{ color: 'var(--clr-text-muted)', fontSize: '0.95rem', lineHeight: '1.6' }}>
@@ -125,11 +145,11 @@ export default function HomePage() {
                 sustainability and gain exclusive access to our certified candidate pool.
               </p>
             </div>
-            <div style={{ flexShrink: 0 }}>
+            <div className="sponsorship-action" style={{ flexShrink: 0 }}>
               <button 
                 className="btn btn-primary" 
                 onClick={() => navigate('/sponsors')}
-                style={{ background: '#30c88a', padding: '1rem 2.5rem', fontWeight: 'bold', boxShadow: '0 0 20px rgba(48, 200, 138, 0.2)' }}
+                style={{ background: '#30c88a', padding: '1rem 2.5rem', fontWeight: 'bold', boxShadow: '0 0 20px rgba(48, 200, 138, 0.2)', width: '100%' }}
               >
                 💎 Sponsor & Fund
               </button>
@@ -187,7 +207,7 @@ export default function HomePage() {
               </p>
               <div style={{ display: 'flex', gap: '1rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
                 <button className="btn btn-primary" onClick={() => navigate('/techniques')}>View Techniques</button>
-                <button className="btn btn-outline" onClick={() => navigate('/glossary')}>Glossary A–Z</button>
+                <button className="btn btn-outline" onClick={() => navigate('/techniques?tab=glossary')}>Glossary A–Z</button>
                 <button className="btn btn-outline" onClick={() => navigate('/quiz')}>Practice Quiz</button>
               </div>
             </div>

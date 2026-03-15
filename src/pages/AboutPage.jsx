@@ -70,7 +70,7 @@ export default function AboutPage() {
           </motion.p>
         </header>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(450px, 1fr))', gap: '2rem' }}>
+        <div className="profile-card-grid">
           {CREATORS.map((creator, idx) => (
             <motion.div 
               key={creator.name}
@@ -80,8 +80,8 @@ export default function AboutPage() {
               className="detail-card profile-card"
               style={{ padding: '3rem', position: 'relative', overflow: 'hidden' }}
             >
-              <div style={{ display: 'flex', gap: '2rem', marginBottom: '2.5rem', alignItems: 'flex-start' }}>
-                <div style={{ 
+              <div className="profile-header" style={{ display: 'flex', gap: '2rem', marginBottom: '2.5rem', alignItems: 'flex-start' }}>
+                <div className="profile-image-wrapper" style={{ 
                   width: '140px', 
                   height: '140px', 
                   borderRadius: '24px', 
@@ -116,10 +116,10 @@ export default function AboutPage() {
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                <a href={`mailto:${creator.contact.email}`} className="btn btn-outline" style={{ fontSize: '0.85rem', textAlign: 'center' }}>
+                <a href={`mailto:${creator.contact.email}`} className="btn btn-outline" style={{ display: 'block', fontSize: '0.85rem', textAlign: 'center' }}>
                   ✉ Email
                 </a>
-                <a href={`tel:${creator.contact.phone}`} className="btn btn-outline" style={{ fontSize: '0.85rem', textAlign: 'center' }}>
+                <a href={`tel:${creator.contact.phone}`} className="btn btn-outline" style={{ display: 'block', fontSize: '0.85rem', textAlign: 'center' }}>
                   📞 Call
                 </a>
               </div>

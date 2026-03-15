@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { to: '/wine', label: 'Wine' },
   { to: '/beer', label: 'Beer' },
   { to: '/techniques', label: 'Techniques' },
-  { to: '/glossary', label: 'Glossary' },
+  { to: '/wset', label: 'WSET' },
   { to: '/quiz', label: '🎓 Quiz' },
 ];
 
