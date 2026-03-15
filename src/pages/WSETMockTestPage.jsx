@@ -276,6 +276,7 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
   const [timeLeft, setTimeLeft] = useState(0);
   const [analysis, setAnalysis] = useState(null);
   const [showDetailedReview, setShowDetailedReview] = useState(false);
+  const [showMobileDashboard, setShowMobileDashboard] = useState(false);
 
   // Load questions for the active level
   const questions = useMemo(() => {
@@ -529,9 +530,27 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
         {/* Main Examination View */}
         <div className="cbt-main">
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--clr-border)', paddingBottom: '1.5rem', marginBottom: '2rem' }}>
-            <div>
-              <span style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', letterSpacing: '1px' }}>WSET LEVEL {activeLevel} MOCK</span>
-              <div style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>{currentIdx + 1} <span style={{ fontSize: '1rem', color: 'var(--clr-text-muted)' }}>OF {questions.length}</span></div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <button 
+                className="cbt-mobile-toggle"
+                onClick={() => setShowMobileDashboard(true)}
+                style={{ 
+                  display: 'none', 
+                  padding: '8px 12px', 
+                  background: 'rgba(255,255,255,0.05)', 
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '8px',
+                  color: 'var(--clr-accent)',
+                  fontSize: '0.8rem',
+                  fontWeight: 'bold'
+                }}
+              >
+                📊 DASHBOARD
+              </button>
+              <div>
+                <span style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', letterSpacing: '1px' }}>WSET LEVEL {activeLevel} MOCK</span>
+                <div style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>{currentIdx + 1} <span style={{ fontSize: '1rem', color: 'var(--clr-text-muted)' }}>OF {questions.length}</span></div>
+              </div>
             </div>
             <div style={{ textAlign: 'right' }}>
               <span style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', letterSpacing: '1px' }}>TIME REMAINING</span>
@@ -606,8 +625,24 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
         </div>
 
         {/* Question Palette Sidebar */}
-        <aside className="cbt-sidebar">
-          <h4 style={{ marginBottom: '1.5rem', fontFamily: 'var(--font-display)', fontSize: '1.2rem' }}>Exam Dashboard</h4>
+        <aside className={`cbt-sidebar ${showMobileDashboard ? 'open' : ''}`}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <h4 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: '1.2rem' }}>Exam Dashboard</h4>
+            <button 
+              className="cbt-mobile-close"
+              onClick={() => setShowMobileDashboard(false)}
+              style={{ 
+                display: 'none', 
+                background: 'transparent', 
+                border: 'none', 
+                color: 'var(--clr-text-muted)',
+                fontSize: '1.2rem'
+              }}
+            >
+              ✕
+            </button>
+          </div>
+          
           <div style={{ flexGrow: 1, overflowY: 'auto' }}>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.6rem', marginBottom: '2rem' }}>
               {questions.map((_, idx) => {
@@ -630,7 +665,10 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
                 return (
                   <button 
                     key={idx}
-                    onClick={() => setCurrentIdx(idx)}
+                    onClick={() => {
+                      setCurrentIdx(idx);
+                      setShowMobileDashboard(false);
+                    }}
                     style={{
                       aspectRatio: '1',
                       borderRadius: '10px',
