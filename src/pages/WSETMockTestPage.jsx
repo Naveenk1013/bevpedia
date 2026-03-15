@@ -529,39 +529,44 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
       <div className="cbt-container animate-fade-in">
         {/* Main Examination View */}
         <div className="cbt-main">
-          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--clr-border)', paddingBottom: '1.5rem', marginBottom: '2rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <button 
-                className="cbt-mobile-toggle"
-                onClick={() => setShowMobileDashboard(true)}
-                style={{ 
-                  display: 'none', 
-                  padding: '8px 12px', 
-                  background: 'rgba(255,255,255,0.05)', 
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: '8px',
-                  color: 'var(--clr-accent)',
-                  fontSize: '0.8rem',
-                  fontWeight: 'bold'
-                }}
-              >
-                📊 DASHBOARD
-              </button>
-              <div>
-                <span style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', letterSpacing: '1px' }}>WSET LEVEL {activeLevel} MOCK</span>
-                <div style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>{currentIdx + 1} <span style={{ fontSize: '1rem', color: 'var(--clr-text-muted)' }}>OF {questions.length}</span></div>
+          <header className="cbt-header">
+            <div className="header-left">
+              <div className="header-left-top">
+                <button 
+                  className="cbt-mobile-toggle"
+                  onClick={() => setShowMobileDashboard(true)}
+                  style={{ 
+                    padding: '8px 12px', 
+                    background: 'rgba(255,255,255,0.05)', 
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '8px',
+                    color: 'var(--clr-accent)',
+                    fontSize: '0.75rem',
+                    fontWeight: 'bold',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  📊 DASHBOARD
+                </button>
+                <div className="level-label">WSET LEVEL {activeLevel} MOCK</div>
+              </div>
+              <div className="question-index">
+                {currentIdx + 1} <span className="index-total">OF {questions.length}</span>
               </div>
             </div>
-            <div style={{ textAlign: 'right' }}>
-              <span style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', letterSpacing: '1px' }}>TIME REMAINING</span>
-              <div style={{ fontSize: '2.2rem', fontFamily: 'monospace', fontWeight: 'bold', color: timeLeft < 300 ? '#E05C5C' : 'var(--clr-text)' }}>
+            
+            <div className="header-right">
+              <div className="timer-label">TIME REMAINING</div>
+              <div className="timer-value" style={{ color: timeLeft < 300 ? '#E05C5C' : 'var(--clr-text)' }}>
                 {formatTime(timeLeft)}
               </div>
             </div>
           </header>
 
           <div className="question-content" style={{ flexGrow: 1, overflowY: 'auto', paddingRight: '1rem' }}>
-            <h3 style={{ fontSize: '1.6rem', lineHeight: '1.4', marginBottom: '3rem', fontFamily: 'var(--font-display)' }}>{q.q}</h3>
+            <h3 className="question-text">{q.q}</h3>
             
             <div className="options-grid" style={{ display: 'grid', gap: '1.25rem' }}>
               {q.options.map((opt, i) => (
@@ -601,24 +606,29 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
             </div>
           </div>
 
-          <footer style={{ marginTop: '3rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <button 
-              className="btn btn-outline" 
-              onClick={() => toggleMarkForReview(currentIdx)} 
-              style={{ 
-                borderColor: markedForReview.has(currentIdx) ? '#D4AF37' : 'rgba(255,255,255,0.2)', 
-                color: markedForReview.has(currentIdx) ? '#D4AF37' : 'inherit',
-                background: markedForReview.has(currentIdx) ? '#D4AF3710' : 'transparent'
-              }}
-            >
-              {markedForReview.has(currentIdx) ? '✨ Marked for Review' : 'Mark for Review'}
-            </button>
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <button className="btn btn-outline" disabled={currentIdx === 0} onClick={() => setCurrentIdx(prev => prev - 1)}>Previous</button>
+          <footer className="cbt-footer">
+            <div className="footer-left">
+              <button 
+                className="btn btn-outline footer-btn" 
+                onClick={() => toggleMarkForReview(currentIdx)} 
+                style={{ 
+                  borderColor: markedForReview.has(currentIdx) ? '#D4AF37' : 'rgba(255,255,255,0.2)', 
+                  color: markedForReview.has(currentIdx) ? '#D4AF37' : 'inherit',
+                  background: markedForReview.has(currentIdx) ? '#D4AF3710' : 'transparent',
+                  padding: '10px 16px',
+                  fontSize: '0.85rem'
+                }}
+              >
+                {markedForReview.has(currentIdx) ? '✨ Marked for Review' : 'Mark for Review'}
+              </button>
+            </div>
+            
+            <div className="footer-right">
+              <button className="btn btn-outline footer-btn" disabled={currentIdx === 0} onClick={() => setCurrentIdx(prev => prev - 1)}>Previous</button>
               {currentIdx === questions.length - 1 ? (
-                <button className="btn btn-primary" onClick={finishExam} style={{ background: '#30C88A', paddingLeft: '2.5rem', paddingRight: '2.5rem' }}>FINISH EXAM</button>
+                <button className="btn btn-primary footer-btn" onClick={finishExam} style={{ background: '#30C88A' }}>FINISH EXAM</button>
               ) : (
-                <button className="btn btn-primary" onClick={() => setCurrentIdx(prev => prev + 1)} style={{ background: levelColor, paddingLeft: '2.5rem', paddingRight: '2.5rem' }}>Next Question</button>
+                <button className="btn btn-primary footer-btn" onClick={() => setCurrentIdx(prev => prev + 1)} style={{ background: levelColor }}>Next Question</button>
               )}
             </div>
           </footer>
