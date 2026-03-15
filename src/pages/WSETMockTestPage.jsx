@@ -275,6 +275,7 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
   const [markedForReview, setMarkedForReview] = useState(new Set());
   const [timeLeft, setTimeLeft] = useState(0);
   const [analysis, setAnalysis] = useState(null);
+  const [showDetailedReview, setShowDetailedReview] = useState(false);
 
   // Load questions for the active level
   const questions = useMemo(() => {
@@ -331,6 +332,7 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
     setMarkedForReview(new Set());
     setCurrentIdx(0);
     setAnalysis(null);
+    setShowDetailedReview(false);
   };
 
   const finishExam = () => {
@@ -454,8 +456,66 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
 
           <div style={{ marginTop: '3rem', display: 'flex', gap: '1rem', justifyContent: 'center', borderTop: '1px solid var(--clr-border)', paddingTop: '2rem' }}>
             <button className="btn btn-primary" onClick={startExam} style={{ background: levelColor }}>Retake Exam</button>
+            <button className="btn btn-outline" onClick={() => setShowDetailedReview(!showDetailedReview)}>
+              {showDetailedReview ? 'Hide Question Review' : 'Detailed Question Review'}
+            </button>
             <button className="btn btn-outline" onClick={() => setExamState('instructions')}>Return to Guide</button>
           </div>
+
+          <AnimatePresence>
+            {showDetailedReview && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }} 
+                animate={{ opacity: 1, height: 'auto' }} 
+                exit={{ opacity: 0, height: 0 }}
+                style={{ marginTop: '3rem', overflow: 'hidden' }}
+              >
+                <h3 style={{ fontFamily: 'var(--font-display)', marginBottom: '1.5rem', borderBottom: '1px solid var(--clr-border)', paddingBottom: '0.5rem' }}>Question-by-Question Review</h3>
+                <div style={{ display: 'grid', gap: '2rem' }}>
+                  {questions.map((q, idx) => {
+                    const isCorrect = answers[idx] === q.a;
+                    const isSkipped = !answers[idx];
+                    
+                    return (
+                      <div key={idx} style={{ padding: '2rem', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: `1px solid ${isCorrect ? '#30C88A44' : isSkipped ? 'rgba(255,255,255,0.1)' : '#E05C5C44'}` }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', gap: '1rem' }}>
+                          <span style={{ fontSize: '0.9rem', color: 'var(--clr-text-muted)', fontWeight: 'bold' }}>QUESTION {idx + 1}</span>
+                          <span style={{ 
+                            fontSize: '0.8rem', 
+                            padding: '6px 12px', 
+                            borderRadius: '20px', 
+                            background: isCorrect ? '#30C88A20' : isSkipped ? 'rgba(255,255,255,0.05)' : '#E05C5C20',
+                            color: isCorrect ? '#30C88A' : isSkipped ? 'var(--clr-text-muted)' : '#E05C5C',
+                            fontWeight: 'bold'
+                          }}>
+                            {isCorrect ? '✅ CORRECT' : isSkipped ? '⚪ SKIPPED' : '❌ INCORRECT'}
+                          </span>
+                        </div>
+                        
+                        <h4 style={{ fontSize: '1.2rem', marginBottom: '1.5rem', lineHeight: '1.4' }}>{q.q}</h4>
+                        
+                        <div style={{ display: 'grid', gap: '0.75rem' }}>
+                          <div style={{ padding: '1rem', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', border: `1px solid ${!isCorrect && !isSkipped ? '#E05C5C44' : 'transparent'}` }}>
+                            <span style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', display: 'block', marginBottom: '0.25rem' }}>Your Answer</span>
+                            <span style={{ color: isSkipped ? 'var(--clr-text-muted)' : 'inherit', fontStyle: isSkipped ? 'italic' : 'normal' }}>
+                              {answers[idx] || 'No answer provided'}
+                            </span>
+                          </div>
+                          
+                          {!isCorrect && (
+                            <div style={{ padding: '1rem', borderRadius: '12px', background: '#30C88A10', border: '1px solid #30C88A44' }}>
+                              <span style={{ fontSize: '0.8rem', color: '#30C88A', display: 'block', marginBottom: '0.25rem' }}>Correct Answer</span>
+                              <span style={{ color: '#30C88A', fontWeight: 'bold' }}>{q.a}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </motion.div>
     );
