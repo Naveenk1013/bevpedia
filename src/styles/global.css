@@ -1107,13 +1107,14 @@ p { color: var(--clr-text); }
 
   .cbt-container {
     grid-template-columns: 1fr;
-    padding: 1.5rem !important;
-    padding-top: calc(1.5rem + env(safe-area-inset-top, 20px)) !important;
-    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 20px)) !important;
+    padding: 1rem !important;
+    padding-top: calc(1rem + env(safe-area-inset-top, 20px)) !important;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 20px)) !important;
     height: 100% !important;
     border-radius: 0 !important;
     position: relative;
     overflow: hidden;
+    width: 100vw !important;
     max-width: 100vw !important;
     box-sizing: border-box;
     display: flex;
@@ -1151,18 +1152,21 @@ p { color: var(--clr-text); }
   }
 
   .cbt-container header {
-    gap: 1rem;
-    margin-bottom: 1.5rem !important;
+    gap: 0.5rem;
+    margin-bottom: 1rem !important;
+    padding-bottom: 0.75rem !important;
   }
 
-  .cbt-container header > div:first-child {
-    flex-direction: row !important;
-    align-items: center !important;
-    align-items: flex-start !important;
+  .timer-value {
+    font-size: 1.5rem !important;
+  }
+
+  .question-index {
+    font-size: 1.5rem !important;
   }
 
   .cbt-container header span {
-    font-size: 0.7rem !important;
+    font-size: 0.6rem !important;
   }
 
   .question-content {
@@ -1184,10 +1188,10 @@ p { color: var(--clr-text); }
   }
 
   .options-grid button {
-    padding: 1rem !important;
-    font-size: 0.95rem !important;
+    padding: 0.85rem !important;
+    font-size: 0.9rem !important;
     border-radius: 12px !important;
-    gap: 1rem !important;
+    gap: 0.75rem !important;
   }
 
   .cbt-container header > div:last-child {
@@ -1201,8 +1205,18 @@ p { color: var(--clr-text); }
   }
   
   .cbt-container {
-    padding: 1.5rem;
-    border-radius: 20px;
+    padding: 1rem;
+    border-radius: 0;
+  }
+
+  .cbt-footer {
+    padding-top: 1rem !important;
+    gap: 0.5rem !important;
+  }
+
+  .footer-btn {
+    padding: 0.6rem 0.8rem !important;
+    font-size: 0.75rem !important;
   }
 }
 /* ── Hero Marquee Styles ── */

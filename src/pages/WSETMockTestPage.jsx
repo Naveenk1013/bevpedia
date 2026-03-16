@@ -565,7 +565,7 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
             </div>
           </header>
 
-          <div className="question-content" style={{ flexGrow: 1, overflowY: 'auto', paddingRight: '1rem' }}>
+          <div className="question-content" style={{ flexGrow: 1, overflowY: 'auto' }}>
             <h3 className="question-text">{q.q}</h3>
             
             <div className="options-grid" style={{ display: 'grid', gap: '1.25rem' }}>
@@ -615,20 +615,20 @@ function WSETQuizEngine({ activeLevel, levelColor }) {
                   borderColor: markedForReview.has(currentIdx) ? '#D4AF37' : 'rgba(255,255,255,0.2)', 
                   color: markedForReview.has(currentIdx) ? '#D4AF37' : 'inherit',
                   background: markedForReview.has(currentIdx) ? '#D4AF3710' : 'transparent',
-                  padding: '10px 16px',
-                  fontSize: '0.85rem'
+                  padding: '8px 12px',
+                  fontSize: '0.75rem'
                 }}
               >
-                {markedForReview.has(currentIdx) ? '✨ Marked for Review' : 'Mark for Review'}
+                {markedForReview.has(currentIdx) ? '✨ Review' : 'Mark Review'}
               </button>
             </div>
             
             <div className="footer-right">
-              <button className="btn btn-outline footer-btn" disabled={currentIdx === 0} onClick={() => setCurrentIdx(prev => prev - 1)}>Previous</button>
+              <button className="btn btn-outline footer-btn" disabled={currentIdx === 0} onClick={() => setCurrentIdx(prev => prev - 1)}>Prev</button>
               {currentIdx === questions.length - 1 ? (
-                <button className="btn btn-primary footer-btn" onClick={finishExam} style={{ background: '#30C88A' }}>FINISH EXAM</button>
+                <button className="btn btn-primary footer-btn" onClick={finishExam} style={{ background: '#30C88A' }}>SUBMIT</button>
               ) : (
-                <button className="btn btn-primary footer-btn" onClick={() => setCurrentIdx(prev => prev + 1)} style={{ background: levelColor }}>Next Question</button>
+                <button className="btn btn-primary footer-btn" onClick={() => setCurrentIdx(prev => prev + 1)} style={{ background: levelColor }}>Next</button>
               )}
             </div>
           </footer>
