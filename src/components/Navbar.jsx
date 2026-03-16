@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { to: '/beer', label: 'Beer' },
   { to: '/techniques', label: 'Techniques' },
   { to: '/wset', label: 'WSET' },
+  { to: '/nchmct', label: 'NCHMCT' },
   { to: '/quiz', label: '🎓 Quiz' },
 ];
 

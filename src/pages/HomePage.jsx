@@ -11,6 +11,7 @@ const CATEGORY_CARDS = [
   { icon: '🍺', name: 'Beer', path: '/beer', count: '12+', colour: '#d97b30', desc: 'Ales, lagers, stouts, IPAs & sours' },
   { icon: '🔪', name: 'Techniques', path: '/techniques', count: '15', colour: '#3a9fd6', desc: 'Professional bartending methods' },
   { icon: '📖', name: 'Glossary', path: '/glossary', count: '80+', colour: '#8891a4', desc: 'A–Z bar & beverage terminology' },
+  { icon: '🏛️', name: 'NCHMCT', path: '/nchmct', count: 'JEE/NHTET', colour: '#30c88a', desc: 'Academic guidance & mock testing' },
   { icon: '🎓', name: 'Quiz', path: '/quiz', count: '20 Qs', colour: '#e05c5c', desc: 'Test your beverage knowledge' },
 ];
 
@@ -207,7 +208,7 @@ export default function HomePage() {
               </p>
               <div style={{ display: 'flex', gap: '1rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
                 <button className="btn btn-primary" onClick={() => navigate('/techniques')}>View Techniques</button>
-                <button className="btn btn-outline" onClick={() => navigate('/techniques?tab=glossary')}>Glossary A–Z</button>
+                <button className="btn btn-outline" onClick={() => navigate('/glossary')}>Glossary A–Z</button>
                 <button className="btn btn-outline" onClick={() => navigate('/quiz')}>Practice Quiz</button>
               </div>
             </div>

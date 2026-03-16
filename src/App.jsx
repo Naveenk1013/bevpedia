@@ -12,6 +12,8 @@ import QuizPage from './pages/QuizPage';
 import WSETMockTestPage from './pages/WSETMockTestPage';
 import AboutPage from './pages/AboutPage';
 import SponsorshipPage from './pages/SponsorshipPage';
+import GlossaryPage from './pages/GlossaryPage';
+import NCHMCTPage from './pages/NCHMCTPage';
 
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
@@ -49,6 +51,8 @@ export default function App() {
           <Route path="/techniques" element={<TechniquesPage />} />
           <Route path="/quiz" element={<QuizPage />} />
           <Route path="/wset" element={<WSETMockTestPage />} />
+          <Route path="/glossary" element={<GlossaryPage />} />
+          <Route path="/nchmct" element={<NCHMCTPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/sponsors" element={<SponsorshipPage />} />
         </Routes>
