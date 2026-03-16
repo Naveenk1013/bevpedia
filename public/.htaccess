@@ -4,6 +4,8 @@
 
   # Serve static files directly
   RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^(sitemap\.xml|robots\.txt|ads\.txt)$ - [L]
+  RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
   # SPA Fallback
