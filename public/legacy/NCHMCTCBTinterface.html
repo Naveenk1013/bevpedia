@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Academic CBT Interface — ApexUniversity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0F1923;--ink2:#4A5568;--ink3:#8A97A8;--ink4:#C5CDD8;
+  --page:#FFFFFF;--page2:#F7F8FA;--page3:#EEF1F5;
+  --blue:#1A56DB;--blue-light:#EBF2FF;--blue-mid:#BFCFEE;
+  --green:#0D7A4E;--green-light:#E8F6EF;
+  --red:#C0392B;--red-light:#FDECEA;
+  --amber:#A05C00;--amber-light:#FFF4E0;
+  --border:#DDE3EC;--border2:#C5CDD8;
+  font-family:'DM Sans',sans-serif;
+  color:var(--ink);background:var(--page);
+}
+body{background:var(--page2);min-height:100vh}
+.screen{display:none;min-height:100vh}
+.screen.active{display:flex}
+
+/* WELCOME */
+#welcome{flex-direction:column;background:var(--page);min-height:100vh}
+.inst-header{background:var(--ink);padding:14px 32px;display:flex;align-items:center;justify-content:space-between}
+.inst-logo{font-family:'Instrument Serif',serif;font-size:18px;color:#fff;letter-spacing:0.01em}
+.inst-logo span{color:#93C5FD}
+.inst-tagline{font-size:11px;color:#93C5FD;letter-spacing:0.08em;text-transform:uppercase}
+.welcome-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:48px 24px}
+.welcome-kicker{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:14px;background:var(--blue-light);padding:5px 14px;border-radius:20px;border:1px solid var(--blue-mid)}
+.welcome-h{font-family:'Instrument Serif',serif;font-size:clamp(26px,4vw,38px);color:var(--ink);text-align:center;line-height:1.2;margin-bottom:10px}
+.welcome-sub{color:var(--ink2);font-size:14px;text-align:center;max-width:460px;line-height:1.75;margin-bottom:40px}
+.exam-table{width:100%;max-width:700px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--page)}
+.et-head{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 100px;background:var(--page3);border-bottom:1px solid var(--border);padding:10px 20px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3)}
+.et-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 100px;padding:16px 20px;border-bottom:1px solid var(--border);align-items:center;cursor:pointer;transition:background 0.15s}
+.et-row:last-child{border-bottom:none}
+.et-row:hover{background:var(--blue-light)}
+.et-row.selected{background:var(--blue-light);border-left:3px solid var(--blue)}
+.et-row.selected .er-name{color:var(--blue)}
+.er-name{font-size:14px;font-weight:500}
+.er-dept{font-size:11px;color:var(--ink3);margin-top:2px}
+.er-cell{font-size:13px;color:var(--ink2)}
+.er-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 10px;border-radius:6px;background:var(--blue-light);color:var(--blue);border:1px solid var(--blue-mid)}
+.btn-start{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:13px 36px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s;margin-top:28px;letter-spacing:0.01em}
+.btn-start:hover{background:#1548C8}
+.btn-start:disabled{background:var(--page3);color:var(--ink3);cursor:not-allowed}
+.welcome-rules{width:100%;max-width:700px;margin-top:28px;background:var(--amber-light);border:1px solid #EDD9A3;border-radius:10px;padding:16px 20px}
+.rules-title{font-size:12px;font-weight:600;color:var(--amber);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.rules-list{display:flex;flex-wrap:wrap;gap:6px 24px}
+.rules-list li{font-size:12px;color:#7A4D00;list-style:disc;margin-left:16px;line-height:1.8}
+
+/* EXAM */
+#exam{flex-direction:column;background:var(--page2)}
+.exam-topbar{background:var(--page);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;padding:0 20px;gap:16px;position:sticky;top:0;z-index:100}
+.etb-logo{font-family:'Instrument Serif',serif;font-size:15px;color:var(--ink);display:flex;align-items:center;gap:8px}
+.etb-sep{width:1px;height:20px;background:var(--border)}
+.etb-exam-name{font-size:13px;color:var(--ink2);flex:1}
+.etb-right{display:flex;align-items:center;gap:10px}
+.timer-pill{display:flex;align-items:center;gap:8px;background:var(--page2);border:1px solid var(--border);border-radius:8px;padding:7px 14px}
+.timer-ico{width:14px;height:14px;flex-shrink:0}
+.timer-val{font-size:14px;font-weight:600;letter-spacing:0.06em;color:var(--ink);font-family:'DM Sans',sans-serif}
+.timer-pill.warn .timer-val{color:var(--amber)}
+.timer-pill.danger{border-color:#F6B0B0;background:var(--red-light)}
+.timer-pill.danger .timer-val{color:var(--red)}
+.btn-flag-sm{background:transparent;border:1px solid var(--border);border-radius:7px;padding:7px 13px;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 0.15s}
+.btn-flag-sm:hover{border-color:var(--amber);color:var(--amber)}
+.btn-flag-sm.flagged{border-color:var(--amber);color:var(--amber);background:var(--amber-light)}
+.btn-end-exam{background:var(--ink);color:#fff;border:none;border-radius:7px;padding:7px 16px;font-size:12px;font-weight:600;cursor:pointer;transition:background 0.15s;font-family:'DM Sans',sans-serif}
+.btn-end-exam:hover{background:#2D3748}
+
+.exam-layout{display:flex;flex:1;overflow:hidden;height:calc(100vh - 56px)}
+.exam-sidebar{width:200px;min-width:200px;background:var(--page);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+.sidebar-section{padding:14px 16px;border-bottom:1px solid var(--border)}
+.sidebar-label{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.q-palette{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+.qp-btn{aspect-ratio:1;border-radius:5px;border:1px solid var(--border);background:var(--page2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;cursor:pointer;transition:all 0.15s;color:var(--ink2)}
+.qp-btn:hover{border-color:var(--blue);color:var(--blue)}
+.qp-btn.cur{background:var(--blue);border-color:var(--blue);color:#fff}
+.qp-btn.ans{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.qp-btn.flg{background:var(--amber-light);border-color:var(--amber);color:var(--amber)}
+.sidebar-stats-block{padding:14px 16px}
+.ss-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.ss-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;margin-right:6px}
+.ss-label{font-size:12px;color:var(--ink2);display:flex;align-items:center;gap:0}
+.ss-val{font-size:12px;font-weight:600;color:var(--ink)}
+.progress-track{height:4px;background:var(--page3);border-radius:4px;overflow:hidden;margin-top:12px}
+.progress-fill{height:100%;border-radius:4px;background:var(--blue);transition:width 0.3s}
+
+.q-main{flex:1;overflow-y:auto;padding:28px 24px;display:flex;justify-content:center;align-items:flex-start}
+.q-paper{background:var(--page);border:1px solid var(--border);border-radius:12px;max-width:700px;width:100%;overflow:hidden}
+.q-paper-head{background:var(--page2);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:10px}
+.q-num-tag{background:var(--blue);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:5px;letter-spacing:0.04em}
+.q-type-tag{font-size:11px;color:var(--ink3);background:var(--page3);border:1px solid var(--border);padding:4px 10px;border-radius:5px}
+.q-marks-tag{margin-left:auto;font-size:12px;color:var(--ink2)}
+.q-marks-tag b{color:var(--blue)}
+.q-body{padding:28px 24px}
+.q-section-label{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.q-section-label::after{content:'';flex:1;height:1px;background:var(--blue-light)}
+.q-text{font-size:16px;line-height:1.8;color:var(--ink);margin-bottom:24px}
+.q-text em{font-family:'Instrument Serif',serif;font-style:italic;font-size:17px}
+.q-text code{font-family:monospace;background:var(--page3);border:1px solid var(--border);padding:1px 6px;border-radius:4px;font-size:14px}
+
+.multi-instr{font-size:12px;color:var(--ink3);background:var(--page2);border:1px solid var(--border);border-radius:7px;padding:8px 14px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.mi-icon{width:16px;height:16px;border:1.5px solid var(--ink3);border-radius:3px;flex-shrink:0}
+.cb-options{display:flex;flex-direction:column;gap:9px}
+.cb-opt{display:flex;align-items:flex-start;gap:12px;background:var(--page);border:1.5px solid var(--border);border-radius:9px;padding:14px 16px;cursor:pointer;transition:all 0.15s}
+.cb-opt:hover{border-color:var(--blue-mid);background:var(--blue-light)}
+.cb-opt.checked{border-color:var(--blue);background:var(--blue-light)}
+.cb-opt.correct{border-color:var(--green);background:var(--green-light)}
+.cb-opt.wrong{border-color:var(--red);background:var(--red-light)}
+.cb-box{width:18px;height:18px;min-width:18px;border:2px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;margin-top:1px}
+.cb-opt.checked .cb-box{background:var(--blue);border-color:var(--blue)}
+.cb-opt.correct .cb-box{background:var(--green);border-color:var(--green)}
+.cb-opt.wrong .cb-box{background:var(--red);border-color:var(--red)}
+.cb-check{width:10px;height:7px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px);display:none}
+.cb-opt.checked .cb-check,.cb-opt.correct .cb-check{display:block}
+.cb-opt.wrong .cb-check{display:block;transform:rotate(45deg) translateY(0);border-left:none;border-bottom:none;border-right:2px solid #fff;border-top:2px solid #fff;width:9px;height:9px}
+.cb-label{font-size:14px;color:var(--ink);line-height:1.6;flex:1}
+.cb-letter{font-size:11px;font-weight:700;color:var(--ink3);min-width:16px}
+.cb-opt.checked .cb-letter{color:var(--blue)}
+
+.mcq-options{display:flex;flex-direction:column;gap:9px}
+.mcq-opt{display:flex;align-items:flex-start;gap:12px;background:var(--page);border:1.5px solid var(--border);border-radius:9px;padding:14px 16px;cursor:pointer;transition:all 0.15s}
+.mcq-opt:hover{border-color:var(--blue-mid);background:var(--blue-light)}
+.mcq-opt.sel{border-color:var(--blue);background:var(--blue-light)}
+.mcq-opt.correct{border-color:var(--green);background:var(--green-light)}
+.mcq-opt.wrong{border-color:var(--red);background:var(--red-light)}
+.mcq-bubble{width:18px;height:18px;min-width:18px;border-radius:50%;border:2px solid var(--border2);transition:all 0.15s;position:relative;margin-top:1px}
+.mcq-opt.sel .mcq-bubble{border-color:var(--blue);background:var(--blue)}
+.mcq-opt.sel .mcq-bubble::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#fff}
+.mcq-opt.correct .mcq-bubble{border-color:var(--green);background:var(--green)}
+.mcq-opt.correct .mcq-bubble::after{content:'';position:absolute;inset:3px;border-radius:50%;background:#fff}
+.mcq-opt.wrong .mcq-bubble{border-color:var(--red);background:var(--red)}
+.opt-text{font-size:14px;color:var(--ink);line-height:1.6;flex:1}
+
+.tf-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tf-card{background:var(--page);border:1.5px solid var(--border);border-radius:10px;padding:22px;text-align:center;cursor:pointer;transition:all 0.15s}
+.tf-card:hover{border-color:var(--blue-mid);background:var(--blue-light)}
+.tf-card.sel-t{border-color:var(--green);background:var(--green-light);color:var(--green)}
+.tf-card.sel-f{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.tf-mark{font-size:26px;margin-bottom:6px}
+.tf-word{font-size:14px;font-weight:600}
+
+.fitb-input{background:var(--page2);border:1.5px solid var(--border);border-radius:8px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);width:100%;outline:none;transition:border 0.15s}
+.fitb-input:focus{border-color:var(--blue)}
+
+.q-footer{padding:18px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--page)}
+.btn-nav-ghost{background:transparent;border:1px solid var(--border);border-radius:7px;padding:9px 20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--ink2);cursor:pointer;transition:all 0.15s}
+.btn-nav-ghost:hover{border-color:var(--blue);color:var(--blue)}
+.btn-nav-ghost:disabled{opacity:0.35;cursor:not-allowed}
+.btn-nav-solid{background:var(--blue);color:#fff;border:none;border-radius:7px;padding:9px 22px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:background 0.15s}
+.btn-nav-solid:hover{background:#1548C8}
+.q-counter{font-size:12px;color:var(--ink3)}
+
+/* RESULTS */
+#results{flex-direction:column;background:var(--page2);overflow-y:auto}
+.results-topbar{background:var(--page);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;gap:12px}
+.results-body{max-width:740px;margin:0 auto;width:100%;padding:36px 24px}
+.result-hero{background:var(--page);border:1px solid var(--border);border-radius:14px;padding:32px;display:flex;flex-direction:column;align-items:center;margin-bottom:22px}
+.result-verdict{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:20px}
+.result-verdict.pass{background:var(--green-light);color:var(--green);border:1px solid #B2E2CC}
+.result-verdict.fail{background:var(--red-light);color:var(--red);border:1px solid #F6B0B0}
+.result-score-ring{position:relative;width:140px;height:140px;margin-bottom:20px}
+.result-score-ring svg{transform:rotate(-90deg)}
+.rsr-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.rsr-pct{font-family:'Instrument Serif',serif;font-size:32px;color:var(--ink)}
+.rsr-lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3)}
+.result-name{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);margin-bottom:4px;text-align:center}
+.result-detail{font-size:13px;color:var(--ink2);text-align:center}
+.stats-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-bottom:22px}
+.stat-tile{background:var(--page);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.st-val{font-size:22px;font-weight:600;margin-bottom:4px}
+.st-lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3)}
+.review-card{background:var(--page);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:22px}
+.review-card-head{padding:14px 20px;background:var(--page2);border-bottom:1px solid var(--border);font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3)}
+.ri{display:flex;gap:14px;padding:16px 20px;border-bottom:1px solid var(--border);align-items:flex-start}
+.ri:last-child{border-bottom:none}
+.ri-dot{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.ri-dot.c{background:var(--green-light);color:var(--green)}
+.ri-dot.w{background:var(--red-light);color:var(--red)}
+.ri-dot.s{background:var(--amber-light);color:var(--amber)}
+.ri-content{flex:1}
+.ri-q{font-size:13px;color:var(--ink);line-height:1.5;margin-bottom:5px}
+.ri-ans{font-size:12px;color:var(--ink2)}
+.ri-ans .ca{color:var(--green);font-weight:500}
+.ri-ans .wa{color:var(--red)}
+.result-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;padding-bottom:40px}
+.btn-outline-ink{background:transparent;border:1px solid var(--border2);border-radius:8px;padding:11px 28px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;transition:all 0.15s}
+.btn-outline-ink:hover{border-color:var(--blue);color:var(--blue)}
+</style>
+</head>
+<body>
+
+<!-- WELCOME -->
+<div id="welcome" class="screen active" style="flex-direction:column">
+  <div class="inst-header">
+    <div class="inst-logo">Apex<span>University</span></div>
+    <div class="inst-tagline">Online Examination System</div>
+  </div>
+  <div class="welcome-body">
+    <div class="welcome-kicker">Academic CBT Portal</div>
+    <h1 class="welcome-h">Select Your Examination</h1>
+    <p class="welcome-sub">Choose a paper from the schedule below. Ensure a stable internet connection before beginning. All attempts are recorded.</p>
+
+    <div class="exam-table">
+      <div class="et-head">
+        <div>Paper</div><div>Duration</div><div>Questions</div><div>Max Marks</div><div></div>
+      </div>
+      <div class="et-row" onclick="selectExam(0,this)">
+        <div><div class="er-name">Introduction to Computer Science</div><div class="er-dept">Dept. of Computing · Semester II</div></div>
+        <div class="er-cell">45 min</div><div class="er-cell">10</div><div class="er-cell">30</div>
+        <div><span class="er-badge">Available</span></div>
+      </div>
+      <div class="et-row" onclick="selectExam(1,this)">
+        <div><div class="er-name">Business Economics</div><div class="er-dept">School of Commerce · Semester III</div></div>
+        <div class="er-cell">40 min</div><div class="er-cell">10</div><div class="er-cell">28</div>
+        <div><span class="er-badge">Available</span></div>
+      </div>
+      <div class="et-row" onclick="selectExam(2,this)">
+        <div><div class="er-name">Environmental Science</div><div class="er-dept">Life Sciences · Semester I</div></div>
+        <div class="er-cell">35 min</div><div class="er-cell">8</div><div class="er-cell">22</div>
+        <div><span class="er-badge">Available</span></div>
+      </div>
+    </div>
+
+    <button class="btn-start" id="start-btn" onclick="startExam()" disabled>Select a paper to proceed</button>
+
+    <div class="welcome-rules">
+      <div class="rules-title">Examination Guidelines</div>
+      <ul class="rules-list">
+        <li>Read each question carefully before answering</li>
+        <li>Multiple-select questions require all correct options to be chosen</li>
+        <li>Use the flag button to mark questions for review</li>
+        <li>The exam auto-submits when time expires</li>
+        <li>Passing score: 50% of total marks</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- EXAM SCREEN -->
+<div id="exam" class="screen" style="flex-direction:column">
+  <div class="exam-topbar">
+    <div class="etb-logo">ApexUniversity</div>
+    <div class="etb-sep"></div>
+    <div class="etb-exam-name" id="etb-name">—</div>
+    <div class="etb-right">
+      <div class="timer-pill" id="timer-el">
+        <svg class="timer-ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="5.5"/><path d="M8 6.5V9l1.5 1.5"/><path d="M6 1.5h4"/><path d="M8 1.5v2"/></svg>
+        <span class="timer-val" id="timer-txt">--:--</span>
+      </div>
+      <button class="btn-flag-sm" id="flag-btn" onclick="toggleFlag()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 1v10M2 1l8 3-8 4"/></svg>
+        <span id="flag-lbl">Flag</span>
+      </button>
+      <button class="btn-end-exam" onclick="confirmSubmit()">End Exam</button>
+    </div>
+  </div>
+  <div class="exam-layout">
+    <div class="exam-sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Question Palette</div>
+        <div class="q-palette" id="q-palette"></div>
+      </div>
+      <div class="sidebar-stats-block" id="sidebar-stats"></div>
+    </div>
+    <div class="q-main">
+      <div class="q-paper" id="q-paper"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="results" class="screen" style="flex-direction:column">
+  <div class="results-topbar">
+    <div style="font-family:'Instrument Serif',serif;font-size:16px;color:var(--ink)">ApexUniversity — Examination Results</div>
+  </div>
+  <div class="results-body">
+    <div class="result-hero">
+      <div class="result-verdict" id="r-verdict">PASS</div>
+      <div class="result-score-ring">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="58" fill="none" stroke="#EEF1F5" stroke-width="10"/>
+          <circle id="score-arc" cx="70" cy="70" r="58" fill="none" stroke="#1A56DB" stroke-width="10" stroke-linecap="round" stroke-dasharray="364.42" stroke-dashoffset="364.42"/>
+        </svg>
+        <div class="rsr-inner">
+          <div class="rsr-pct" id="r-pct">0%</div>
+          <div class="rsr-lbl">Score</div>
+        </div>
+      </div>
+      <div class="result-name" id="r-paper-name">—</div>
+      <div class="result-detail" id="r-detail">—</div>
+    </div>
+    <div class="stats-strip" id="stats-strip"></div>
+    <div class="review-card">
+      <div class="review-card-head">Answer Review</div>
+      <div id="review-list"></div>
+    </div>
+    <div class="result-actions">
+      <button class="btn-outline-ink" onclick="restartSame()">Retake This Paper</button>
+      <button class="btn-start" onclick="goHome()">Back to Portal</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const EXAMS=[
+  {name:"Introduction to Computer Science",dept:"Dept. of Computing · Semester II",duration:2700,questions:[
+    {type:"multi",text:"Which of the following are <em>object-oriented programming languages</em>? Select all that apply.",marks:3,opts:["Python","C","Java","Assembly","C++"],ans:[0,2,4]},
+    {type:"multi",text:"Which data structures operate on a <em>Last-In, First-Out (LIFO)</em> principle?",marks:3,opts:["Queue","Stack","Deque (when used as stack)","Linked List","Array Stack"],ans:[1,2,4]},
+    {type:"mcq",text:"What does <em>CPU</em> stand for in computing?",marks:2,opts:["Central Processing Unit","Computer Programming Utility","Central Program Uploader","Core Processor Unit"],ans:0},
+    {type:"multi",text:"Select all that are valid <em>secondary storage devices</em>:",marks:3,opts:["HDD","RAM","SSD","Cache","USB Flash Drive"],ans:[0,2,4]},
+    {type:"tf",text:"In binary, the number <code>1010</code> equals decimal 10.",marks:2,ans:true},
+    {type:"multi",text:"Which of the following are <em>high-level programming languages</em>?",marks:3,opts:["Python","Machine Code","JavaScript","Assembly","Kotlin"],ans:[0,2,4]},
+    {type:"mcq",text:"Which sorting algorithm has a best-case time complexity of O(n)?",marks:2,opts:["Bubble Sort","Quick Sort","Merge Sort","Selection Sort"],ans:0},
+    {type:"fitb",text:"The process of converting source code into machine code is called ___.",marks:2,ans:"compilation"},
+    {type:"multi",text:"Which of the following are components of the <em>Von Neumann architecture</em>?",marks:3,opts:["Control Unit","Monitor","ALU","Memory Unit","Printer"],ans:[0,2,3]},
+    {type:"mcq",text:"What is the maximum number of nodes at level 3 of a binary tree (root = level 0)?",marks:2,opts:["4","6","8","16"],ans:2}
+  ]},
+  {name:"Business Economics",dept:"School of Commerce · Semester III",duration:2400,questions:[
+    {type:"multi",text:"Which of the following are <em>factors of production</em> in classical economics?",marks:3,opts:["Land","Technology","Labour","Capital","Entrepreneurship"],ans:[0,2,3,4]},
+    {type:"mcq",text:"When demand increases and supply remains constant, what happens to the equilibrium price?",marks:2,opts:["Decreases","Stays the same","Increases","Cannot be determined"],ans:2},
+    {type:"tf",text:"A monopoly is characterised by many sellers competing in the same market.",marks:2,ans:false},
+    {type:"multi",text:"Select all that are examples of <em>fiscal policy tools</em>:",marks:3,opts:["Government spending","Interest rates","Taxation","Money supply","Subsidies"],ans:[0,2,4]},
+    {type:"mcq",text:"Price Elasticity of Demand is defined as:",marks:2,opts:["% change in supply / % change in price","% change in quantity demanded / % change in price","Change in price / Change in demand","Change in income / Change in demand"],ans:1},
+    {type:"multi",text:"Which of the following are characteristics of <em>perfect competition</em>?",marks:3,opts:["Many buyers and sellers","Differentiated products","Perfect information","Price-taking behaviour","Barriers to entry"],ans:[0,2,3]},
+    {type:"fitb",text:"The law of ___ states that as more units of a variable input are added, the marginal product eventually decreases.",marks:2,ans:"diminishing returns"},
+    {type:"mcq",text:"GDP stands for:",marks:2,opts:["Gross Domestic Product","General Demand Projection","Gross Development Plan","General Domestic Production"],ans:0},
+    {type:"tf",text:"Inflation and unemployment are always inversely related according to the Phillips Curve.",marks:2,ans:false},
+    {type:"multi",text:"Which of the following are examples of <em>public goods</em>?",marks:2,opts:["Street lighting","Private healthcare","National defence","A restaurant meal","Clean air"],ans:[0,2,4]}
+  ]},
+  {name:"Environmental Science",dept:"Life Sciences · Semester I",duration:2100,questions:[
+    {type:"multi",text:"Which of the following are <em>greenhouse gases</em>?",marks:3,opts:["Carbon Dioxide","Oxygen","Methane","Nitrogen","Nitrous Oxide"],ans:[0,2,4]},
+    {type:"mcq",text:"Which layer of the atmosphere contains the ozone layer?",marks:2,opts:["Troposphere","Stratosphere","Mesosphere","Thermosphere"],ans:1},
+    {type:"multi",text:"Select all that are classified as <em>renewable energy sources</em>:",marks:3,opts:["Solar","Coal","Wind","Natural Gas","Tidal"],ans:[0,2,4]},
+    {type:"tf",text:"Eutrophication is caused by an excess of nutrients in water bodies, leading to algal blooms.",marks:2,ans:true},
+    {type:"multi",text:"Which of the following best describe <em>biodiversity hotspots</em>?",marks:3,opts:["High species endemism","Low rainfall","Significant habitat loss","Abundant fossil fuels","High levels of threat to ecosystems"],ans:[0,2,4]},
+    {type:"mcq",text:"The primary cause of acid rain is:",marks:2,opts:["Carbon dioxide","Sulphur dioxide and nitrogen oxides","Methane","Chlorofluorocarbons"],ans:1},
+    {type:"fitb",text:"The ___ cycle describes the continuous movement of water between the atmosphere, land, and oceans.",marks:2,ans:"hydrological"},
+    {type:"multi",text:"Which of the following are effects of <em>deforestation</em>?",marks:3,opts:["Increased soil erosion","Improved air quality","Loss of biodiversity","Increased carbon sequestration","Disruption of water cycles"],ans:[0,2,4]}
+  ]}
+];
+
+let CE=null,cq=0,answers=[],flags=[],timerInt=null,tLeft=0;
+
+function selectExam(i,el){
+  document.querySelectorAll('.et-row').forEach(r=>r.classList.remove('selected'));
+  el.classList.add('selected');
+  CE=EXAMS[i];
+  const b=document.getElementById('start-btn');
+  b.disabled=false;
+  b.textContent='Begin: '+CE.name+' \u2192';
+}
+
+function startExam(){
+  if(!CE)return;
+  answers=new Array(CE.questions.length).fill(null);
+  flags=new Array(CE.questions.length).fill(false);
+  cq=0;tLeft=CE.duration;
+  document.getElementById('etb-name').textContent=CE.name;
+  showScreen('exam');
+  buildPalette();renderQ();startTimer();
+}
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+function buildPalette(){
+  const p=document.getElementById('q-palette');p.innerHTML='';
+  CE.questions.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='qp-btn';d.id='qpb-'+i;d.textContent=i+1;d.onclick=()=>goQ(i);p.appendChild(d);
+  });
+  updatePalette();
+}
+
+function updatePalette(){
+  CE.questions.forEach((_,i)=>{
+    const el=document.getElementById('qpb-'+i);
+    el.className='qp-btn';
+    if(i===cq)el.classList.add('cur');
+    else if(flags[i])el.classList.add('flg');
+    else if(answers[i]!==null)el.classList.add('ans');
+  });
+  const tot=CE.questions.length,ans=answers.filter(a=>a!==null).length,fl=flags.filter(Boolean).length;
+  document.getElementById('sidebar-stats').innerHTML=`
+    <div class="sidebar-label">Status</div>
+    <div class="ss-row"><span class="ss-label"><span class="ss-dot" style="background:#0D7A4E"></span>Answered</span><span class="ss-val" style="color:var(--green)">${ans}</span></div>
+    <div class="ss-row"><span class="ss-label"><span class="ss-dot" style="background:#DDE3EC"></span>Not answered</span><span class="ss-val">${tot-ans}</span></div>
+    <div class="ss-row"><span class="ss-label"><span class="ss-dot" style="background:var(--amber)"></span>Flagged</span><span class="ss-val" style="color:var(--amber)">${fl}</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:${Math.round(ans/tot*100)}%"></div></div>
+    <div style="font-size:11px;color:var(--ink3);margin-top:6px;text-align:right">${Math.round(ans/tot*100)}% complete</div>
+  `;
+}
+
+function renderQ(){
+  const q=CE.questions[cq];const n=CE.questions.length;
+  const tmap={mcq:'Single Answer (MCQ)',multi:'Multiple Select — tick all correct options',tf:'True / False',fitb:'Fill in the Blank'};
+  let body='';
+  if(q.type==='multi'){
+    const sel=answers[cq]||[];
+    body=`<div class="multi-instr"><div class="mi-icon"></div>Select <strong>all</strong> correct answers. Partial credit is not awarded.</div>
+    <div class="cb-options">${q.opts.map((o,i)=>`
+      <div class="cb-opt ${sel.includes(i)?'checked':''}" onclick="toggleMulti(${i})">
+        <div class="cb-box"><div class="cb-check"></div></div>
+        <span class="cb-letter">${String.fromCharCode(65+i)}</span>
+        <span class="cb-label">${o}</span>
+      </div>`).join('')}</div>`;
+  } else if(q.type==='mcq'){
+    body=`<div class="mcq-options">${q.opts.map((o,i)=>`
+      <div class="mcq-opt ${answers[cq]===i?'sel':''}" onclick="selMCQ(${i})">
+        <div class="mcq-bubble"></div>
+        <span class="opt-text">${o}</span>
+      </div>`).join('')}</div>`;
+  } else if(q.type==='tf'){
+    body=`<div class="tf-pair">
+      <div class="tf-card ${answers[cq]===true?'sel-t':''}" onclick="selTF(true)"><div class="tf-mark" style="color:var(--green)">&#10003;</div><div class="tf-word">True</div></div>
+      <div class="tf-card ${answers[cq]===false?'sel-f':''}" onclick="selTF(false)"><div class="tf-mark" style="color:var(--red)">&#10007;</div><div class="tf-word">False</div></div>
+    </div>`;
+  } else {
+    body=`<div style="border-radius:8px;overflow:hidden;border:1.5px solid var(--border)">
+      <input class="fitb-input" type="text" placeholder="Type your answer..." value="${answers[cq]||''}" oninput="saveFITB(this.value)" />
+    </div>`;
+  }
+
+  document.getElementById('q-paper').innerHTML=`
+    <div class="q-paper-head">
+      <div class="q-num-tag">Q${cq+1} / ${n}</div>
+      <div class="q-type-tag">${tmap[q.type]}</div>
+      <div class="q-marks-tag">Marks: <b>${q.marks}</b></div>
+    </div>
+    <div class="q-body">
+      <div class="q-section-label">Question ${cq+1}</div>
+      <div class="q-text">${q.text}</div>
+      ${body}
+    </div>
+    <div class="q-footer">
+      <button class="btn-nav-ghost" onclick="goQ(${cq-1})" ${cq===0?'disabled':''}>&#8592; Previous</button>
+      <span class="q-counter">${cq+1} of ${n}</span>
+      ${cq===n-1?`<button class="btn-nav-solid" onclick="confirmSubmit()">Submit Paper</button>`:`<button class="btn-nav-solid" onclick="goQ(${cq+1})">Next &#8594;</button>`}
+    </div>`;
+
+  const fb=document.getElementById('flag-btn');
+  fb.className='btn-flag-sm'+(flags[cq]?' flagged':'');
+  document.getElementById('flag-lbl').textContent=flags[cq]?'Flagged':'Flag';
+  updatePalette();
+}
+
+function toggleMulti(i){if(!answers[cq])answers[cq]=[];const a=answers[cq],x=a.indexOf(i);x>-1?a.splice(x,1):a.push(i);if(a.length===0)answers[cq]=null;renderQ();}
+function selMCQ(i){answers[cq]=i;renderQ();}
+function selTF(v){answers[cq]=v;renderQ();}
+function saveFITB(v){answers[cq]=v.trim()||null;}
+function goQ(i){if(i<0||i>=CE.questions.length)return;cq=i;renderQ();}
+function toggleFlag(){flags[cq]=!flags[cq];renderQ();}
+
+function startTimer(){
+  clearInterval(timerInt);
+  const tick=()=>{
+    tLeft--;
+    const m=Math.floor(tLeft/60),s=tLeft%60;
+    document.getElementById('timer-txt').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    const el=document.getElementById('timer-el');
+    el.className='timer-pill'+(tLeft<=300?' warn':'')+(tLeft<=60?' danger':'');
+    if(tLeft<=0){clearInterval(timerInt);submitExam();}
+  };tick();
+  timerInt=setInterval(tick,1000);
+}
+
+function confirmSubmit(){
+  const u=answers.filter(a=>a===null).length;
+  if(u>0){if(!confirm(`${u} question(s) unanswered. Submit the paper?`))return;}
+  submitExam();
+}
+
+function submitExam(){
+  clearInterval(timerInt);
+  const qs=CE.questions;let correct=0,totalM=0,scored=0,skipped=0;
+  qs.forEach((q,i)=>{
+    totalM+=q.marks;
+    if(answers[i]===null){skipped++;return;}
+    let ok=false;
+    if(q.type==='mcq'||q.type==='tf')ok=answers[i]===q.ans;
+    else if(q.type==='multi'){const a=answers[i]||[],ca=q.ans;ok=a.length===ca.length&&ca.every(x=>a.includes(x));}
+    else if(q.type==='fitb')ok=(answers[i]||'').toLowerCase().trim()===q.ans.toLowerCase().trim();
+    if(ok){correct++;scored+=q.marks;}
+  });
+  const pct=Math.round(scored/totalM*100),pass=pct>=50;
+  const timeTaken=CE.duration-tLeft,mm=Math.floor(timeTaken/60),ss=timeTaken%60;
+  showScreen('results');
+  document.getElementById('r-verdict').textContent=pass?'PASS':'FAIL';
+  document.getElementById('r-verdict').className='result-verdict '+(pass?'pass':'fail');
+  document.getElementById('r-pct').textContent=pct+'%';
+  document.getElementById('r-paper-name').textContent=CE.name;
+  document.getElementById('r-detail').textContent=`${CE.dept} \u00b7 ${scored} / ${totalM} marks`;
+  const arc=document.getElementById('score-arc');
+  arc.style.stroke=pass?'#0D7A4E':'#C0392B';
+  arc.style.strokeDashoffset=364.42*(1-pct/100);
+  document.getElementById('stats-strip').innerHTML=`
+    <div class="stat-tile"><div class="st-val" style="color:var(--green)">${correct}</div><div class="st-lbl">Correct</div></div>
+    <div class="stat-tile"><div class="st-val" style="color:var(--red)">${qs.length-correct-skipped}</div><div class="st-lbl">Incorrect</div></div>
+    <div class="stat-tile"><div class="st-val" style="color:var(--amber)">${skipped}</div><div class="st-lbl">Skipped</div></div>
+    <div class="stat-tile"><div class="st-val">${scored}/${totalM}</div><div class="st-lbl">Marks</div></div>
+    <div class="stat-tile"><div class="st-val">${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}</div><div class="st-lbl">Time Taken</div></div>
+    <div class="stat-tile"><div class="st-val" style="color:${pass?'var(--green)':'var(--red)'}">${pass?'Pass':'Fail'}</div><div class="st-lbl">Result</div></div>
+  `;
+  const tmap={mcq:'MCQ',multi:'Multi-Select',tf:'True/False',fitb:'Fill-Blank'};
+  document.getElementById('review-list').innerHTML=qs.map((q,i)=>{
+    let ok=false,userStr='Not attempted',corrStr='';
+    if(q.type==='mcq'){ok=answers[i]===q.ans;userStr=answers[i]!=null?q.opts[answers[i]]:'Not attempted';corrStr=q.opts[q.ans];}
+    else if(q.type==='tf'){ok=answers[i]===q.ans;userStr=answers[i]==null?'Not attempted':(answers[i]?'True':'False');corrStr=q.ans?'True':'False';}
+    else if(q.type==='multi'){const a=answers[i]||[];ok=a.length===q.ans.length&&q.ans.every(x=>a.includes(x));userStr=answers[i]?a.map(x=>q.opts[x]).join(', '):'Not attempted';corrStr=q.ans.map(x=>q.opts[x]).join(', ');}
+    else{ok=(answers[i]||'').toLowerCase().trim()===q.ans.toLowerCase().trim();userStr=answers[i]||'Not attempted';corrStr=q.ans;}
+    const s=answers[i]==null?'s':ok?'c':'w';
+    const raw=q.text.replace(/<[^>]*>/g,'');
+    return `<div class="ri">
+      <div class="ri-dot ${s}">${s==='c'?'&#10003;':s==='w'?'&#10007;':'&#8212;'}</div>
+      <div class="ri-content">
+        <div class="ri-q">Q${i+1} [${tmap[q.type]}] \u2014 ${raw.length>90?raw.slice(0,90)+'\u2026':raw}</div>
+        <div class="ri-ans">Your answer: <span class="${s==='c'?'ca':'wa'}">${userStr}</span>${!ok&&s!=='s'?` &nbsp;&middot;&nbsp; Correct: <span class="ca">${corrStr}</span>`:''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function restartSame(){const e=CE;goHome();setTimeout(()=>{const i=EXAMS.indexOf(e);if(i>=0){const rows=document.querySelectorAll('.et-row');selectExam(i,rows[i]);}},50);}
+function goHome(){clearInterval(timerInt);CE=null;document.querySelectorAll('.et-row').forEach(r=>r.classList.remove('selected'));const b=document.getElementById('start-btn');b.disabled=true;b.textContent='Select a paper to proceed';showScreen('welcome');}
+</script>
+</body>
+</html>

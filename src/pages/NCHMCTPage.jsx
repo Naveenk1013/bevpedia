@@ -1,173 +1,486 @@
-import { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { nchmct_jee_info, jee_questions } from '../data/nchmct_jee';
+import { nhtet_info, nhtet_questions } from '../data/nhtet';
 
-const EXAM_DATA = {
-  jee: {
-    title: 'NCHMCT JEE',
-    subtitle: 'Joint Entrance Examination for IHM Admissions',
-    color: '#30c88a',
-    target: 'Hospitality Aspirants (10+2)',
-    focus: 'Securing admission to top Institute of Hotel Management (IHM) colleges across India.',
-    features: [
-      {
-        name: 'Comprehensive Guidance',
-        items: ['Eligibility criteria & reservation policy', 'State-wise IHM directory', 'Application process walkthrough']
-      },
-      {
-        name: 'Study Materials',
-        items: ['Numerical Ability & Analytical Aptitude', 'Reasoning & Logical Deduction', 'General Knowledge & Current Affairs', 'English Language proficiency']
-      },
-      {
-        name: 'Mock Testing',
-        items: ['Full-length simulation tests', 'Previous year question papers (2018-2024)', 'Sectional practice sets']
+const NCHMCTPage = () => {
+  const navigate = useNavigate();
+  const [phase, setPhase] = useState('select-exam'); // 'select-exam', 'dashboard', 'mock-test', 'results'
+  const [selectedExam, setSelectedExam] = useState(null); // 'jee' or 'nhtet'
+  const [activeSection, setActiveSection] = useState('info'); // 'info', 'materials', 'papers', 'mock'
+  
+  // Quiz State
+  const [quizQuestions, setQuizQuestions] = useState([]);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [userAnswers, setUserAnswers] = useState({});
+  const [flags, setFlags] = useState({});
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [quizResult, setQuizResult] = useState(null);
+
+  const examData = selectedExam === 'jee' ? nchmct_jee_info : nhtet_info;
+  const examQuestions = selectedExam === 'jee' ? jee_questions : nhtet_questions;
+
+  // Timer Effect
+  useEffect(() => {
+    let timer;
+    if (phase === 'mock-test' && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            finishQuiz();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [phase, timeLeft]);
+
+  const handleSelectExam = (type) => {
+    setSelectedExam(type);
+    setPhase('dashboard');
+    setActiveSection('info');
+  };
+
+  const startMockTest = (testConfig) => {
+    setQuizQuestions(examQuestions);
+    setTimeLeft(testConfig.time * 60);
+    setUserAnswers({});
+    setFlags({});
+    setCurrentIdx(0);
+    setPhase('mock-test');
+  };
+
+  const finishQuiz = useCallback(() => {
+    const questions = quizQuestions;
+    let correct = 0;
+    let totalMarks = 0;
+    let scoredMarks = 0;
+    let attempted = 0;
+
+    questions.forEach((q, idx) => {
+      totalMarks += q.marks;
+      const ans = userAnswers[idx];
+      if (ans !== undefined && ans !== null) {
+        attempted++;
+        if (ans === q.ans) {
+          correct++;
+          scoredMarks += q.marks;
+        } else {
+          if (selectedExam === 'jee') {
+            scoredMarks -= 1;
+          }
+        }
       }
-    ]
-  },
-  nhtet: {
-    title: 'NHTET',
-    subtitle: 'National Hospitality Teachers Eligibility Test',
-    color: '#7c5cfc',
-    target: 'Graduates & Industry Professionals',
-    focus: 'Qualifying to teach in NCHMCT-affiliated government institutes.',
-    features: [
-      {
-        name: 'Teaching Career Path',
-        items: ['Certification for Teaching Associates', 'Eligibility for Assistant Lecturer positions', 'Exam patterns and frequency']
-      },
-      {
-        name: 'Expert Curriculum',
-        items: ['Teaching & Research Aptitude', 'Hospitality Administration', 'Food Production & Beverage Service specialization']
-      },
-      {
-        name: 'Professional Resources',
-        items: ['Pedagogy study materials', 'Mock exams for Paper I, II & III', 'Interview preparation guides']
-      }
-    ]
-  }
-};
+    });
 
-export default function NCHMCTPage() {
-  const [activeTab, setActiveTab] = useState('jee');
-  const data = EXAM_DATA[activeTab];
+    setQuizResult({
+      total: questions.length,
+      correct,
+      attempted,
+      totalMarks,
+      scoredMarks,
+      pct: Math.max(0, Math.round((scoredMarks / totalMarks) * 100)),
+      timeTaken: timeLeft 
+    });
+    setPhase('results');
+  }, [quizQuestions, userAnswers, selectedExam, timeLeft]);
 
-  return (
-    <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
-      <header className="page-header animate-fade-up">
-        <Link to="/" style={{ color: 'var(--clr-accent)', textDecoration: 'none', marginBottom: '1rem', display: 'inline-block' }}>
-          ← Back to Home
-        </Link>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2.5rem', marginBottom: '1rem' }}>
-          NCHMCT <span style={{ color: 'var(--clr-accent3)' }}>Academic Center</span>
-        </h1>
-        <p className="text-muted" style={{ maxWidth: '800px', lineHeight: '1.6', fontSize: '1.1rem' }}>
-          The Beverage Encyclopedia is proud to support the next generation of hospitality leaders. 
-          Access free study materials, expert guidance, and professional mock testing for NCHMCT examinations.
-        </p>
-      </header>
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  };
 
-      {/* Selector Tabs */}
-      <div className="filter-bar animate-fade-up" style={{ marginTop: '2.5rem', justifyContent: 'center' }}>
-        <button
-          className={`filter-pill ${activeTab === 'jee' ? 'active' : ''}`}
-          onClick={() => setActiveTab('jee')}
-          style={{ 
-            borderColor: activeTab === 'jee' ? EXAM_DATA.jee.color : 'var(--clr-border)',
-            backgroundColor: activeTab === 'jee' ? `${EXAM_DATA.jee.color}20` : 'transparent',
-            color: activeTab === 'jee' ? EXAM_DATA.jee.color : 'var(--clr-text)'
-          }}
-        >
-          IHM Entrance (JEE)
-        </button>
-        <button
-          className={`filter-pill ${activeTab === 'nhtet' ? 'active' : ''}`}
-          onClick={() => setActiveTab('nhtet')}
-          style={{ 
-            borderColor: activeTab === 'nhtet' ? EXAM_DATA.nhtet.color : 'var(--clr-border)',
-            backgroundColor: activeTab === 'nhtet' ? `${EXAM_DATA.nhtet.color}20` : 'transparent',
-            color: activeTab === 'nhtet' ? EXAM_DATA.nhtet.color : 'var(--clr-text)'
-          }}
-        >
-          Teaching Eligibility (NHTET)
-        </button>
+  const renderSelection = () => (
+    <div className="nchm-container">
+      <div className="nchm-text-center nchm-mb-12">
+        <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} className="nchm-badge">
+          NCHMCT Academic Hub
+        </motion.div>
+        <h1 className="nchm-title">Choose Your <span style={{color:'#10B981'}}>Path</span></h1>
+        <p className="nchm-subtitle">Select a program to access study materials, previous papers, and simulated mock examinations.</p>
       </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-          className="wset-content-grid"
-          style={{ marginTop: '3rem' }}
-        >
-          {/* Main Info Card */}
-          <div className="detail-card" style={{ borderTop: `4px solid ${data.color}` }}>
-            <div className="detail-card-header">
-              <h2 style={{ fontFamily: 'var(--font-display)', margin: 0 }}>{data.title}</h2>
-              <p style={{ color: data.color, fontWeight: 'bold' }}>{data.subtitle}</p>
-            </div>
-            <div className="detail-card-body">
-              <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Primary Focus</h3>
-              <p className="text-muted" style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>{data.focus}</p>
-              
-              <div style={{ marginTop: '1.5rem', padding: '1rem', background: 'var(--clr-surface-alt)', borderRadius: '12px' }}>
-                <p style={{ margin: 0, fontSize: '0.9rem' }}><strong>Target Audience:</strong> {data.target}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Features / Syllabus Card */}
-          <div className="detail-card">
-            <div className="detail-card-header">
-              <h3 style={{ fontFamily: 'var(--font-display)', margin: 0 }}>Resources & Guidance</h3>
-            </div>
-            <div className="detail-card-body">
-              {data.features.map((feature, idx) => (
-                <div key={idx} style={{ marginBottom: '1.25rem' }}>
-                  <h4 style={{ fontSize: '1rem', color: 'var(--clr-accent)', marginBottom: '0.4rem' }}>{feature.name}</h4>
-                  <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.9rem', color: 'var(--clr-text-muted)' }}>
-                    {feature.items.map((item, i) => <li key={i} style={{ marginBottom: '0.2rem' }}>{item}</li>)}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Action Card */}
-          <div className="detail-card" style={{ background: 'var(--clr-surface-alt)', borderColor: 'transparent' }}>
-            <div className="detail-card-header">
-              <h3 style={{ fontFamily: 'var(--font-display)', margin: 0 }}>Free Preparation</h3>
-            </div>
-            <div className="detail-card-body">
-              <p style={{ fontSize: '0.9rem', color: 'var(--clr-text-muted)', marginBottom: '1.5rem' }}>
-                Our research team is currently indexing thousands of pages of notes and question papers.
-              </p>
-              <div style={{ display: 'grid', gap: '1rem' }}>
-                <button className="btn btn-primary" style={{ background: data.color, width: '100%' }}>Download Notes (PDF)</button>
-                <button className="btn btn-outline" style={{ width: '100%' }}>Practice Mock Test</button>
-                <button className="btn btn-ghost" style={{ width: '100%', fontSize: '0.8rem' }}>View Past Papers</button>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </AnimatePresence>
-
-      <section style={{ marginTop: '5rem', textAlign: 'center' }}>
-        <div style={{ 
-          padding: '3rem', 
-          background: 'linear-gradient(135deg, rgba(48, 200, 138, 0.05), rgba(124, 92, 252, 0.05))',
-          borderRadius: '24px',
-          border: '1px solid var(--clr-border)'
-        }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', marginBottom: '1rem' }}>Help Us Expand</h2>
-          <p className="text-muted" style={{ maxWidth: '600px', margin: '0 auto 2rem', lineHeight: '1.6' }}>
-            Are you a student or professional with quality study materials? Contribute to our open encyclopedia and help thousands of learners.
-          </p>
-          <button className="btn btn-outline">Submit Study Material</button>
-        </div>
-      </section>
+      <div className="nchm-grid">
+        {[
+          { id: 'jee', ...nchmct_jee_info, icon: '🎓' },
+          { id: 'nhtet', ...nhtet_info, icon: '👨‍🏫' }
+        ].map((exam) => (
+          <motion.div 
+            key={exam.id}
+            whileHover={{ y: -5 }}
+            onClick={() => handleSelectExam(exam.id)}
+            className="nchm-card"
+          >
+            <div className="nchm-card-icon">{exam.icon}</div>
+            <h3 className="nchm-card-title">{exam.title}</h3>
+            <p className="nchm-card-desc">{exam.subtitle}</p>
+            <button className="nchm-btn-primary">
+              Enter Hub &rarr;
+            </button>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
-}
+
+  const renderDashboard = () => (
+    <div className="nchm-container">
+      <div className="nchm-dash-header">
+        <div>
+          <button onClick={() => setPhase('select-exam')} className="nchm-back-btn">
+            &larr; Back to Selection
+          </button>
+          <h2 className="nchm-dash-title">{examData.title} <span style={{color:'white'}}>Academic Center</span></h2>
+          <p className="nchm-subtitle" style={{margin:'8px 0', textAlign:'left'}}>{examData.overview}</p>
+        </div>
+        <div className="nchm-tab-bar">
+          {['info', 'materials', 'papers', 'mock'].map((s) => (
+            <button
+              key={s}
+              onClick={() => setActiveSection(s)}
+              className={`nchm-tab ${activeSection === s ? 'active' : ''}`}
+            >
+              {s.toUpperCase()}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {activeSection === 'info' && (
+        <motion.div initial={{opacity:0}} animate={{opacity:1}} className="nchm-section-grid">
+          <div className="nchm-info-card">
+            <h4 className="nchm-info-header">📊 Exam Pattern & Layout</h4>
+            <div style={{display:'flex', flexDirection:'column', gap:'12px'}}>
+               {selectedExam === 'jee' ? (
+                 <>
+                   <div className="nchm-item-row"><span className="nchm-item-label">Duration</span><span className="nchm-item-value">{examData.pattern.duration}</span></div>
+                   <div className="nchm-item-row"><span className="nchm-item-label">Total Questions</span><span className="nchm-item-value">{examData.pattern.totalQuestions}</span></div>
+                   <div className="nchm-item-row"><span className="nchm-item-label">Marking Scheme</span><span className="nchm-item-value" style={{color:'#10B981'}}>{examData.pattern.marking}</span></div>
+                 </>
+               ) : (
+                examData.pattern.papers.map(p => (
+                  <div key={p.id} className="nchm-item-row">
+                    <span className="nchm-item-label">Paper {p.id}: {p.name}</span>
+                    <span className="nchm-item-value">{p.questions} Qs | {p.duration}</span>
+                  </div>
+                ))
+               )}
+            </div>
+          </div>
+          <div className="nchm-info-card">
+             <h4 className="nchm-info-header">💡 Quick Tips</h4>
+             <ul className="nchm-list">
+               <li className="nchm-list-item"><span>&bull;</span> Focus on Numerical Ability and English for high scoring.</li>
+               <li className="nchm-list-item"><span>&bull;</span> Practice at least 5 full-length mock tests before the actual exam.</li>
+               <li className="nchm-list-item"><span>&bull;</span> The "Service Sector" section is unique to NCHMCT – study hospitality protocols.</li>
+               <li className="nchm-list-item"><span>&bull;</span> Effective time management is key: 200 questions in 180 minutes.</li>
+             </ul>
+          </div>
+        </motion.div>
+      )}
+
+      {activeSection === 'materials' && (
+        <motion.div initial={{opacity:0}} animate={{opacity:1}} className="nchm-section-grid">
+          {examData.studyMaterial.map((sec, idx) => (
+            <div key={idx} className="nchm-info-card">
+               <h4 className="nchm-info-header" style={{borderBottom:'1px solid rgba(16,185,129,0.3)', paddingBottom:'12px'}}>{sec.category}</h4>
+               <div style={{display:'grid', gap:'12px', marginTop:'20px'}}>
+                 {sec.items.map((item, i) => (
+                   <a href={item.link} key={i} className="nchm-material-card">
+                     <span className="nchm-material-title">{item.title}</span>
+                     <span className="nchm-material-dl">DOWNLOAD &darr;</span>
+                   </a>
+                 ))}
+               </div>
+            </div>
+          ))}
+        </motion.div>
+      )}
+
+      {activeSection === 'papers' && (
+        <motion.div initial={{opacity:0}} animate={{opacity:1}} className="nchm-info-card" style={{maxWidth:'100%'}}>
+          <div className="nchm-section-grid">
+            {examData.samplePapers.map((paper, idx) => (
+              <div key={idx} className="nchm-item-row" style={{padding:'20px', alignItems:'center'}}>
+                <div style={{fontSize:'1.5rem'}}>📄</div>
+                <div style={{flexGrow:1, marginLeft:'16px'}}>
+                   <div style={{fontSize:'10px', color:'#10B981', fontWeight:'700'}}>{paper.year}</div>
+                   <div style={{color:'white', fontWeight:'500'}}>{paper.title}</div>
+                </div>
+                <button className="nchm-btn-primary" style={{width:'auto', padding:'8px 16px', fontSize:'10px'}}>VIEW</button>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {activeSection === 'mock' && (
+        <motion.div initial={{opacity:0}} animate={{opacity:1}} className="nchm-section-grid">
+          {examData.mockTests.map((test) => (
+            <div key={test.id} className="nchm-mock-card">
+               <div className="nchm-mock-tag">Simulated CBT</div>
+               <h4 className="nchm-mock-title">{test.name}</h4>
+               <div className="nchm-mock-meta">
+                 <span>⏱️ {test.time} Mins</span>
+                 <span>📋 {test.questions} Questions</span>
+               </div>
+               <button 
+                 onClick={() => startMockTest(test)}
+                 className="nchm-btn-primary"
+               >
+                 START MOCK TEST
+               </button>
+            </div>
+          ))}
+        </motion.div>
+      )}
+    </div>
+  );
+
+  const renderCBT = () => {
+    const q = quizQuestions[currentIdx];
+    if (!q) return null;
+
+    return (
+      <div className="nchm-cbt-overlay">
+        <div className="nchm-topbar">
+          <h2 style={{fontSize:'1.25rem', fontFamily:'var(--font-display)', color:'#0f172a'}}>NCHMCT <span style={{color:'#2563eb'}}>Mock Exam</span></h2>
+          <div style={{display:'flex', alignItems:'center', gap:'16px'}}>
+            <div className="nchm-timer-box" style={timeLeft < 300 ? {background:'#fee2e2', borderColor:'#fecaca'} : {}}>
+              <span className="nchm-timer-label">Time Left:</span>
+              <span className="nchm-timer-val" style={timeLeft < 300 ? {color:'#dc2626'} : {}}>{formatTime(timeLeft)}</span>
+            </div>
+            <button
+               onClick={() => {if(window.confirm('End exam now?')) finishQuiz()}}
+               style={{padding:'8px 20px', background:'#0f172a', color:'white', borderRadius:'8px', fontWeight:'600', border:'none', cursor:'pointer'}}
+            >
+              Finish Exam
+            </button>
+          </div>
+        </div>
+
+        <div className="nchm-layout">
+          <div className="nchm-sidebar">
+            <h3 style={{fontSize:'10px', fontWeight:'700', color:'#94a3b8', textTransform:'uppercase', letterSpacing:'1px', marginBottom:'16px'}}>Question Palette</h3>
+            <div className="palette-grid">
+              {quizQuestions.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentIdx(i)}
+                  className={`palette-btn ${currentIdx === i ? 'current' : ''} ${userAnswers[i] !== undefined ? 'answered' : ''} ${flags[i] ? 'flagged' : ''}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+            
+            <div style={{marginTop:'auto', paddingTop:'24px', borderTop:'1px solid #f1f5f9', display:'grid', gap:'12px'}}>
+              <div style={{display:'flex', justifyContent:'space-between', fontSize:'12px', color:'#0f172a'}}>
+                <span style={{display:'flex', alignItems:'center', gap:'8px'}}><div style={{width:'12px', height:'12px', background:'#10b981', borderRadius:'3px'}}></div> Answered</span>
+                <span style={{fontWeight:'700'}}>{Object.keys(userAnswers).length}</span>
+              </div>
+              <div style={{display:'flex', justifyContent:'space-between', fontSize:'12px', color:'#0f172a'}}>
+                <span style={{display:'flex', alignItems:'center', gap:'8px'}}><div style={{width:'12px', height:'12px', background:'#f8fafc', border:'1px solid #e2e8f0', borderRadius:'3px'}}></div> Not Answered</span>
+                <span style={{fontWeight:'700'}}>{quizQuestions.length - Object.keys(userAnswers).length}</span>
+              </div>
+              <div style={{display:'flex', justifyContent:'space-between', fontSize:'12px', color:'#0f172a'}}>
+                <span style={{display:'flex', alignItems:'center', gap:'8px'}}><div style={{width:'12px', height:'12px', background:'#f59e0b', borderRadius:'3px'}}></div> Flagged</span>
+                <span style={{fontWeight:'700'}}>{Object.keys(flags).filter(k => flags[k]).length}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="nchm-main">
+             <div className="nchm-q-card">
+                <div className="nchm-q-header">
+                   <div style={{display:'flex', gap:'12px'}}>
+                      <span style={{padding:'4px 12px', background:'#2563eb', color:'white', fontSize:'10px', fontWeight:'700', borderRadius:'4px'}}>QUESTION {currentIdx + 1}</span>
+                      <span style={{padding:'4px 12px', background:'#f1f5f9', color:'#64748b', fontSize:'10px', fontWeight:'700', borderRadius:'4px'}}>{q.section}</span>
+                   </div>
+                   <div style={{fontSize:'12px', fontWeight:'600', color:'#94a3b8'}}>Correct: <span style={{color:'#10b981'}}>+{q.marks}</span> | Wrong: <span style={{color:'#ef4444'}}>{selectedExam === 'jee' ? '-1' : '0'}</span></div>
+                </div>
+
+                <div className="nchm-q-body">
+                   <p className="nchm-q-text">{q.text}</p>
+                   <div style={{display:'grid', gap:'16px'}}>
+                      {q.opts.map((opt, i) => (
+                        <div 
+                          key={i}
+                          onClick={() => setUserAnswers(prev => ({...prev, [currentIdx]: i}))}
+                          className={`nchm-opt ${userAnswers[currentIdx] === i ? 'selected' : ''}`}
+                        >
+                           <div style={{
+                             width:'24px', height:'24px', borderRadius:'101%', border:'2px solid #cbd5e1', 
+                             display:'flex', alignItems:'center', justifyContent:'center', marginRight:'16px',
+                             background: userAnswers[currentIdx] === i ? '#2563eb' : 'transparent',
+                             borderColor: userAnswers[currentIdx] === i ? '#2563eb' : '#cbd5e1',
+                             color: userAnswers[currentIdx] === i ? 'white' : '#64748b',
+                             fontSize:'10px', fontWeight:'700'
+                           }}>
+                              {String.fromCharCode(65+i)}
+                           </div>
+                           <span style={{fontSize:'1rem', fontWeight:'500', color:'#0f172a'}}>{opt}</span>
+                        </div>
+                      ))}
+                   </div>
+                </div>
+
+                <div className="nchm-q-footer">
+                   <div style={{display:'flex', gap:'12px'}}>
+                      <button 
+                        onClick={() => setFlags(prev => ({...prev, [currentIdx]: !prev[currentIdx]}))}
+                        style={{
+                          padding:'10px 24px', borderRadius:'8px', fontWeight:'600', fontSize:'14px', border:'1px solid #e2e8f0', cursor:'pointer',
+                          background: flags[currentIdx] ? '#f59e0b' : 'white',
+                          color: flags[currentIdx] ? 'white' : '#64748b'
+                        }}
+                      >
+                        {flags[currentIdx] ? 'Flagged' : 'Flag for Review'}
+                      </button>
+                      <button 
+                        onClick={() => setUserAnswers(prev => {
+                          const n = {...prev};
+                          delete n[currentIdx];
+                          return n;
+                        })}
+                        style={{padding:'10px 24px', background:'none', border:'none', color:'#ef4444', fontWeight:'600', cursor:'pointer'}}
+                      >
+                        Clear Response
+                      </button>
+                   </div>
+                   <div style={{display:'flex', gap:'12px'}}>
+                       <button 
+                         disabled={currentIdx === 0}
+                         onClick={() => setCurrentIdx(c => c - 1)}
+                         style={{padding:'10px 24px', background:'#f1f5f9', color:'#64748b', border:'none', borderRadius:'8px', fontWeight:'700', cursor:'pointer', opacity: currentIdx === 0 ? 0.3 : 1}}
+                       >
+                         Previous
+                       </button>
+                       <button 
+                         onClick={() => {
+                           if (currentIdx === quizQuestions.length - 1) finishQuiz();
+                           else setCurrentIdx(c => c + 1);
+                         }}
+                         style={{padding:'10px 32px', background:'#10b981', color:'white', border:'none', borderRadius:'8px', fontWeight:'700', cursor:'pointer'}}
+                       >
+                         {currentIdx === quizQuestions.length - 1 ? 'Save & Submit' : 'Save & Next'}
+                       </button>
+                   </div>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderResults = () => {
+    if (!quizResult) return null;
+    const res = quizResult;
+    return (
+      <div className="nchm-cbt-overlay" style={{overflowY:'auto'}}>
+        <div className="nchm-topbar" style={{position:'sticky', top:0, zIndex:10}}>
+          <h2 style={{fontSize:'1.25rem', fontFamily:'var(--font-display)', color:'#0f172a'}}>Exam <span style={{color:'#10b981'}}>Report Card</span></h2>
+          <button onClick={() => setPhase('dashboard')} style={{padding:'8px 20px', background:'#0f172a', color:'white', borderRadius:'8px', border:'none', fontWeight:'700', cursor:'pointer'}}>Return to Dashboard</button>
+        </div>
+
+        <div style={{maxWidth:'900px', margin:'0 auto', padding:'48px 24px', width:'100%'}}>
+           <div className="nchm-result-header">
+              <div style={{
+                display:'inline-block', padding:'6px 16px', borderRadius:'99px', fontSize:'10px', fontWeight:'700', letterSpacing:'1px', textTransform:'uppercase', marginBottom:'32px',
+                background: res.pct >= 50 ? '#dcfce7' : '#fee2e2',
+                color: res.pct >= 50 ? '#15803d' : '#b91c1c'
+              }}>
+                Result Status: {res.pct >= 50 ? 'Exam Passed' : 'Exam Failed'}
+              </div>
+
+              <div className="nchm-score-circle">
+                <svg width="180" height="180" viewBox="0 0 140 140">
+                  <circle cx="70" cy="70" r="58" fill="none" stroke="#f1f5f9" strokeWidth="12" />
+                  <circle 
+                    cx="70" cy="70" r="58" fill="none" stroke={res.pct >= 50 ? '#10b981' : '#ef4444'} 
+                    strokeWidth="12" strokeDasharray="364.42" 
+                    strokeDashoffset={364.42 * (1 - res.pct / 100)} 
+                    strokeLinecap="round" style={{transition:'stroke-dashoffset 1s ease-out'}}
+                  />
+                </svg>
+                <div style={{position:'absolute', display:'flex', flexDirection:'column', alignItems:'center'}}>
+                   <span style={{fontSize:'3rem', fontWeight:'700', fontFamily:'var(--font-display)', color:'#0f172a'}}>{res.pct}%</span>
+                   <span style={{fontSize:'9px', fontWeight:'700', color:'#94a3b8', textTransform:'uppercase'}}>Aggregate</span>
+                </div>
+              </div>
+
+              <h3 style={{fontSize:'2.5rem', fontFamily:'var(--font-display)', marginBottom:'8px', color:'#0f172a'}}>{examData.title} <span style={{color:'#10b981'}}>Practice Session</span></h3>
+              <p style={{color:'#64748b'}}>Session completed on {new Date().toLocaleDateString()}</p>
+           </div>
+
+           <div className="nchm-tile-grid">
+              <div className="result-tile"><div className="result-val" style={{color:'#10b981'}}>{res.correct}</div><div className="result-lbl">Correct</div></div>
+              <div className="result-tile"><div className="result-val" style={{color:'#ef4444'}}>{res.attempted - res.correct}</div><div className="result-lbl">Wrong</div></div>
+              <div className="result-tile"><div className="result-val" style={{color:'#94a3b8'}}>{res.total - res.attempted}</div><div className="result-lbl">Skipped</div></div>
+              <div className="result-tile"><div className="result-val" style={{color:'#2563eb'}}>{res.scoredMarks} / {res.totalMarks}</div><div className="result-lbl">Marks</div></div>
+              <div className="result-tile"><div className="result-val">{res.attempted}</div><div className="result-lbl">Attempted</div></div>
+              <div className="result-tile"><div className="result-val">{res.total}</div><div className="result-lbl">Total Qs</div></div>
+           </div>
+
+           <div className="nchm-review-box">
+              <div className="nchm-review-head">Review Your Answers</div>
+              <div>
+                 {quizQuestions.map((q, i) => {
+                    const status = userAnswers[i] === undefined ? 'skipped' : userAnswers[i] === q.ans ? 'correct' : 'wrong';
+                    return (
+                        <div key={i} className="nchm-review-q">
+                           <div style={{display:'flex', gap:'16px', marginBottom:'24px'}}>
+                              <span style={{
+                                width:'32px', height:'32px', borderRadius:'8px', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:'700', shrink:0,
+                                background: status === 'correct' ? '#dcfce7' : status === 'wrong' ? '#fee2e2' : '#f1f5f9',
+                                color: status === 'correct' ? '#15803d' : status === 'wrong' ? '#b91c1c' : '#64748b'
+                              }}>
+                                 {i + 1}
+                              </span>
+                              <p style={{fontSize:'1.1rem', fontWeight:'500', lineHeight:'1.5', color:'#0f172a'}}>{q.text}</p>
+                           </div>
+                           <div style={{marginLeft:'48px', display:'grid', gap:'12px'}}>
+                              <div style={{padding:'16px', borderRadius:'12px', border:'2px solid', display:'flex', justifyContent:'space-between', alignItems:'center',
+                                borderColor: status === 'correct' ? '#10b981' : status === 'wrong' ? '#ef4444' : '#e2e8f0',
+                                background: status === 'correct' ? '#f0fdf4' : status === 'wrong' ? '#fef2f2' : '#f8fafc',
+                                color: status === 'correct' ? '#15803d' : status === 'wrong' ? '#b91c1c' : '#94a3b8'
+                              }}>
+                                 <span style={{fontWeight:'600'}}>{userAnswers[i] !== undefined ? q.opts[userAnswers[i]] : 'No selection made'}</span>
+                                 <span>{status === 'correct' ? '✓ Correct' : status === 'wrong' ? '✗ Incorrect' : '• Skipped'}</span>
+                              </div>
+                              {status !== 'correct' && (
+                                <div style={{padding:'16px', borderRadius:'12px', background:'#f0fdf4', border:'1px solid #dcfce7', color:'#15803d'}}>
+                                  <span style={{fontSize:'10px', fontWeight:'700', textTransform:'uppercase', display:'block', marginBottom:'4px'}}>Correct Answer:</span>
+                                  <span style={{fontWeight:'600'}}>{q.opts[q.ans]}</span>
+                                </div>
+                              )}
+                           </div>
+                        </div>
+                    );
+                 })}
+              </div>
+           </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div style={{minHeight:'100vh', background:'#050505', color:'white', paddingTop:'80px'}}>
+      <AnimatePresence mode="wait">
+        {phase === 'select-exam' && renderSelection()}
+        {phase === 'dashboard' && renderDashboard()}
+        {phase === 'mock-test' && renderCBT()}
+        {phase === 'results' && renderResults()}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+export default NCHMCTPage;
