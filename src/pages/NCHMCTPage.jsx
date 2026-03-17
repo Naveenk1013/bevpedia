@@ -257,7 +257,7 @@ const NCHMCTPage = () => {
             </div>
             <button
                onClick={() => {if(window.confirm('End exam now?')) finishQuiz()}}
-               style={{padding:'8px 20px', background:'#0f172a', color:'white', borderRadius:'8px', fontWeight:'600', border:'none', cursor:'pointer'}}
+               className="nchm-btn-finish"
             >
               Finish Exam
             </button>
@@ -316,7 +316,7 @@ const NCHMCTPage = () => {
                         >
                            <div style={{
                              width:'24px', height:'24px', borderRadius:'101%', border:'2px solid #cbd5e1', 
-                             display:'flex', alignItems:'center', justifyContent:'center', marginRight:'16px',
+                             display:'flex', alignItems:'center', justifyContent:'center', marginRight:'16px', flexShrink: 0,
                              background: userAnswers[currentIdx] === i ? '#2563eb' : 'transparent',
                              borderColor: userAnswers[currentIdx] === i ? '#2563eb' : '#cbd5e1',
                              color: userAnswers[currentIdx] === i ? 'white' : '#64748b',
@@ -331,14 +331,10 @@ const NCHMCTPage = () => {
                 </div>
 
                 <div className="nchm-q-footer">
-                   <div style={{display:'flex', gap:'12px'}}>
+                   <div className="nchm-action-btns">
                       <button 
                         onClick={() => setFlags(prev => ({...prev, [currentIdx]: !prev[currentIdx]}))}
-                        style={{
-                          padding:'10px 24px', borderRadius:'8px', fontWeight:'600', fontSize:'14px', border:'1px solid #e2e8f0', cursor:'pointer',
-                          background: flags[currentIdx] ? '#f59e0b' : 'white',
-                          color: flags[currentIdx] ? 'white' : '#64748b'
-                        }}
+                        className={`nchm-btn-flag ${flags[currentIdx] ? 'active' : ''}`}
                       >
                         {flags[currentIdx] ? 'Flagged' : 'Flag for Review'}
                       </button>
@@ -348,16 +344,17 @@ const NCHMCTPage = () => {
                           delete n[currentIdx];
                           return n;
                         })}
-                        style={{padding:'10px 24px', background:'none', border:'none', color:'#ef4444', fontWeight:'600', cursor:'pointer'}}
+                        className="nchm-btn-clear"
                       >
                         Clear Response
                       </button>
                    </div>
-                   <div style={{display:'flex', gap:'12px'}}>
+                   <div className="nchm-nav-btns">
                        <button 
                          disabled={currentIdx === 0}
                          onClick={() => setCurrentIdx(c => c - 1)}
-                         style={{padding:'10px 24px', background:'#f1f5f9', color:'#64748b', border:'none', borderRadius:'8px', fontWeight:'700', cursor:'pointer', opacity: currentIdx === 0 ? 0.3 : 1}}
+                         className="nchm-btn-prev"
+                         style={{opacity: currentIdx === 0 ? 0.3 : 1}}
                        >
                          Previous
                        </button>
@@ -366,7 +363,7 @@ const NCHMCTPage = () => {
                            if (currentIdx === quizQuestions.length - 1) finishQuiz();
                            else setCurrentIdx(c => c + 1);
                          }}
-                         style={{padding:'10px 32px', background:'#10b981', color:'white', border:'none', borderRadius:'8px', fontWeight:'700', cursor:'pointer'}}
+                         className="nchm-btn-next"
                        >
                          {currentIdx === quizQuestions.length - 1 ? 'Save & Submit' : 'Save & Next'}
                        </button>
@@ -386,7 +383,7 @@ const NCHMCTPage = () => {
       <div className="nchm-cbt-overlay" style={{overflowY:'auto'}}>
         <div className="nchm-topbar" style={{position:'sticky', top:0, zIndex:10}}>
           <h2 style={{fontSize:'1.25rem', fontFamily:'var(--font-display)', color:'#0f172a'}}>Exam <span style={{color:'#10b981'}}>Report Card</span></h2>
-          <button onClick={() => setPhase('dashboard')} style={{padding:'8px 20px', background:'#0f172a', color:'white', borderRadius:'8px', border:'none', fontWeight:'700', cursor:'pointer'}}>Return to Dashboard</button>
+          <button onClick={() => setPhase('dashboard')} className="nchm-btn-finish">Return to Dashboard</button>
         </div>
 
         <div style={{maxWidth:'900px', margin:'0 auto', padding:'48px 24px', width:'100%'}}>
@@ -437,7 +434,7 @@ const NCHMCTPage = () => {
                         <div key={i} className="nchm-review-q">
                            <div style={{display:'flex', gap:'16px', marginBottom:'24px'}}>
                               <span style={{
-                                width:'32px', height:'32px', borderRadius:'8px', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:'700', shrink:0,
+                                width:'32px', height:'32px', borderRadius:'8px', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:'700', flexShrink: 0,
                                 background: status === 'correct' ? '#dcfce7' : status === 'wrong' ? '#fee2e2' : '#f1f5f9',
                                 color: status === 'correct' ? '#15803d' : status === 'wrong' ? '#b91c1c' : '#64748b'
                               }}>

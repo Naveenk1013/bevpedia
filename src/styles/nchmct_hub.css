@@ -428,3 +428,144 @@
 .nchm-review-box { background: white; border-radius: 24px; overflow: hidden; border: 1px solid #e2e8f0; color: #0f172a; }
 .nchm-review-head { padding: 24px 32px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; }
 .nchm-review-q { padding: 32px; border-bottom: 1px solid #f1f5f9; }
+
+/* Component Buttons */
+.nchm-btn-finish {
+  padding: 8px 20px;
+  background: #0f172a;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.nchm-btn-finish:hover { background: #1e293b; }
+
+.nchm-action-btns { display: flex; gap: 12px; }
+.nchm-nav-btns { display: flex; gap: 12px; }
+
+.nchm-btn-flag {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  background: white;
+  color: #64748b;
+  transition: all 0.2s;
+}
+.nchm-btn-flag.active { background: #f59e0b; color: white; border-color: #f59e0b; }
+
+.nchm-btn-clear {
+  padding: 10px 24px;
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nchm-btn-prev {
+  padding: 10px 24px;
+  background: #f1f5f9;
+  color: #64748b;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.nchm-btn-next {
+  padding: 10px 32px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nchm-btn-next:hover {
+  background: #059669;
+}
+
+/* Mobile Optimization */
+@media (max-width: 768px) {
+  .nchm-container { padding: 24px 16px; }
+  .nchm-title { font-size: 2rem; }
+  .nchm-mb-12 { margin-bottom: 32px; }
+  .nchm-card { padding: 24px; }
+  
+  .nchm-section-grid { grid-template-columns: 1fr; }
+  
+  .nchm-dash-title { font-size: 1.5rem; }
+  .nchm-tab-bar { 
+    overflow-x: auto; 
+    white-space: nowrap; 
+    padding: 8px; 
+    -webkit-overflow-scrolling: touch; 
+  }
+  .nchm-tab { padding: 8px 12px; font-size: 0.75rem; }
+  
+  .nchm-info-card, .nchm-mock-card { padding: 20px; }
+  .nchm-mock-meta { flex-direction: column; gap: 8px; margin-bottom: 24px; }
+  
+  .nchm-layout { flex-direction: column-reverse; }
+  .nchm-sidebar { 
+    width: 100%; 
+    border-right: none; 
+    border-top: 1px solid #e2e8f0; 
+    padding: 16px; 
+    max-height: 250px; 
+    overflow-y: auto; 
+  }
+  
+  .palette-grid { grid-template-columns: repeat(6, 1fr); gap: 6px; }
+  
+  .nchm-main { padding: 16px; }
+  
+  .nchm-q-card { border-radius: 12px; }
+  .nchm-q-header { padding: 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .nchm-q-body { padding: 20px 16px; }
+  .nchm-q-text { font-size: 1.125rem; margin-bottom: 24px; }
+  .nchm-opt { padding: 12px; margin-bottom: 8px; }
+  
+  .nchm-q-footer { flex-direction: column; gap: 16px; padding: 16px; }
+  .nchm-action-btns, .nchm-nav-btns { display: flex; width: 100%; gap: 8px; }
+  
+  /* Make buttons stretch on mobile */
+  .nchm-btn-flag, .nchm-btn-clear, .nchm-btn-prev, .nchm-btn-next {
+    flex: 1; padding: 12px 0; font-size: 13px; text-align: center;
+  }
+  
+  .nchm-result-header { padding: 32px 16px; border-radius: 16px; }
+  .nchm-score-circle { transform: scale(0.8); margin-bottom: 16px; }
+  .nchm-result-header h3 { font-size: 1.75rem; }
+  
+  .nchm-tile-grid { grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px; }
+  .result-tile { padding: 16px; }
+  .result-val { font-size: 1.25rem; }
+  
+  .nchm-review-box { border-radius: 16px; }
+  .nchm-review-head { padding: 16px; }
+  .nchm-review-q { padding: 16px; }
+  .nchm-review-q > div:first-child { flex-direction: column; gap: 8px; }
+  .nchm-review-q p { font-size: 1rem; }
+  .nchm-review-q > div:last-child { margin-left: 0; }
+  
+  .nchm-topbar { padding: 0 16px; height: 56px; }
+  .nchm-topbar h2 { font-size: 1.1rem !important; }
+  .nchm-timer-box { padding: 6px 10px; }
+  .nchm-timer-label { display: none; } /* Hide label on mobile */
+  .nchm-timer-val { font-size: 1rem; }
+  .nchm-btn-finish { padding: 6px 12px; font-size: 12px; }
+}
+
+/* Very small screens */
+@media (max-width: 380px) {
+  .palette-grid { grid-template-columns: repeat(5, 1fr); }
+  .nchm-action-btns, .nchm-nav-btns { flex-direction: column; }
+}
