@@ -4,7 +4,7 @@ export const nchmct_jee_info = {
   overview: 'Conducted by NTA once a year for admission to undergraduate courses in Central, State, and Private Institutes of Hotel Management.',
   pattern: {
     duration: '3 Hours',
-    totalQuestions: 200,
+    totalQuestions: 120,
     marking: 'Correct: +4 | Incorrect: -1',
     sections: [
       { name: 'Numerical Ability & Analytical Aptitude', count: 30 },
@@ -40,21 +40,23 @@ export const nchmct_jee_info = {
     { year: 'Practice', title: 'Top-tier IHM Model Paper 1', link: '#' }
   ],
   mockTests: [
-    { id: 'jee_mock_1', name: 'JEE Full Length Mock 1', questions: 200, time: 180 },
+    { id: 'jee_mock_1', name: 'JEE Full Length Mock', questions: 120, time: 180 },
     { id: 'jee_sectional_1', name: 'Numerical Ability Special', questions: 30, time: 30 }
   ]
 };
 
-// Placeholder for Mock Test Questions - To be expanded in next step
-export const jee_questions = [
-  {
-    id: 1,
-    section: 'Numerical Ability',
+import nchmctQuestionBank from './nchmctjeequestionbank';
+
+export const jee_questions = nchmctQuestionBank.map((q, idx) => {
+  const ansIndex = q.options.indexOf(q.a);
+  return {
+    id: idx + 1,
+    section: q.category,
     type: 'mcq',
-    text: 'A train 150m long is running at a speed of 54 km/hr. How much time will it take to cross a platform 250m long?',
-    opts: ['20.6 sec', '26.6 sec', '30 sec', '35 sec'],
-    ans: 1, // 26.666
-    marks: 4
-  },
-  // More will be added
-];
+    text: q.q,
+    opts: q.options,
+    ans: ansIndex >= 0 ? ansIndex : 0, // Fallback if no exact match found
+    marks: 4,
+    explanation: q.explanation || ''
+  };
+});

@@ -51,7 +51,7 @@ const CONTRIBUTORS = [
   {
     name: "Mukul Sahu",
     role: "Chef & Assistant Professor of Food Production",
-    location: "India",
+    location: "Ahmedabad, Gujarat, India",
     contact: {
       phone: "+916265405471",
       email: "mukulsahu06@gmail.com"
@@ -89,7 +89,7 @@ const CONTRIBUTORS = [
   {
     name: "Nishanth Upadhyayula",
     role: "Hospitality Educator & Assistant Professor",
-    location: "India",
+    location: "Bangalore, Karnataka, India",
     contact: {
       phone: "+91 9640785375",
       email: "nishanthupadhyayula@gmail.com",
@@ -109,7 +109,7 @@ const CONTRIBUTORS = [
   {
     name: "Jayant Lohar",
     role: "Assistant Professor & Author",
-    location: "India",
+    location: "Lonavala, Maharashtra, India",
     contact: {
       phone: "+91 7758821693",
       email: "loharj79@gmail.com"
@@ -129,15 +129,15 @@ const CONTRIBUTORS = [
   {
     name: "Nitesh Kumar",
     role: "Assistant Professor & Content Creator",
-    location: "India",
+    location: "Bareilly, Uttar Pradesh, India",
     contact: {
       phone: "+91 8840059787",
       email: "niteshnk476@gmail.com",
       youtube: "https://www.youtube.com/@aaoswadbadle/shorts"
     },
     bio: [
-      "I am an academician who takes genuine pride in the teaching profession, viewing it not just as a job, but as a calling to shape future talent. With a background that spans both the dynamic pace of professional kitchens and the structured environment of the classroom, I bring a unique blend of practical industry insight and academic rigor to my students. My journey began as a Commi III at Mayfair Lake Resort, moved through various faculty roles, and has led me to my current position as an Assistant Professor, where I strive to make learning both relevant and engaging.",
-      "My teaching philosophy is rooted in real-world application. Whether I was solving guest issues at Novotel or working in the cold kitchen, those experiences form the foundation of my lessons in Food Production. I believe in preparing students not just for exams, but for the challenges of the hospitality floor. This has driven me to work in affiliated colleges like MLRSM Institute and ACMT GROUP OF COLLEGES, where I have focused on bridging the gap between theoretical knowledge and the skills demanded by the industry.",
+      "I am an academician who takes genuine pride in the teaching profession, viewing it not just as a job, but as a calling to shape future talent. With a background that spans both the dynamic pace of professional kitchens and the structured environment of the classroom, I bring a unique blend of practical industry insight and academic rigor to my students.",
+      "My teaching philosophy is rooted in real-world application. Whether I was solving guest issues at Novotel or working in the cold kitchen, those experiences form the foundation of my lessons in Food Production. I believe in preparing students not just for exams, but for the challenges of the hospitality floor.",
       "Beyond the classroom, I am a proactive individual who enjoys content creation on YouTube and is actively involved in event and business management. I am a self-motivated and reliable team player, always seeking growth-oriented opportunities where I can deliver value while continuing to learn. My goal is to inspire students to take pride in the profession, just as I do, and to equip them with the confidence and competence to excel in the world of hospitality."
     ],
     credits: [
@@ -146,6 +146,46 @@ const CONTRIBUTORS = [
       "Event & Business Management"
     ],
     image: "image/about/Nitesh_kumar.png"
+  },
+   {
+    name: "Saumya Saini",
+    role: "Assistant Professor & Phd. Scholar",
+    location: "Rajasthan, India",
+    contact: {
+      phone: "+91 9521274499",
+      email: "saumya.udr@gmail.com",
+    },
+    bio: [
+      "With a Master's in Hospitality Administration specializing in Human Resources and a passion for luxury service, I am an educator dedicated to bridging the gap between academic learning and the realities of the hotel industry. My foundation was built and refined within some of India's most prestigious properties, including The Oberoi Udaivillas and The Leela Palace, Udaipur. These experiences taught me not just the mechanics of Food & Beverage, Front Office, and Housekeeping, but the art of anticipating guest needs and handling high-pressure situations with grace.",
+      "I bring this real-world perspective into my current role as a Hospitality Faculty and Training Placement Coordinator. I believe that true education extends beyond the textbook, which is why I focus on preparing students for the nuances of hotel operations, from VIP guest service to the strategic functions of the Human Resources department. Earning four Kudos certificates during my training at The Oberoi reinforced my belief in the power of dedication and attention to detail—values I strive to instill in every student I mentor.",
+      "Currently pursuing my PhD, I am committed to continuous learning and academic excellence. Whether I am coordinating placements, managing examination processes, or drawing on my experience as a district-level athlete to teach teamwork and resilience, my goal is to shape well-rounded professionals. I am passionate about guiding the next generation of hospitality leaders, equipping them with the skills, confidence, and grace required to excel in this dynamic field."
+    ],
+    credits: [
+      "Testing and cross Referencing",
+      "Service Standards and SOPs Verification",
+      "Study Material and Exam Preparation data"
+    ],
+    image: "image/about/Saumya_saini.png"
+  },
+  {
+    name: "Arya Mohan",
+    role: "Assistant Professor",
+    location: "Punjab, India",
+    contact: {
+      phone: "+91 8102533916",
+      email: "aryamohan647@gmail.com",
+    },
+    bio: [
+      "I am a culinary academician, hospitality professional, and bestselling author dedicated to preserving culinary heritage while shaping the future of hospitality education. As an Assistant Professor at Lovely Professional University, I blend classical traditions with modern practices to create dynamic learning experiences.",
+      "My journey began in luxury hospitality with Trident Udaipur and the prestigious Oberoi Centre of Learning and Development, where I imbibed the highest standards of excellence. This foundation was strengthened by formal education at IHM Lucknow and NCHMCT Noida.",
+      "Prior to my current role, I served at Parul University, mentoring aspiring chefs. I am also a published author of two bestselling books on Amazon. For me, every kitchen is a classroom, and I remain committed to inspiring the next generation of hospitality professionals through tradition, technique, and relentless pursuit of excellence."
+    ],
+    credits: [
+      "Testing and cross Referencing",
+      "Service Standards and SOPs Verification",
+      "Study Material and Exam Preparation data"
+    ],
+    image: "image/about/Arya_mohan.png"
   }
 ];
 
