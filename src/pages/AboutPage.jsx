@@ -85,6 +85,67 @@ const CONTRIBUTORS = [
       "Hospitality & Tourism Management expertise"
     ],
     image: "image/about/Mahak_agrawal.png" // Guessing image path based on others
+  },
+  {
+    name: "Nishanth Upadhyayula",
+    role: "Hospitality Educator & Assistant Professor",
+    location: "India",
+    contact: {
+      phone: "+91 9640785375",
+      email: "nishanthupadhyayula@gmail.com",
+      linkedin: "https://www.linkedin.com/in/upadhyayula-nishanth-276a96129/"
+    },
+    bio: [
+      "As a hospitality educator with a Master’s in Hotel Management, I am passionate about shaping the next generation of industry professionals. My approach to teaching combines rigorous theoretical knowledge with practical, hands-on experience, a philosophy I've developed through roles like Assistant Professor and Food & Beverage lecturer. I believe that education extends beyond the classroom, which is why I am deeply involved in curriculum development, student counseling, and organizing workshops to ensure my students are truly industry-ready.",
+      "My own foundation in the field was built through intensive training with leading hotels like Novotel and the Taj Group. This direct industry experience, from managing banquet operations to understanding front office procedures, allows me to bring real-world insights into my lessons. It is incredibly rewarding to bridge that gap between textbook learning and the dynamic environment of a hotel.",
+      "Beyond teaching, I am an avid learner and enthusiast of educational technology and AI, always looking for innovative ways to enhance the student experience. Whether I'm developing academic content or coordinating events, my goal remains the same: to mentor and guide students toward successful and fulfilling careers in hospitality management."
+    ],
+    credits: [
+      "Mentorship & Curriculum Development",
+      "Event Coordination & Ed-Tech Integration"
+    ],
+    image: "image/about/Nishanth_upadhyayula.jpg"
+  },
+  {
+    name: "Jayant Lohar",
+    role: "Assistant Professor & Author",
+    location: "India",
+    contact: {
+      phone: "+91 7758821693",
+      email: "loharj79@gmail.com"
+    },
+    bio: [
+      "I am a dedicated hospitality educator with a deep-seated passion for shaping the future of the industry through comprehensive teaching and mentorship. Currently pursuing my PhD in Hospitality and Tourism Management, my academic journey has equipped me with a strong foundation in Room Division and Food & Beverage management, which I strive to impart to my students in a dynamic and practical learning environment.",
+      "In my current role as an Assistant Professor, I serve as an Exam Coordinator and oversee Training and Placement activities. This multifaceted position allows me to not only teach core subjects like Front Office and Food & Beverage Service but also to ensure our students are academically excellent and fully prepared for industry demands. I believe in a holistic approach to education, which is why I actively contribute to various institutional committees—from the IQAC to the Student Development Cell—working to enhance educational quality and foster an inclusive, engaging campus life through events like theme dinners and cultural celebrations.",
+      "My commitment to the field extends beyond the classroom. I am the author of \"Simplifying Service - Your Guide to Success\" and continuously engage in professional development, exploring everything from AI in hospitality to sustainable practices. Whether I'm mentoring students, organizing a major event, or developing new curriculum, my goal remains to equip future hospitality leaders with the skills, confidence, and passion they need to succeed."
+    ],
+    credits: [
+      "Author of 'Simplifying Service'",
+      "Room Division & F&B Management",
+      "Training & Placement Coordination"
+    ],
+    image: "image/about/Jayant_lohar.png"
+  },
+  {
+    name: "Nitesh Kumar",
+    role: "Assistant Professor & Content Creator",
+    location: "India",
+    contact: {
+      phone: "+91 8840059787",
+      email: "niteshnk476@gmail.com",
+      youtube: "https://www.youtube.com/@aaoswadbadle/shorts"
+    },
+    bio: [
+      "I am an academician who takes genuine pride in the teaching profession, viewing it not just as a job, but as a calling to shape future talent. With a background that spans both the dynamic pace of professional kitchens and the structured environment of the classroom, I bring a unique blend of practical industry insight and academic rigor to my students. My journey began as a Commi III at Mayfair Lake Resort, moved through various faculty roles, and has led me to my current position as an Assistant Professor, where I strive to make learning both relevant and engaging.",
+      "My teaching philosophy is rooted in real-world application. Whether I was solving guest issues at Novotel or working in the cold kitchen, those experiences form the foundation of my lessons in Food Production. I believe in preparing students not just for exams, but for the challenges of the hospitality floor. This has driven me to work in affiliated colleges like MLRSM Institute and ACMT GROUP OF COLLEGES, where I have focused on bridging the gap between theoretical knowledge and the skills demanded by the industry.",
+      "Beyond the classroom, I am a proactive individual who enjoys content creation on YouTube and is actively involved in event and business management. I am a self-motivated and reliable team player, always seeking growth-oriented opportunities where I can deliver value while continuing to learn. My goal is to inspire students to take pride in the profession, just as I do, and to equip them with the confidence and competence to excel in the world of hospitality."
+    ],
+    credits: [
+      "Food Production & Practical Training",
+      "Digital Content Creation",
+      "Event & Business Management"
+    ],
+    image: "image/about/Nitesh_kumar.png"
   }
 ];
 
@@ -167,13 +228,27 @@ const ProfileCard = ({ person, idx }) => {
          </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-        <a href={`mailto:${person.contact.email}`} className="btn btn-outline" style={{ display: 'block', fontSize: '0.85rem', textAlign: 'center' }}>
-          ✉ Email
-        </a>
-        <a href={`tel:${person.contact.phone}`} className="btn btn-outline" style={{ display: 'block', fontSize: '0.85rem', textAlign: 'center' }}>
-          📞 Call
-        </a>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))', gap: '1rem' }}>
+        {person.contact.email && (
+          <a href={`mailto:${person.contact.email}`} className="btn btn-outline" style={{ display: 'block', fontSize: '0.85rem', textAlign: 'center', padding: '0.8rem 0.5rem' }}>
+            ✉ Email
+          </a>
+        )}
+        {person.contact.phone && (
+          <a href={`tel:${person.contact.phone}`} className="btn btn-outline" style={{ display: 'block', fontSize: '0.85rem', textAlign: 'center', padding: '0.8rem 0.5rem' }}>
+            📞 Call
+          </a>
+        )}
+        {person.contact.linkedin && (
+          <a href={person.contact.linkedin} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ display: 'block', fontSize: '0.85rem', textAlign: 'center', padding: '0.8rem 0.5rem' }}>
+            in LinkedIn
+          </a>
+        )}
+        {person.contact.youtube && (
+          <a href={person.contact.youtube} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ display: 'block', fontSize: '0.85rem', textAlign: 'center', padding: '0.8rem 0.5rem' }}>
+            ▶ YouTube
+          </a>
+        )}
       </div>
     </motion.div>
   );
