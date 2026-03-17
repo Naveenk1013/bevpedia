@@ -47,7 +47,16 @@ const NCHMCTPage = () => {
   };
 
   const startMockTest = (testConfig) => {
-    setQuizQuestions(examQuestions);
+    // Shuffle the question pool
+    let pool = [...examQuestions];
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    // Limit to the requested test configuration number
+    const selectedQuestions = pool.slice(0, testConfig.questions || pool.length);
+
+    setQuizQuestions(selectedQuestions);
     setTimeLeft(testConfig.time * 60);
     setUserAnswers({});
     setFlags({});

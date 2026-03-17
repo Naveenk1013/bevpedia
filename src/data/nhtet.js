@@ -1,3 +1,5 @@
+import { nhtet_questions_bank } from './nhtetquestionbank';
+
 export const nhtet_info = {
   title: 'NHTET',
   subtitle: 'National Hospitality Teachers Eligibility Test',
@@ -48,20 +50,17 @@ export const nhtet_info = {
   ]
 };
 
-// Placeholder for NHTET Questions
-export const nhtet_questions = [
-  {
-    id: 1,
-    section: 'Food Science',
+// Map NHTET Questions from the question bank
+export const nhtet_questions = nhtet_questions_bank.map((q, index) => {
+  const ansIndex = q.options.findIndex(opt => opt === q.a);
+  return {
+    id: index + 1,
+    section: q.category || 'General',
     type: 'mcq',
-    text: 'What is the primary purpose of the HACCP system in food safety?',
-    opts: [
-      'To enhance the flavor of food',
-      'To prevent contamination at critical control points',
-      'To increase the shelf life of food products',
-      'To reduce the cooking time of food'
-    ],
-    ans: 1,
-    marks: 2
-  }
-];
+    text: q.q,
+    opts: q.options,
+    ans: ansIndex >= 0 ? ansIndex : 0,
+    marks: 2 // Default 2 marks per question as per common NHTET scheme
+  };
+});
+

@@ -919,6 +919,7 @@ p { color: var(--clr-text); }
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   gap: 2rem;
+  align-items: start;
 }
 
 .sponsorship-grid {
