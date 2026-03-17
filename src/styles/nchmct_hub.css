@@ -321,6 +321,16 @@
 
 .nchm-layout { display: flex; flex: 1; overflow: hidden; }
 
+.nchm-palette-toggle {
+  display: none; /* Hidden on desktop */
+}
+
+.nchm-palette-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .nchm-sidebar {
   width: 280px;
   background: white;
@@ -522,8 +532,30 @@
     border-right: none; 
     border-top: 1px solid #e2e8f0; 
     padding: 16px; 
-    max-height: 250px; 
-    overflow-y: auto; 
+    height: auto;
+  }
+  
+  .nchm-palette-toggle {
+    display: block;
+    padding: 6px 12px;
+    background: #f1f5f9;
+    color: #0f172a;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  .nchm-palette-content {
+    display: none;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-top: 8px;
+  }
+  
+  .nchm-palette-content.expanded {
+    display: flex;
   }
   
   .palette-grid { grid-template-columns: repeat(6, 1fr); gap: 6px; }

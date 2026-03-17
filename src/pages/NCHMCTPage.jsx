@@ -17,6 +17,7 @@ const NCHMCTPage = () => {
   const [flags, setFlags] = useState({});
   const [timeLeft, setTimeLeft] = useState(0);
   const [quizResult, setQuizResult] = useState(null);
+  const [isPaletteExpanded, setIsPaletteExpanded] = useState(false);
 
   const examData = selectedExam === 'jee' ? nchmct_jee_info : nhtet_info;
   const examQuestions = selectedExam === 'jee' ? jee_questions : nhtet_questions;
@@ -266,31 +267,45 @@ const NCHMCTPage = () => {
 
         <div className="nchm-layout">
           <div className="nchm-sidebar">
-            <h3 style={{fontSize:'10px', fontWeight:'700', color:'#94a3b8', textTransform:'uppercase', letterSpacing:'1px', marginBottom:'16px'}}>Question Palette</h3>
-            <div className="palette-grid">
-              {quizQuestions.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentIdx(i)}
-                  className={`palette-btn ${currentIdx === i ? 'current' : ''} ${userAnswers[i] !== undefined ? 'answered' : ''} ${flags[i] ? 'flagged' : ''}`}
-                >
-                  {i + 1}
-                </button>
-              ))}
+            <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'16px'}}>
+              <h3 style={{fontSize:'10px', fontWeight:'700', color:'#94a3b8', textTransform:'uppercase', letterSpacing:'1px', margin:0}}>Question Palette</h3>
+              <button 
+                className="nchm-palette-toggle" 
+                onClick={() => setIsPaletteExpanded(!isPaletteExpanded)}
+              >
+                {isPaletteExpanded ? 'Hide Palette ↑' : 'Show Palette ↓'}
+              </button>
             </div>
             
-            <div style={{marginTop:'auto', paddingTop:'24px', borderTop:'1px solid #f1f5f9', display:'grid', gap:'12px'}}>
-              <div style={{display:'flex', justifyContent:'space-between', fontSize:'12px', color:'#0f172a'}}>
-                <span style={{display:'flex', alignItems:'center', gap:'8px'}}><div style={{width:'12px', height:'12px', background:'#10b981', borderRadius:'3px'}}></div> Answered</span>
-                <span style={{fontWeight:'700'}}>{Object.keys(userAnswers).length}</span>
+            <div className={`nchm-palette-content ${isPaletteExpanded ? 'expanded' : ''}`}>
+              <div className="palette-grid">
+                {quizQuestions.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      setCurrentIdx(i);
+                      setIsPaletteExpanded(false); // Auto-close on selection on mobile
+                    }}
+                    className={`palette-btn ${currentIdx === i ? 'current' : ''} ${userAnswers[i] !== undefined ? 'answered' : ''} ${flags[i] ? 'flagged' : ''}`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
               </div>
-              <div style={{display:'flex', justifyContent:'space-between', fontSize:'12px', color:'#0f172a'}}>
-                <span style={{display:'flex', alignItems:'center', gap:'8px'}}><div style={{width:'12px', height:'12px', background:'#f8fafc', border:'1px solid #e2e8f0', borderRadius:'3px'}}></div> Not Answered</span>
-                <span style={{fontWeight:'700'}}>{quizQuestions.length - Object.keys(userAnswers).length}</span>
-              </div>
-              <div style={{display:'flex', justifyContent:'space-between', fontSize:'12px', color:'#0f172a'}}>
-                <span style={{display:'flex', alignItems:'center', gap:'8px'}}><div style={{width:'12px', height:'12px', background:'#f59e0b', borderRadius:'3px'}}></div> Flagged</span>
-                <span style={{fontWeight:'700'}}>{Object.keys(flags).filter(k => flags[k]).length}</span>
+              
+              <div style={{marginTop:'auto', paddingTop:'24px', borderTop:'1px solid #f1f5f9', display:'grid', gap:'12px'}}>
+                <div style={{display:'flex', justifyContent:'space-between', fontSize:'12px', color:'#0f172a'}}>
+                  <span style={{display:'flex', alignItems:'center', gap:'8px'}}><div style={{width:'12px', height:'12px', background:'#10b981', borderRadius:'3px'}}></div> Answered</span>
+                  <span style={{fontWeight:'700'}}>{Object.keys(userAnswers).length}</span>
+                </div>
+                <div style={{display:'flex', justifyContent:'space-between', fontSize:'12px', color:'#0f172a'}}>
+                  <span style={{display:'flex', alignItems:'center', gap:'8px'}}><div style={{width:'12px', height:'12px', background:'#f8fafc', border:'1px solid #e2e8f0', borderRadius:'3px'}}></div> Not Answered</span>
+                  <span style={{fontWeight:'700'}}>{quizQuestions.length - Object.keys(userAnswers).length}</span>
+                </div>
+                <div style={{display:'flex', justifyContent:'space-between', fontSize:'12px', color:'#0f172a'}}>
+                  <span style={{display:'flex', alignItems:'center', gap:'8px'}}><div style={{width:'12px', height:'12px', background:'#f59e0b', borderRadius:'3px'}}></div> Flagged</span>
+                  <span style={{fontWeight:'700'}}>{Object.keys(flags).filter(k => flags[k]).length}</span>
+                </div>
               </div>
             </div>
           </div>
