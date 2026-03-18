@@ -41,8 +41,27 @@ export const nhtet_info = {
     }
   ],
   samplePapers: [
-    { year: '2024', title: 'NHTET 2024 Model Question Paper', link: '#' },
-    { year: '2023', title: 'NHTET Previous Year Solution', link: '#' }
+    { year: '2019 JULY', title: 'NHTET JULY 2019 Paper I & II', link: 'https://drive.google.com/file/d/12msOsFVW325yO0dQPe5ncOUNn451dKnJ/view?usp=drive_link' },
+    { year: '2019 JULY', title: 'NHTET JULY 2019 Paper III', link: 'https://drive.google.com/file/d/1hpety1QOwfzRZh18627eayMcLSFhXv8g/view?usp=drive_link' },
+    { year: '2019 JULY', title: 'NHTET JULY 2019 Answer Key', link: 'https://drive.google.com/file/d/1AZl6M9Lyvx7PMKzGYdcJSNUisOO4CxlT/view?usp=drive_link' },
+    { year: '2019 MAY', title: 'NHTET MAY 2019 Paper I & II', link: 'https://drive.google.com/file/d/12msOsFVW325yO0dQPe5ncOUNn451dKnJ/view?usp=drive_link' },
+    { year: '2019 MAY', title: 'NHTET MAY 2019 Paper III', link: 'https://drive.google.com/file/d/1hpety1QOwfzRZh18627eayMcLSFhXv8g/view?usp=drive_link' },
+    { year: '2019 MAY', title: 'NHTET MAY 2019 Answer Key', link: 'https://drive.google.com/file/d/1AZl6M9Lyvx7PMKzGYdcJSNUisOO4CxlT/view?usp=drive_link' },
+    { year: '2018 SEP', title: 'NHTET SEP 2018 Paper I & II', link: 'https://drive.google.com/file/d/1OwPMM4ISG9Y8cUJko6sJI-JUmjyz4fX_/view?usp=drive_link' },
+    { year: '2018 SEP', title: 'NHTET SEP 2018 Paper III', link: 'https://drive.google.com/file/d/14_XKT-dbZIsS1rklC_XZ8bOVXvsLLiNy/view?usp=drive_link' },
+    { year: '2018 SEP', title: 'NHTET SEP 2018 Answer Key', link: 'https://drive.google.com/file/d/1cI3sD8VMlODIxIn9n6wY9MJYZXmbOfOr/view?usp=drive_link' },
+    { year: '2018 MAR', title: 'NHTET MAR 2018 Paper I', link: 'https://drive.google.com/file/d/12YrcquVBCHq6Il1FsoccI1xwQ8PNH0OG/view?usp=drive_link' },
+    { year: '2018 MAR', title: 'NHTET MAR 2018 Paper II', link: 'https://drive.google.com/file/d/118mnfzG2x2ZoLSmdOCLsH7kVVdR0BmRC/view?usp=drive_link' },
+    { year: '2018 MAR', title: 'NHTET MAR 2018 Paper III', link: 'https://drive.google.com/file/d/1VCyVi-ZLVmi1lUgfzSLQLYyiWjgUaZPB/view?usp=drive_link' },
+    { year: '2018 MAR', title: 'NHTET MAR 2018 Answer Key', link: 'https://drive.google.com/file/d/1jO_iSTcwCgULU6TwTlu1eUaNbLez8x4z/view?usp=drive_link' },
+    { year: '2017 JUN', title: 'NHTET JUN 2017 Paper I', link: 'https://drive.google.com/file/d/15djL6p59gJpJaX0bLyxJI2InBJD8hfPZ/view?usp=drive_link' },
+    { year: '2017 JUN', title: 'NHTET JUN 2017 Paper II', link: 'https://drive.google.com/file/d/1_boSFgpTEGnOb4GbrhjZL3OyEKx92F8V/view?usp=drive_link' },
+    { year: '2017 JUN', title: 'NHTET JUN 2017 Paper III', link: 'https://drive.google.com/file/d/1WfgWTb-0WHeh0VtN6LhLMzpOHaODRsl7/view?usp=drive_link' },
+    { year: '2017 JUN', title: 'NHTET JUN 2017 Answer Key', link: 'https://drive.google.com/file/d/1m8pmRery33JIY2htLh6JCoivj1AtQN0w/view?usp=drive_link' },
+    { year: '2017 APR', title: 'NHTET APR 2017 Paper I', link: 'https://drive.google.com/file/d/1Pgqc0hug1GoXZCnIvj4bivSSD7jlO_qm/view?usp=drive_link' },
+    { year: '2017 APR', title: 'NHTET APR 2017 Paper II', link: 'https://drive.google.com/file/d/1xBG-iu6azLzdp4drVGouGPaKGqZUcoMP/view?usp=drive_link' },
+    { year: '2017 APR', title: 'NHTET APR 2017 Paper III', link: 'https://drive.google.com/file/d/1uDAPnXwB7qmhh8HnHf8YiFeY3lEWW05z/view?usp=drive_link' },
+    { year: '2017 APR', title: 'NHTET APR 2017 Answer Key', link: 'https://drive.google.com/file/d/1lHud4Pb2ozHZAU_3D6RknhUfQiIlLXLM/view?usp=drive_link' }
   ],
   mockTests: [
     { id: 'nhtet_p1_mock', name: 'Part-I: General Aptitude Full Mock', questions: 50, time: 60 },

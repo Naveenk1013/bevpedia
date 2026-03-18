@@ -222,7 +222,13 @@ const NCHMCTPage = () => {
                    <div style={{fontSize:'10px', color:'#10B981', fontWeight:'700'}}>{paper.year}</div>
                    <div style={{color:'white', fontWeight:'500'}}>{paper.title}</div>
                 </div>
-                <button className="nchm-btn-primary" style={{width:'auto', padding:'8px 16px', fontSize:'10px'}}>VIEW</button>
+                <button 
+                  onClick={() => window.open(paper.link, '_blank')}
+                  className="nchm-btn-primary" 
+                  style={{width:'auto', padding:'8px 16px', fontSize:'10px'}}
+                >
+                  VIEW
+                </button>
               </div>
             ))}
           </div>
