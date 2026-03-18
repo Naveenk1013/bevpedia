@@ -186,6 +186,25 @@ const CONTRIBUTORS = [
       "Study Material and Exam Preparation data"
     ],
     image: "image/about/Arya_mohan.png"
+  },
+  {
+    name: "Chanchreek Sharma",
+    role: "Assistant Professor",
+    location: "Punjab, India",
+    contact: {
+      phone: "+91 8278819476",
+      email: "Chanchreek21@gmail.com",
+    },
+    bio: [
+      "I am an Assistant Professor in Hotel Management with a strong academic background and industry exposure. I am currently pursuing a Ph.D. and hold a Master’s and Bachelor’s degree in Hospitality Administration. My areas of interest include human resource management, hospitality operations, front office and sustainable practices.",
+      "I am involved in teaching, curriculum development, and mentoring students. I also actively contribute to research through publications, book chapters, and patents, aiming to grow and add value to the field of hospitality.",
+    ],
+    credits: [
+      "Testing and cross Referencing",
+      "UI/UX Design Recomendation",
+      "Study Material and Exam Preparation data"
+    ],
+    image: "image/about/Chanchreek_sharma.png"
   }
 ];
 
