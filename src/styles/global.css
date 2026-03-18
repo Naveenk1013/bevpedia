@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import './nchmct_hub.css';
 
 @theme {
   --color-border: hsl(var(--border));
@@ -51,7 +52,6 @@
   }
 }
 
-@import './nchmct_hub.css';
 /* ═══════════════════════════════════════════════════
    BEVERAGE ENCYCLOPEDIA — Global CSS Design System
    Fonts: Playfair Display (headings) + Inter (body)
