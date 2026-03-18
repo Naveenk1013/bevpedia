@@ -54,12 +54,13 @@ const CONTRIBUTORS = [
     location: "Ahmedabad, Gujarat, India",
     contact: {
       phone: "+916265405471",
-      email: "mukulsahu06@gmail.com"
+      email: "mukulsahu06@gmail.com",
+      linkedin: "http://www.linkedin.com/in/mukul-sahu-a91a2998"
     },
     bio: [
-      "I am a passionate Chef and Assistant Professor of Food Production with a strong foundation in hospitality, combining industry experience from The Oberoi Amarvilas, Conrad by Hilton, and Biryani by Kilo with academic expertise.",
-      "Currently pursuing a Ph.D. in Tourism and Travel Management alongside postgraduate studies in Hospitality Administration, I focus on bridging the gap between theory and practice.",
-      "I am actively involved in research, conferences, and student development, and I strive to create a professional, engaging learning environment that builds skills, confidence, and creativity in future hospitality professionals."
+      "I am a culinary academician, hospitality professional, and dedicated researcher committed to preserving regional culinary heritage while shaping the future of hospitality education. As an Assistant Professor at the Asia Pacific Institute of Hotel Management, Ahmedabad, I blend classical hot kitchen and bakery traditions  with modern academic practices to create dynamic learning experiences.",
+      "My journey began in luxury hospitality with The Oberoi Group and Hilton , where I imbibed the highest standards of excellence. This foundation was strengthened by formal education at IHM Guwahati and NCHMCT Noida.Prior to my current role.",
+      "I served at SRMS CET&R, Bareilly and Yenepoya (Deemed to be University) Mangalore , mentoring aspiring chefs and hospitality leaders."
     ],
     credits: [
       "Industry expertise & insights",
@@ -73,7 +74,8 @@ const CONTRIBUTORS = [
     location: "Dharmsinh Desai University, Gujarat, India",
     contact: {
       phone: "", // No phone provided
-      email: "mahakagrawal1308@gmail.com"
+      email: "mahakagrawal1308@gmail.com",
+      linkedin: "https://www.linkedin.com/in/mahak-agrawal-1982931b9/"
     },
     bio: [
       "I am Mahak Agrawal, an Assistant Professor at Dharmsinh Desai University, Gujarat, India, and I am concurrently pursuing my Ph.D. I hold an M.Sc. in Hospitality Administration and am actively engaged in teaching, research, and academic development in the field of hospitality and tourism management.",

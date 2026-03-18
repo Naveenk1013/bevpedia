@@ -1,3 +1,56 @@
+@import "tailwindcss";
+
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  
+  --color-accent2: #7c5cfc;
+  --color-accent3: #30c88a;
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-surface: var(--clr-surface);
+  --color-surface2: var(--clr-surface2);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+}
+
 @import './nchmct_hub.css';
 /* ═══════════════════════════════════════════════════
    BEVERAGE ENCYCLOPEDIA — Global CSS Design System
@@ -57,6 +110,28 @@
 
   /* Sidebar & nav */
   --nav-height: 64px;
+
+  /* shadcn variables mapping */
+  --background: 224 71% 4%;
+  --foreground: 213 31% 91%;
+  --muted: 223 47% 11%;
+  --muted-foreground: 215.4 16.3% 56.9%;
+  --accent: 216 34% 17%;
+  --accent-foreground: 210 40% 98%;
+  --popover: 224 71% 4%;
+  --popover-foreground: 215 20.2% 65.1%;
+  --border: 216 34% 17%;
+  --input: 216 34% 17%;
+  --card: 224 71% 4%;
+  --card-foreground: 213 31% 91%;
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 1.2%;
+  --secondary: 222.2 47.4% 11.2%;
+  --secondary-foreground: 210 40% 98%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 210 40% 98%;
+  --ring: 216 34% 17%;
+  --radius: 0.5rem;
 }
 
 /* Light mode overrides */
@@ -940,18 +1015,18 @@ p { color: var(--clr-text); }
   .profile-card-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .profile-card {
     padding: 1.5rem !important;
   }
-  
+
   .profile-header {
     flex-direction: column;
     align-items: center;
     text-align: center;
     gap: 1.5rem !important;
   }
-  
+
   .profile-image-wrapper {
     width: 120px !important;
     height: 120px !important;
@@ -1122,7 +1197,7 @@ p { color: var(--clr-text); }
     display: flex;
     flex-direction: column;
   }
-  
+
   .cbt-mobile-toggle {
     display: block !important;
   }
@@ -1205,7 +1280,7 @@ p { color: var(--clr-text); }
   .cbt-overlay {
     padding: 1rem;
   }
-  
+
   .cbt-container {
     padding: 1rem;
     border-radius: 0;
@@ -1273,5 +1348,17 @@ p { color: var(--clr-text); }
   .hero-marquee-item {
     font-size: 0.75rem;
     padding: 0 1rem;
+  }
+}
+
+@layer base {
+  .maplibregl-popup-content {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+  .maplibregl-popup-tip {
+    display: none !important;
   }
 }

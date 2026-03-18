@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react';
 import { wines } from '../data/wines.js';
 import BeverageModal from '../components/BeverageModal';
+import WineRegionMap from '../components/wine/WineRegionMap';
+import { Globe } from 'lucide-react';
 
 const WINE_TYPES = ['all', 'red', 'white', 'rosé', 'sparkling', 'fortified'];
 const TYPE_ICONS = { red:'🍷', white:'🥂', rosé:'🌸', sparkling:'✨', fortified:'🍾', all:'🍷' };
@@ -34,6 +36,23 @@ export default function WinePage({ toggleFavourite, isFavourite }) {
           </p>
         </div>
       </div>
+
+      {/* Global Terroir Map Section */}
+      <section className="animate-fade-up" style={{ marginBottom: '3rem' }}>
+        <div className="section-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+          <div>
+            <span className="section-eyebrow">Interactive Exploration</span>
+            <h2 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <Globe className="text-accent" /> Global Wine Regions
+            </h2>
+            <p className="section-subtitle">Navigate the world's most prestigious terroirs. Discover coordinates, soil types, and climate profiles in real-time.</p>
+          </div>
+          <div className="text-muted" style={{ fontSize: '0.8rem', textAlign: 'right' }}>
+            Powered by <strong>mapcn</strong>
+          </div>
+        </div>
+        <WineRegionMap />
+      </section>
       
       {/* Partner Banner */}
       <a 
