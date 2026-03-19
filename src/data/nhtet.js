@@ -83,3 +83,33 @@ export const nhtet_questions = nhtet_questions_bank.map((q, index) => {
   };
 });
 
+// Subject-wise grouping for NHTET Materials section
+const subjectMapping = [
+  { name: 'Teaching & Research Aptitude', icon: '📚', categories: ['Teaching Aptitude', 'Research Aptitude'] },
+  { name: 'General & Basic Management', icon: '📊', categories: ['Management'] },
+  { name: 'Hotel Accounts', icon: '💰', categories: ['Accounts'] },
+  { name: 'Food Science & Nutrition', icon: '🍎', categories: ['Nutrition'] },
+  { name: 'Food Production Operation', icon: '👨‍🍳', categories: ['Food Production'] },
+  { name: 'Food & Beverage Service', icon: '🍷', categories: ['F&B Service'] },
+  { name: 'Housekeeping', icon: '🛏️', categories: ['Housekeeping'] },
+  { name: 'Front Office', icon: '🏨', categories: ['Front Office'] },
+  { name: 'General Aptitude', icon: '🧠', categories: ['Reasoning', 'Comprehension', 'General Knowledge', 'Current Affairs'] },
+];
+
+export const nhtet_subject_materials = subjectMapping.map(subject => {
+  const questions = nhtet_questions_bank
+    .filter(q => subject.categories.includes(q.category))
+    .map((q, idx) => ({
+      id: idx + 1,
+      question: q.q,
+      answer: q.a,
+      options: q.options,
+      category: q.category,
+    }));
+  return {
+    ...subject,
+    totalQuestions: questions.length,
+    questions,
+  };
+});
+

@@ -2,13 +2,17 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { nchmct_jee_info, jee_questions } from '../data/nchmct_jee';
-import { nhtet_info, nhtet_questions } from '../data/nhtet';
+import { nhtet_info, nhtet_questions, nhtet_subject_materials } from '../data/nhtet';
 
 const NCHMCTPage = () => {
   const navigate = useNavigate();
   const [phase, setPhase] = useState('select-exam'); // 'select-exam', 'dashboard', 'mock-test', 'results'
   const [selectedExam, setSelectedExam] = useState(null); // 'jee' or 'nhtet'
   const [activeSection, setActiveSection] = useState('info'); // 'info', 'materials', 'papers', 'mock'
+  const [materialSubject, setMaterialSubject] = useState(null);
+  const [revealedAnswers, setRevealedAnswers] = useState({});
+  const [showAnswers, setShowAnswers] = useState({});
+  const [selectedOptions, setSelectedOptions] = useState({});
   
   // Quiz State
   const [quizQuestions, setQuizQuestions] = useState([]);
@@ -194,7 +198,109 @@ const NCHMCTPage = () => {
         </motion.div>
       )}
 
-      {activeSection === 'materials' && (
+      {activeSection === 'materials' && selectedExam === 'nhtet' && (
+        <motion.div initial={{opacity:0}} animate={{opacity:1}}>
+          {!materialSubject ? (
+            <>
+              <div style={{marginBottom:'24px'}}>
+                <h3 className="nhtet-mat-heading">📖 Subject-Wise Study Material</h3>
+                <p className="nhtet-mat-subtext">Select a subject to practice questions from the NHTET question bank.</p>
+              </div>
+              <div className="nhtet-subject-grid">
+                {nhtet_subject_materials.map((subject, idx) => (
+                  <motion.div
+                    key={idx}
+                    className="nhtet-subject-card"
+                    whileHover={{ y: -4, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => { setMaterialSubject(subject); setRevealedAnswers({}); setShowAnswers({}); setSelectedOptions({}); }}
+                  >
+                    <div className="nhtet-subject-icon">{subject.icon}</div>
+                    <h4 className="nhtet-subject-name">{subject.name}</h4>
+                    <span className="nhtet-subject-count">{subject.totalQuestions} Questions</span>
+                    <div className="nhtet-subject-bar">
+                      <div className="nhtet-subject-bar-fill" style={{width: `${Math.min(100, (subject.totalQuestions / 7) )}%`}} />
+                    </div>
+                    <span className="nhtet-subject-cta">Study Now →</span>
+                  </motion.div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="nhtet-detail-view">
+              <div className="nhtet-detail-header">
+                <button className="nchm-back-btn" onClick={() => setMaterialSubject(null)}>&larr; All Subjects</button>
+                <div className="nhtet-detail-title-row">
+                  <span className="nhtet-detail-icon">{materialSubject.icon}</span>
+                  <div>
+                    <h3 className="nhtet-detail-title">{materialSubject.name}</h3>
+                    <p className="nhtet-detail-meta">{materialSubject.totalQuestions} Questions &bull; NHTET Question Bank</p>
+                  </div>
+                </div>
+              </div>
+              <div className="nhtet-questions-list">
+                {materialSubject.questions.map((q, i) => (
+                  <motion.div
+                    key={q.id}
+                    className="nhtet-q-item"
+                    initial={{opacity:0, y: 10}}
+                    animate={{opacity:1, y:0}}
+                    transition={{delay: Math.min(i * 0.02, 0.5)}}
+                  >
+                    <div className="nhtet-q-top" onClick={() => setRevealedAnswers(prev => ({...prev, [i]: !prev[i]}))}>
+                      <span className="nhtet-q-num">Q{i + 1}</span>
+                      <p className="nhtet-q-text">{q.question}</p>
+                      <span className={`nhtet-q-toggle ${revealedAnswers[i] ? 'open' : ''}`}>▼</span>
+                    </div>
+                    {revealedAnswers[i] && (
+                      <motion.div className="nhtet-q-body" initial={{opacity:0, height:0}} animate={{opacity:1, height:'auto'}}>
+                        <div className="nhtet-q-category-tag">{q.category}</div>
+                        <div className="nhtet-q-options">
+                          {q.options.map((opt, oi) => {
+                            const isRevealed = showAnswers[i];
+                            const isCorrect = opt === q.answer;
+                            const isSelected = selectedOptions[i] === oi;
+                            let optClass = 'nhtet-q-opt';
+                            let letterClass = 'nhtet-q-opt-letter';
+                            if (isRevealed && isCorrect) { optClass += ' correct'; letterClass += ' correct'; }
+                            if (isRevealed && isSelected && !isCorrect) { optClass += ' wrong'; letterClass += ' wrong'; }
+                            if (!isRevealed && isSelected) { optClass += ' selected'; letterClass += ' selected'; }
+                            return (
+                              <div
+                                key={oi}
+                                className={optClass}
+                                onClick={() => { if (!isRevealed) setSelectedOptions(prev => ({...prev, [i]: oi})); }}
+                                style={{ cursor: isRevealed ? 'default' : 'pointer' }}
+                              >
+                                <span className={letterClass}>
+                                  {String.fromCharCode(65 + oi)}
+                                </span>
+                                <span className="nhtet-q-opt-text">{opt}</span>
+                                {isRevealed && isCorrect && <span className="nhtet-q-correct-badge">✓ Correct</span>}
+                                {isRevealed && isSelected && !isCorrect && <span className="nhtet-q-wrong-badge">✗ Wrong</span>}
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {!showAnswers[i] && (
+                          <button
+                            className="nhtet-show-answer-btn"
+                            onClick={() => setShowAnswers(prev => ({...prev, [i]: true}))}
+                          >
+                            Show Answer
+                          </button>
+                        )}
+                      </motion.div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+        </motion.div>
+      )}
+
+      {activeSection === 'materials' && selectedExam === 'jee' && (
         <motion.div initial={{opacity:0}} animate={{opacity:1}} className="nchm-section-grid">
           {examData.studyMaterial.map((sec, idx) => (
             <div key={idx} className="nchm-info-card">
