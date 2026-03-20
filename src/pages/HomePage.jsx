@@ -11,7 +11,7 @@ const CATEGORY_CARDS = [
   { icon: '🍺', name: 'Beer', path: '/beer', count: '12+', colour: '#d97b30', desc: 'Ales, lagers, stouts, IPAs & sours' },
   { icon: '🔪', name: 'Techniques', path: '/techniques', count: '15', colour: '#3a9fd6', desc: 'Professional bartending methods' },
   { icon: '📖', name: 'Glossary', path: '/glossary', count: '80+', colour: '#8891a4', desc: 'A–Z bar & beverage terminology' },
-  { icon: '🏛️', name: 'NCHMCT', path: '/nchmct', count: 'JEE/NHTET', colour: '#30c88a', desc: 'Academic guidance & mock testing' },
+  {  icon: 'https://nchm.gov.in/themes/nchmct/images/logo.png', name: 'NCHMCT', path: '/nchmct', count: 'JEE/NHTET', colour: '#30c88a', desc: 'Academic guidance & mock testing' },
   { icon: '🎓', name: 'Quiz', path: '/quiz', count: '20 Qs', colour: '#e05c5c', desc: 'Test your beverage knowledge' },
 ];
 
@@ -110,10 +110,10 @@ export default function HomePage() {
                   <ShinyText text="✨ NEW: WSET Mock examination now available!" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
                 </div>
                 <div className="hero-marquee-item">
-                  <ShinyText text="🎓 CAREER: Boost your career with professional certifications" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
+                  <ShinyText text="🎓 NHTET CBT Mock test available now" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
                 </div>
                 <div className="hero-marquee-item">
-                  <ShinyText text="🏆 COMPETENCY: Test your knowledge in our professional CBT environment" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
+                  <ShinyText text="🏆 NCHMCT JEE 2024 Official Paper and CBT Mock test available now" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
                 </div>
               </div>
             ))}
@@ -180,7 +180,13 @@ export default function HomePage() {
                 onClick={() => navigate(cat.path)}
                 style={{ '--cat-colour': cat.colour }}
               >
-                <div className="cat-card-icon">{cat.icon}</div>
+                <div className="cat-card-icon">
+                  {cat.icon.startsWith('http') ? (
+                    <img src={cat.icon} alt={cat.name} style={{ height: '2.5rem', margin: '0 auto', objectFit: 'contain' }} />
+                  ) : (
+                    cat.icon
+                  )}
+                </div>
                 <div className="cat-card-name" style={{ color: cat.colour }}>{cat.name}</div>
                 <div className="cat-card-count text-muted">{cat.count} entries</div>
                 <p style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', marginTop: '6px' }}>{cat.desc}</p>
