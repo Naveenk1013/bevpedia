@@ -41,6 +41,8 @@ export const nhtet_info = {
     }
   ],
   samplePapers: [
+    { year: '2023 FEB', title: 'NHTET FEB 2023 Paper I(EXCLUSIVE on Bevpedia.in)', link: 'https://drive.google.com/file/d/10N8cpJUZo4suFXwFH_OlTjb-43LMbqlv/view?usp=drive_link' },
+    { year: '2023 FEB', title: 'NHTET FEB 2023 Paper II(EXCLUSIVE on Bevpedia.in)', link: 'https://drive.google.com/file/d/1sYnB51SIy0yVTqmQUwU-V7zf1KSBMxUT/view?usp=drive_link' },
     { year: '2019 JULY', title: 'NHTET JULY 2019 Paper I & II', link: 'https://drive.google.com/file/d/12msOsFVW325yO0dQPe5ncOUNn451dKnJ/view?usp=drive_link' },
     { year: '2019 JULY', title: 'NHTET JULY 2019 Paper III', link: 'https://drive.google.com/file/d/1hpety1QOwfzRZh18627eayMcLSFhXv8g/view?usp=drive_link' },
     { year: '2019 JULY', title: 'NHTET JULY 2019 Answer Key', link: 'https://drive.google.com/file/d/1AZl6M9Lyvx7PMKzGYdcJSNUisOO4CxlT/view?usp=drive_link' },
