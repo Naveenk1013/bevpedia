@@ -1,18 +1,33 @@
 import { useNavigate, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { 
+  Martini, 
+  CupSoda, 
+  Wine, 
+  Beer, 
+  ChefHat, 
+  BookText, 
+  GraduationCap, 
+  Sparkles, 
+  Trophy, 
+  Gem, 
+  School,
+  CheckSquare,
+  Droplets
+} from 'lucide-react';
 import LightPillar from '../components/LightPillar';
 import ShinyText from '../components/ShinyText';
 
 const CATEGORY_CARDS = [
-  { icon: '🍸', name: 'Cocktails', path: '/beverages?cat=cocktail', count: '50+', colour: '#7c5cfc', desc: 'Classic & modern cocktail recipes' },
-  { icon: '🥤', name: 'Mocktails', path: '/beverages?cat=mocktail', count: '20+', colour: '#30c88a', desc: 'Non-alcoholic beverages' },
-  { icon: '🥃', name: 'Spirits', path: '/spirits', count: '20+', colour: '#c9963a', desc: 'Vodka, gin, rum, whisky & more' },
-  { icon: '🍷', name: 'Wine', path: '/wine', count: '15+', colour: '#c0407a', desc: 'Red, white, rosé, sparkling, fortified' },
-  { icon: '🍺', name: 'Beer', path: '/beer', count: '12+', colour: '#d97b30', desc: 'Ales, lagers, stouts, IPAs & sours' },
-  { icon: '🔪', name: 'Techniques', path: '/techniques', count: '15', colour: '#3a9fd6', desc: 'Professional bartending methods' },
-  { icon: '📖', name: 'Glossary', path: '/glossary', count: '80+', colour: '#8891a4', desc: 'A–Z bar & beverage terminology' },
-  {  icon: 'https://nchm.gov.in/themes/nchmct/images/logo.png', name: 'NCHMCT', path: '/nchmct', count: 'JEE/NHTET', colour: '#30c88a', desc: 'Academic guidance & mock testing' },
-  { icon: '🎓', name: 'Quiz', path: '/quiz', count: '20 Qs', colour: '#e05c5c', desc: 'Test your beverage knowledge' },
+  { icon: Martini, name: 'Cocktails', path: '/beverages?cat=cocktail', count: '50+', colour: '#7c5cfc', desc: 'Classic & modern cocktail recipes' },
+  { icon: CupSoda, name: 'Mocktails', path: '/beverages?cat=mocktail', count: '20+', colour: '#30c88a', desc: 'Non-alcoholic beverages' },
+  { icon: Droplets, name: 'Spirits', path: '/spirits', count: '20+', colour: '#c9963a', desc: 'Vodka, gin, rum, whisky & more' },
+  { icon: Wine, name: 'Wine', path: '/wine', count: '15+', colour: '#c0407a', desc: 'Red, white, rosé, sparkling, fortified' },
+  { icon: Beer, name: 'Beer', path: '/beer', count: '12+', colour: '#d97b30', desc: 'Ales, lagers, stouts, IPAs & sours' },
+  { icon: ChefHat, name: 'Techniques', path: '/techniques', count: '15', colour: '#3a9fd6', desc: 'Professional bartending methods' },
+  { icon: BookText, name: 'Glossary', path: '/glossary', count: '80+', colour: '#8891a4', desc: 'A–Z bar & beverage terminology' },
+  { icon: 'https://nchm.gov.in/themes/nchmct/images/logo.png', name: 'NCHMCT', path: '/nchmct', count: 'JEE/NHTET', colour: '#30c88a', desc: 'Academic guidance & mock testing' },
+  { icon: GraduationCap, name: 'Quiz', path: '/quiz', count: '20 Qs', colour: '#e05c5c', desc: 'Test your beverage knowledge' },
 ];
 
 const FUN_FACTS = [
@@ -59,9 +74,10 @@ export default function HomePage() {
         </div>
         <div className="hero-bg" style={{ zIndex: 1, position: 'absolute', background: 'radial-gradient(circle at center, transparent 0%, rgba(10, 10, 15, 0.8) 100%)' }} />
         
-        <div className="hero-badge" style={{ position: 'relative', zIndex: 2 }}>
+        <div className="hero-badge" style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <GraduationCap size={16} color="var(--clr-accent)" />
           <ShinyText
-            text="🎓 For Hotel Management & Bar Professionals"
+            text="For Hotel Management & Bar Professionals"
             speed={3}
             delay={0}
             color="#b5b5b5"
@@ -81,11 +97,11 @@ export default function HomePage() {
           techniques and professional terminology — all in one place.
         </p>
         <div className="hero-actions animate-fade-up" style={{ position: 'relative', zIndex: 2 }}>
-          <button className="btn btn-primary" onClick={() => navigate('/beverages')}>
-            🍹 Explore Beverages
+          <button className="btn btn-primary" onClick={() => navigate('/beverages')} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
+            <Martini size={20} /> Explore Beverages
           </button>
-          <button className="btn btn-outline" onClick={() => navigate('/quiz')}>
-            🎓 Take the Quiz
+          <button className="btn btn-outline" onClick={() => navigate('/quiz')} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
+            <CheckSquare size={20} /> Take the Quiz
           </button>
         </div>
         <div className="hero-stats animate-fade-in" style={{ position: 'relative', zIndex: 2 }}>
@@ -105,15 +121,18 @@ export default function HomePage() {
         <Link to="/wset" className="hero-marquee-wrapper" style={{ textDecoration: 'none', cursor: 'pointer', display: 'block', marginTop: 'auto' }}>
           <div className="hero-marquee-content">
             {[1, 2, 3].map(i => (
-              <div key={i} style={{ display: 'flex' }}>
-                <div className="hero-marquee-item">
-                  <ShinyText text="✨ NEW: WSET Mock examination now available!" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
+              <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
+                <div className="hero-marquee-item" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Sparkles size={16} className="text-gradient" />
+                  <ShinyText text="NEW: WSET Mock examination now available!" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
                 </div>
-                <div className="hero-marquee-item">
-                  <ShinyText text="🎓 NHTET CBT Mock test available now" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
+                <div className="hero-marquee-item" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <GraduationCap size={16} className="text-gradient" />
+                  <ShinyText text="NHTET CBT Mock test available now" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
                 </div>
-                <div className="hero-marquee-item">
-                  <ShinyText text="🏆 NCHMCT JEE 2024 Official Paper and CBT Mock test available now" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
+                <div className="hero-marquee-item" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Trophy size={16} className="text-gradient" />
+                  <ShinyText text="NCHMCT JEE 2024 Official Paper and CBT Mock test available now" speed={3} color="var(--clr-text)" shineColor="var(--clr-accent)" />
                 </div>
               </div>
             ))}
@@ -122,11 +141,13 @@ export default function HomePage() {
       </section>
 
       <section className="sponsorship-preview" style={{ 
-        padding: '3rem 0', 
+        padding: '3rem 0 0 0', 
         background: 'linear-gradient(90deg, rgba(124, 92, 252, 0.05), rgba(48, 200, 138, 0.05))',
-        borderBottom: '1px solid rgba(255,255,255,0.05)'
+        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        display: 'flex',
+        flexDirection: 'column'
       }}>
-        <div className="container">
+        <div className="container" style={{ marginBottom: '3rem' }}>
           <div className="detail-card sponsorship-card" style={{ 
             display: 'flex',
             flexDirection: 'row',
@@ -139,7 +160,9 @@ export default function HomePage() {
             borderRadius: 'var(--radius-lg)'
           }}>
             <div className="sponsorship-content" style={{ maxWidth: '750px' }}>
-              <div style={{ color: '#30c88a', fontWeight: 'bold', fontSize: '0.8rem', marginBottom: '0.5rem', letterSpacing: '2px' }}>GLOBAL INDUSTRY SOLUTIONS</div>
+              <div style={{ color: '#30c88a', fontWeight: 'bold', fontSize: '0.8rem', marginBottom: '0.5rem', letterSpacing: '2px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Gem size={14} /> GLOBAL INDUSTRY SOLUTIONS
+              </div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', marginBottom: '1rem' }}>Support the Future of Beverage Education</h2>
               <p style={{ color: 'var(--clr-text-muted)', fontSize: '0.95rem', lineHeight: '1.6' }}>
                 We are bridging the hospitality talent gap with technology. Join us as a professional partner to support our 
@@ -150,13 +173,34 @@ export default function HomePage() {
               <button 
                 className="btn btn-primary" 
                 onClick={() => navigate('/sponsors')}
-                style={{ background: '#30c88a', padding: '1rem 2.5rem', fontWeight: 'bold', boxShadow: '0 0 20px rgba(48, 200, 138, 0.2)', width: '100%' }}
+                style={{ background: '#30c88a', padding: '1rem 2.5rem', fontWeight: 'bold', boxShadow: '0 0 20px rgba(48, 200, 138, 0.2)', width: '100%', display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center' }}
               >
-                💎 Sponsor & Fund
+                <Trophy size={18} /> Sponsor & Fund
               </button>
             </div>
           </div>
         </div>
+
+        <Link to="/sponsors" className="hero-marquee-wrapper" style={{ position: 'relative', textDecoration: 'none', cursor: 'pointer', display: 'block', borderTop: '1px solid rgba(48, 200, 138, 0.1)', background: 'rgba(0,0,0,0.2)' }}>
+          <div className="hero-marquee-content">
+            {[1, 2, 3].map(i => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center' }}>
+                <div className="hero-marquee-item" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Gem size={16} className="text-gradient" style={{ color: '#30c88a' }} />
+                  <ShinyText text="Be a part of Bevpedia and give yourself a chance to be highlighted!" speed={3} color="var(--clr-text)" shineColor="#30c88a" />
+                </div>
+                <div className="hero-marquee-item" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Sparkles size={16} className="text-gradient" style={{ color: '#30c88a' }} />
+                  <ShinyText text="Want your brand recognized? Run your ads and products here." speed={3} color="var(--clr-text)" shineColor="#30c88a" />
+                </div>
+                <div className="hero-marquee-item" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <Trophy size={16} className="text-gradient" style={{ color: '#30c88a' }} />
+                  <ShinyText text="Your niche is here! Our sponsors get the special place they deserve." speed={3} color="var(--clr-text)" shineColor="#30c88a" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </Link>
       </section>
 
       {/* ── Fun Fact ── */}
@@ -173,25 +217,28 @@ export default function HomePage() {
             <p className="section-subtitle">From classic cocktails to fine wines — everything a hospitality professional needs to know.</p>
           </div>
           <div className="category-grid">
-            {CATEGORY_CARDS.map(cat => (
-              <button
-                key={cat.name}
-                className="cat-card animate-fade-up"
-                onClick={() => navigate(cat.path)}
-                style={{ '--cat-colour': cat.colour }}
-              >
-                <div className="cat-card-icon">
-                  {cat.icon.startsWith('http') ? (
-                    <img src={cat.icon} alt={cat.name} style={{ height: '2.5rem', margin: '0 auto', objectFit: 'contain' }} />
-                  ) : (
-                    cat.icon
-                  )}
-                </div>
-                <div className="cat-card-name" style={{ color: cat.colour }}>{cat.name}</div>
-                <div className="cat-card-count text-muted">{cat.count} entries</div>
-                <p style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', marginTop: '6px' }}>{cat.desc}</p>
-              </button>
-            ))}
+            {CATEGORY_CARDS.map(cat => {
+              const IconComponent = cat.icon;
+              return (
+                <button
+                  key={cat.name}
+                  className="cat-card animate-fade-up"
+                  onClick={() => navigate(cat.path)}
+                  style={{ '--cat-colour': cat.colour }}
+                >
+                  <div className="cat-card-icon">
+                    {typeof IconComponent === 'string' ? (
+                      <img src={IconComponent} alt={cat.name} style={{ height: '2.5rem', margin: '0 auto', objectFit: 'contain' }} />
+                    ) : (
+                      <IconComponent size={32} strokeWidth={1.5} color={cat.colour} />
+                    )}
+                  </div>
+                  <div className="cat-card-name" style={{ color: cat.colour }}>{cat.name}</div>
+                  <div className="cat-card-count text-muted">{cat.count} entries</div>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', marginTop: '6px' }}>{cat.desc}</p>
+                </button>
+              );
+            })}
           </div>
         </section>
 
@@ -203,7 +250,9 @@ export default function HomePage() {
                 <div className="section-eyebrow">Academic Resource</div>
                 <h3 style={{ fontFamily: 'var(--font-display)' }}>Designed for Hospitality Education</h3>
               </div>
-              <span style={{ fontSize: '2.5rem' }}>🏨</span>
+              <div style={{ color: 'var(--clr-accent)', background: 'rgba(124, 92, 252, 0.1)', padding: '1rem', borderRadius: '15px' }}>
+                <School size={32} />
+              </div>
             </div>
             <div className="detail-card-body">
               <p style={{ color: 'var(--clr-text-muted)', lineHeight: '1.7' }}>

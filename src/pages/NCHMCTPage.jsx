@@ -1,8 +1,48 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
+import { 
+  GraduationCap, 
+  BookOpen, 
+  BookText, 
+  FileText, 
+  Timer, 
+  ClipboardList, 
+  ArrowLeft, 
+  School, 
+  BarChart3, 
+  Calculator, 
+  Apple, 
+  ChefHat, 
+  Wine, 
+  Bed, 
+  Hotel, 
+  Brain, 
+  Library,
+  Award,
+  CheckCircle,
+  XCircle,
+  MinusCircle,
+  Search,
+  Book,
+  Download,
+  Check
+} from 'lucide-react';
 import { nchmct_jee_info, jee_questions } from '../data/nchmct_jee';
 import { nhtet_info, nhtet_questions, nhtet_subject_materials } from '../data/nhtet';
+
+const SUBJECT_ICON_MAP = {
+  '📚': Library,
+  '📊': BarChart3,
+  '💰': Calculator,
+  '🍎': Apple,
+  '👨‍🍳': ChefHat,
+  '🍷': Wine,
+  '🛏️': Bed,
+  '🏨': Hotel,
+  '🧠': Brain,
+  '📖': BookText
+};
 
 const NCHMCTPage = () => {
   const navigate = useNavigate();
@@ -121,8 +161,8 @@ const NCHMCTPage = () => {
 
       <div className="nchm-grid">
         {[
-          { id: 'jee', ...nchmct_jee_info, icon: '🎓' },
-          { id: 'nhtet', ...nhtet_info, icon: '👨‍🏫' }
+          { id: 'jee', ...nchmct_jee_info, icon: GraduationCap },
+          { id: 'nhtet', ...nhtet_info, icon: BookOpen }
         ].map((exam) => (
           <motion.div 
             key={exam.id}
@@ -130,11 +170,13 @@ const NCHMCTPage = () => {
             onClick={() => handleSelectExam(exam.id)}
             className="nchm-card"
           >
-            <div className="nchm-card-icon">{exam.icon}</div>
+            <div className="nchm-card-icon">
+              <exam.icon size={40} color="#10B981" strokeWidth={1.5} />
+            </div>
             <h3 className="nchm-card-title">{exam.title}</h3>
             <p className="nchm-card-desc">{exam.subtitle}</p>
-            <button className="nchm-btn-primary">
-              Enter Hub &rarr;
+            <button className="nchm-btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              Enter Hub <ArrowLeft size={16} style={{ transform: 'rotate(180deg)' }} />
             </button>
           </motion.div>
         ))}
@@ -146,20 +188,30 @@ const NCHMCTPage = () => {
     <div className="nchm-container">
       <div className="nchm-dash-header">
         <div>
-          <button onClick={() => setPhase('select-exam')} className="nchm-back-btn">
-            &larr; Back to Selection
+          <button onClick={() => setPhase('select-exam')} className="nchm-back-btn" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'transparent', border: 'none', color: '#10B981', cursor: 'pointer', marginBottom: '16px' }}>
+            <ArrowLeft size={16} /> Back to Selection
           </button>
-          <h2 className="nchm-dash-title">{examData.title} <span style={{color:'white'}}>Academic Center</span></h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <School size={28} color="#10B981" />
+            <h2 className="nchm-dash-title" style={{ margin: 0 }}>{examData.title} <span style={{color:'white'}}>Academic Center</span></h2>
+          </div>
           <p className="nchm-subtitle" style={{margin:'8px 0', textAlign:'left'}}>{examData.overview}</p>
         </div>
         <div className="nchm-tab-bar">
-          {['info', 'materials', 'papers', 'mock'].map((s) => (
+          {[
+            { id: 'info', icon: BookText, label: 'INFO' },
+            { id: 'materials', icon: Library, label: 'MATERIALS' },
+            { id: 'papers', icon: FileText, label: 'PAPERS' },
+            { id: 'mock', icon: ClipboardList, label: 'MOCK' }
+          ].map((tab) => (
             <button
-              key={s}
-              onClick={() => setActiveSection(s)}
-              className={`nchm-tab ${activeSection === s ? 'active' : ''}`}
+              key={tab.id}
+              onClick={() => setActiveSection(tab.id)}
+              className={`nchm-tab ${activeSection === tab.id ? 'active' : ''}`}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
             >
-              {s.toUpperCase()}
+              <tab.icon size={14} />
+              {tab.label}
             </button>
           ))}
         </div>
@@ -203,35 +255,52 @@ const NCHMCTPage = () => {
           {!materialSubject ? (
             <>
               <div style={{marginBottom:'24px'}}>
-                <h3 className="nhtet-mat-heading">📖 Subject-Wise Study Material</h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                  <Library size={24} color="#10B981" />
+                  <h3 className="nhtet-mat-heading" style={{ margin: 0 }}>Subject-Wise Study Material</h3>
+                </div>
                 <p className="nhtet-mat-subtext">Select a subject to practice questions from the NHTET question bank.</p>
               </div>
               <div className="nhtet-subject-grid">
-                {nhtet_subject_materials.map((subject, idx) => (
-                  <motion.div
-                    key={idx}
-                    className="nhtet-subject-card"
-                    whileHover={{ y: -4, scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => { setMaterialSubject(subject); setRevealedAnswers({}); setShowAnswers({}); setSelectedOptions({}); }}
-                  >
-                    <div className="nhtet-subject-icon">{subject.icon}</div>
-                    <h4 className="nhtet-subject-name">{subject.name}</h4>
-                    <span className="nhtet-subject-count">{subject.totalQuestions} Questions</span>
-                    <div className="nhtet-subject-bar">
-                      <div className="nhtet-subject-bar-fill" style={{width: `${Math.min(100, (subject.totalQuestions / 7) )}%`}} />
-                    </div>
-                    <span className="nhtet-subject-cta">Study Now →</span>
-                  </motion.div>
-                ))}
+                {nhtet_subject_materials.map((subject, idx) => {
+                  const Icon = SUBJECT_ICON_MAP[subject.icon] || Book;
+                  return (
+                    <motion.div
+                      key={idx}
+                      className="nhtet-subject-card"
+                      whileHover={{ y: -4, scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => { setMaterialSubject(subject); setRevealedAnswers({}); setShowAnswers({}); setSelectedOptions({}); }}
+                    >
+                      <div className="nhtet-subject-icon">
+                        <Icon size={32} color="#10B981" />
+                      </div>
+                      <h4 className="nhtet-subject-name">{subject.name}</h4>
+                      <span className="nhtet-subject-count">{subject.totalQuestions} Questions</span>
+                      <div className="nhtet-subject-bar">
+                        <div className="nhtet-subject-bar-fill" style={{width: `${Math.min(100, (subject.totalQuestions / 7) )}%`}} />
+                      </div>
+                      <span className="nhtet-subject-cta" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        Study Now <ArrowLeft size={14} style={{ transform: 'rotate(180deg)' }} />
+                      </span>
+                    </motion.div>
+                  );
+                })}
               </div>
             </>
           ) : (
             <div className="nhtet-detail-view">
               <div className="nhtet-detail-header">
-                <button className="nchm-back-btn" onClick={() => setMaterialSubject(null)}>&larr; All Subjects</button>
+                <button className="nchm-back-btn" onClick={() => setMaterialSubject(null)} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <ArrowLeft size={16} /> All Subjects
+                </button>
                 <div className="nhtet-detail-title-row">
-                  <span className="nhtet-detail-icon">{materialSubject.icon}</span>
+                  <div className="nhtet-detail-icon">
+                    {(() => {
+                      const Icon = SUBJECT_ICON_MAP[materialSubject.icon] || Book;
+                      return <Icon size={32} color="#10B981" />;
+                    })()}
+                  </div>
                   <div>
                     <h3 className="nhtet-detail-title">{materialSubject.name}</h3>
                     <p className="nhtet-detail-meta">{materialSubject.totalQuestions} Questions &bull; NHTET Question Bank</p>
@@ -307,9 +376,14 @@ const NCHMCTPage = () => {
                <h4 className="nchm-info-header" style={{borderBottom:'1px solid rgba(16,185,129,0.3)', paddingBottom:'12px'}}>{sec.category}</h4>
                <div style={{display:'grid', gap:'12px', marginTop:'20px'}}>
                  {sec.items.map((item, i) => (
-                   <a href={item.link} key={i} className="nchm-material-card">
-                     <span className="nchm-material-title">{item.title}</span>
-                     <span className="nchm-material-dl">DOWNLOAD &darr;</span>
+                   <a href={item.link} key={i} className="nchm-material-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                     <span className="nchm-material-title" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                       <FileText size={16} color="#10B981" />
+                       {item.title}
+                     </span>
+                     <span className="nchm-material-dl" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                       <Download size={14} /> DOWNLOAD
+                     </span>
                    </a>
                  ))}
                </div>
@@ -323,7 +397,7 @@ const NCHMCTPage = () => {
           <div className="nchm-section-grid">
             {examData.samplePapers.map((paper, idx) => (
               <div key={idx} className="nchm-item-row" style={{padding:'20px', alignItems:'center'}}>
-                <div style={{fontSize:'1.5rem'}}>📄</div>
+                <div style={{ color: '#10B981' }}><FileText size={24} /></div>
                 <div style={{flexGrow:1, marginLeft:'16px'}}>
                    <div style={{fontSize:'10px', color:'#10B981', fontWeight:'700'}}>{paper.year}</div>
                    <div style={{color:'white', fontWeight:'500'}}>{paper.title}</div>
@@ -331,9 +405,9 @@ const NCHMCTPage = () => {
                 <button 
                   onClick={() => window.open(paper.link, '_blank')}
                   className="nchm-btn-primary" 
-                  style={{width:'auto', padding:'8px 16px', fontSize:'10px'}}
+                  style={{width:'auto', padding:'8px 16px', fontSize:'10px', display: 'flex', alignItems: 'center', gap: '8px'}}
                 >
-                  VIEW
+                  <Search size={12} /> VIEW
                 </button>
               </div>
             ))}
@@ -348,14 +422,15 @@ const NCHMCTPage = () => {
                <div className="nchm-mock-tag">Simulated CBT</div>
                <h4 className="nchm-mock-title">{test.name}</h4>
                <div className="nchm-mock-meta">
-                 <span>⏱️ {test.time} Mins</span>
-                 <span>📋 {test.questions} Questions</span>
+                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Timer size={14} color="#10B981" /> {test.time} Mins</span>
+                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><ClipboardList size={14} color="#10B981" /> {test.questions} Questions</span>
                </div>
                <button 
                  onClick={() => startMockTest(test)}
                  className="nchm-btn-primary"
+                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
                >
-                 START MOCK TEST
+                 <ArrowLeft size={16} style={{ transform: 'rotate(180deg)' }} /> START MOCK TEST
                </button>
             </div>
           ))}
@@ -553,12 +628,42 @@ const NCHMCTPage = () => {
            </div>
 
            <div className="nchm-tile-grid">
-              <div className="result-tile"><div className="result-val" style={{color:'#10b981'}}>{res.correct}</div><div className="result-lbl">Correct</div></div>
-              <div className="result-tile"><div className="result-val" style={{color:'#ef4444'}}>{res.attempted - res.correct}</div><div className="result-lbl">Wrong</div></div>
-              <div className="result-tile"><div className="result-val" style={{color:'#94a3b8'}}>{res.total - res.attempted}</div><div className="result-lbl">Skipped</div></div>
-              <div className="result-tile"><div className="result-val" style={{color:'#2563eb'}}>{res.scoredMarks} / {res.totalMarks}</div><div className="result-lbl">Marks</div></div>
-              <div className="result-tile"><div className="result-val">{res.attempted}</div><div className="result-lbl">Attempted</div></div>
-              <div className="result-tile"><div className="result-val">{res.total}</div><div className="result-lbl">Total Qs</div></div>
+              <div className="result-tile">
+                <div className="result-val" style={{color:'#10b981', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center'}}>
+                  <CheckCircle size={20} /> {res.correct}
+                </div>
+                <div className="result-lbl">Correct</div>
+              </div>
+              <div className="result-tile">
+                <div className="result-val" style={{color:'#ef4444', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center'}}>
+                  <XCircle size={20} /> {res.attempted - res.correct}
+                </div>
+                <div className="result-lbl">Wrong</div>
+              </div>
+              <div className="result-tile">
+                <div className="result-val" style={{color:'#94a3b8', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center'}}>
+                  <MinusCircle size={20} /> {res.total - res.attempted}
+                </div>
+                <div className="result-lbl">Skipped</div>
+              </div>
+              <div className="result-tile">
+                <div className="result-val" style={{color:'#2563eb', display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center'}}>
+                  <Award size={20} /> {res.scoredMarks} / {res.totalMarks}
+                </div>
+                <div className="result-lbl">Marks</div>
+              </div>
+              <div className="result-tile">
+                <div className="result-val" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                  <ClipboardList size={20} color="#10B981" /> {res.attempted}
+                </div>
+                <div className="result-lbl">Attempted</div>
+              </div>
+              <div className="result-tile">
+                <div className="result-val" style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                  <FileText size={20} color="#10B981" /> {res.total}
+                </div>
+                <div className="result-lbl">Total Qs</div>
+              </div>
            </div>
 
            <div className="nchm-review-box">
