@@ -1,0 +1,549 @@
+/* 
+  Isolated CSS for the Student Hub Module
+  Designed with a clean, smooth, academic and glassmorphic aesthetic.
+  Ensures zero entanglement with existing legacy CSS files.
+*/
+
+:root {
+  /* Light Mode (Default) */
+  --student-bg: #f8fafc;
+  --student-surface: #ffffff;
+  --student-surface-hover: #f1f5f9;
+  --student-border: #e2e8f0;
+  --student-border-focus: #cbd5e1;
+  --student-text: #0f172a;
+  --student-text-muted: #64748b;
+  --student-radius-lg: 16px;
+  --student-radius-md: 12px;
+  --student-radius-sm: 8px;
+  --student-blur: blur(12px);
+  --student-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --student-accent: #3b82f6; /* Used for active states/links */
+}
+
+/* Dark Mode Palette */
+[data-theme='dark'] {
+  --student-bg: #090b10;
+  --student-surface: rgba(255, 255, 255, 0.03);
+  --student-surface-hover: rgba(255, 255, 255, 0.06);
+  --student-border: rgba(255, 255, 255, 0.08);
+  --student-border-focus: rgba(255, 255, 255, 0.2);
+  --student-text: #f8fafc;
+  --student-text-muted: #94a3b8;
+  --student-accent: #60a5fa;
+}
+
+.student-module-container {
+  min-height: 100vh;
+  background-color: var(--student-bg);
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(48, 200, 138, 0.04), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(124, 92, 252, 0.04), transparent 25%);
+  color: var(--student-text);
+  font-family: 'Inter', system-ui, sans-serif;
+  padding-top: var(--nav-height, 80px); /* align with main app nav */
+  padding-bottom: 4rem;
+}
+
+.student-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  padding: 0 2rem;
+}
+
+.student-title {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  color: var(--student-text);
+}
+
+[data-theme='dark'] .student-title {
+  background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.student-subtitle {
+  font-size: 1.1rem;
+  color: var(--student-text-muted);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Base Card Styles */
+.student-card {
+  background: var(--student-surface);
+  border: 1px solid var(--student-border);
+  border-radius: var(--student-radius-lg);
+  backdrop-filter: var(--student-blur);
+  padding: 2rem;
+  transition: var(--student-transition);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.student-card:hover {
+  background: var(--student-surface-hover);
+  border-color: var(--student-border-focus);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Lighter shadow for light mode */
+}
+
+[data-theme='dark'] .student-card:hover {
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+/* Grid Layouts */
+.student-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* University Card Specific */
+.uni-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.uni-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--student-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.05);
+}
+
+.uni-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.uni-desc {
+  font-size: 0.9rem;
+  color: var(--student-text-muted);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.uni-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--student-border);
+  padding-top: 1rem;
+  margin-top: auto;
+}
+
+.uni-programs-count {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--student-text-muted);
+  background: rgba(255,255,255,0.05);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Semester View */
+.semester-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.semester-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.back-btn {
+  background: transparent;
+  border: 1px solid var(--student-border);
+  color: var(--student-text);
+  border-radius: var(--student-radius-full, 50px);
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--student-transition);
+}
+
+.back-btn:hover {
+  background: var(--student-surface);
+  border-color: var(--student-border-focus);
+}
+
+/* Accordions for Subjects */
+.subject-accordion {
+  background: var(--student-surface);
+  border: 1px solid var(--student-border);
+  border-radius: var(--student-radius-md);
+  margin-bottom: 1rem;
+  overflow: hidden;
+  transition: var(--student-transition);
+}
+
+.subject-header {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.subject-header:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+.subject-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.subject-code {
+  font-size: 0.75rem;
+  background: rgba(255,255,255,0.1);
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+.subject-content {
+  padding: 0 1.5rem 1.25rem 1.5rem;
+  border-top: 1px solid var(--student-border);
+}
+
+/* Resources List */
+.resource-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--student-border);
+  border-radius: var(--student-radius-sm);
+  margin-top: 12px;
+  transition: var(--student-transition);
+}
+
+.resource-item:hover {
+  border-color: rgba(255,255,255,0.15);
+  background: rgba(0,0,0,0.4);
+}
+
+.resource-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.resource-title {
+  font-size: 0.95rem;
+  color: var(--student-text);
+}
+
+.resource-type {
+  font-size: 0.75rem;
+  color: #30c88a;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.resource-action {
+  color: #a5b4fc;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.resource-action:hover {
+  text-decoration: underline;
+}
+
+/* Animations */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Admin Panel Additions */
+.admin-badge {
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.admin-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.admin-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--student-text-muted);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.admin-input {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--student-border);
+  padding: 12px 16px;
+  border-radius: var(--student-radius-sm);
+  color: var(--student-text);
+  font-size: 1rem;
+  transition: var(--student-transition);
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: #30c88a;
+  background: rgba(0,0,0,0.5);
+}
+
+.admin-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.admin-btn {
+  background: #30c88a;
+  color: #000;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--student-radius-md);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--student-transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-btn:hover {
+  background: #28a975;
+  transform: translateY(-2px);
+}
+
+.admin-btn-secondary {
+  background: transparent;
+  border: 1px solid var(--student-border);
+  color: var(--student-text);
+}
+
+.admin-btn-secondary:hover {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.2);
+}
+
+.admin-code-block {
+  background: #1e1e1e;
+  padding: 1rem;
+  border-radius: var(--student-radius-sm);
+  font-family: monospace;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  color: #d4d4d4;
+  border: 1px solid #333;
+}
+
+/* ═══════════════════════════════════════════════════
+   Rich Text Notes Editor (TipTap)
+   ═══════════════════════════════════════════════════ */
+.notes-editor-wrapper {
+  border: 1px solid var(--student-border);
+  border-radius: var(--student-radius-md);
+  overflow: hidden;
+  background: rgba(0,0,0,0.25);
+  margin-top: 10px;
+}
+
+.notes-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px;
+  background: rgba(0,0,0,0.3);
+  border-bottom: 1px solid var(--student-border);
+  flex-wrap: wrap;
+}
+
+.notes-toolbar-group {
+  display: flex;
+  gap: 3px;
+}
+
+.notes-toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--student-border);
+  margin: 0 6px;
+}
+
+.notes-editor-content {
+  min-height: 250px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.notes-editor-content .tiptap {
+  min-height: 250px;
+  padding: 1.25rem;
+  outline: none;
+  color: var(--student-text);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* Force inherited colors to override pasted inline styles (e.g. from MS Word) */
+.notes-editor-content .tiptap * {
+  color: inherit;
+}
+
+.notes-editor-content .tiptap p.is-editor-empty:first-child::before {
+  color: var(--student-text-muted);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.notes-editor-content .tiptap h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 1.5rem 0 0.75rem;
+  color: var(--student-text);
+}
+
+.notes-editor-content .tiptap h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.5rem;
+  color: var(--student-text);
+}
+
+.notes-editor-content .tiptap h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem;
+  color: var(--student-text);
+}
+
+.notes-editor-content .tiptap p {
+  margin: 0.5rem 0;
+}
+
+.notes-editor-content .tiptap ul,
+.notes-editor-content .tiptap ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.notes-editor-content .tiptap li {
+  margin: 4px 0;
+}
+
+.notes-editor-content .tiptap blockquote {
+  border-left: 3px solid #30c88a;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--student-text-muted);
+  font-style: italic;
+}
+
+.notes-editor-content .tiptap pre {
+  background: #1a1a2e;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.notes-editor-content .tiptap code {
+  background: rgba(255,255,255,0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85em;
+}
+
+.notes-editor-content .tiptap pre code {
+  background: none;
+  padding: 0;
+  color: #e2e8f0;
+}
+
+.notes-editor-content .tiptap img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 1rem 0;
+  border: 1px solid var(--student-border);
+}
+
+.notes-editor-content .tiptap hr {
+  border: none;
+  border-top: 1px solid var(--student-border);
+  margin: 1.5rem 0;
+}
+
+/* Published notes rendering (read-only) */
+.published-notes {
+  padding: 1.25rem;
+  color: var(--student-text);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* Force inherited colors to override pasted inline styles */
+.published-notes * {
+  color: inherit;
+}
+
+.published-notes h1 { font-size: 1.6rem; font-weight: 700; margin: 1.5rem 0 0.75rem; }
+.published-notes h2 { font-size: 1.3rem; font-weight: 600; margin: 1.25rem 0 0.5rem; }
+.published-notes h3 { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 0.5rem; }
+.published-notes p { margin: 0.5rem 0; }
+.published-notes ul, .published-notes ol { padding-left: 1.5rem; margin: 0.5rem 0; }
+.published-notes li { margin: 4px 0; }
+.published-notes blockquote { border-left: 3px solid #30c88a; padding-left: 1rem; margin: 1rem 0; color: var(--student-text-muted); font-style: italic; }
+.published-notes pre { background: #1a1a2e; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+.published-notes code { background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.85em; }
+.published-notes pre code { background: none; padding: 0; color: #e2e8f0; }
+.published-notes img { max-width: 100%; border-radius: 8px; margin: 1rem 0; border: 1px solid var(--student-border); }
+.published-notes hr { border: none; border-top: 1px solid var(--student-border); margin: 1.5rem 0; }
+

@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { to: '/techniques', label: 'Techniques' },
   { to: '/wset', label: 'WSET' },
   { to: '/nchmct', label: 'NCHMCT' },
+  { to: '/students', label: 'Student Hub' },
   { to: '/quiz', label: '🎓 Quiz' },
 ];
 

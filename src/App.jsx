@@ -14,6 +14,10 @@ import AboutPage from './pages/AboutPage';
 import SponsorshipPage from './pages/SponsorshipPage';
 import GlossaryPage from './pages/GlossaryPage';
 import NCHMCTPage from './pages/NCHMCTPage';
+import StudentHub from './pages/StudentHub';
+import UniversityView from './pages/UniversityView';
+import StudentAdmin from './Notes/StudentAdmin';
+import SemesterPage from './Notes/SemesterPage';
 
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
@@ -53,6 +57,10 @@ export default function App() {
           <Route path="/wset" element={<WSETMockTestPage />} />
           <Route path="/glossary" element={<GlossaryPage />} />
           <Route path="/nchmct" element={<NCHMCTPage />} />
+          <Route path="/students" element={<StudentHub />} />
+          <Route path="/students/:uniId" element={<UniversityView />} />
+          <Route path="/students/:uniId/:semId" element={<SemesterPage />} />
+          <Route path="/admin/students" element={<StudentAdmin />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/sponsors" element={<SponsorshipPage />} />
         </Routes>
