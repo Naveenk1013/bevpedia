@@ -258,15 +258,16 @@ const SemesterPage = () => {
             style={{
               position: 'fixed', inset: 0, zIndex: 9999,
               background: 'var(--student-bg)',
-              overflowY: 'auto',
-              padding: '2rem 1rem'
+              overflowY: 'auto'
             }}
           >
-            <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative' }}>
-              <button
-                onClick={() => setFullscreenUnit(null)}
-                style={{
-                  position: 'fixed', top: '1.5rem', right: '1.5rem',
+            <div className="fullscreen-wrapper" style={{ padding: '2rem 1rem' }}>
+              <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative' }}>
+                <button
+                  className="fullscreen-close-btn"
+                  onClick={() => setFullscreenUnit(null)}
+                  style={{
+                    position: 'fixed', top: '1.5rem', right: '1.5rem',
                   background: 'var(--student-surface)', border: '1px solid var(--student-border)',
                   color: 'var(--student-text)', width: '44px', height: '44px',
                   borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -281,25 +282,18 @@ const SemesterPage = () => {
                 <span style={{ fontSize: '0.85rem', color: uni.themeColor, fontWeight: 700, background: `${uni.themeColor}15`, padding: '6px 14px', borderRadius: '50px', display: 'inline-block', marginBottom: '1.5rem' }}>
                   {sem.title} • {fullscreenUnit.subjectName}
                 </span>
-                <h1 style={{ fontSize: '2.8rem', margin: 0, color: 'var(--student-text)', lineHeight: 1.2, letterSpacing: '-0.02em' }}>
+                <h1 style={{ fontSize: '2.8rem', margin: 0, color: 'var(--student-text)', lineHeight: 1.2, letterSpacing: '-0.02em', wordBreak: 'break-word' }}>
                   {fullscreenUnit.title}
                 </h1>
               </div>
 
               <div
-                className="published-notes"
+                className="published-notes fullscreen-notes"
                 dangerouslySetInnerHTML={{ __html: fullscreenUnit.notes }}
-                style={{ 
-                  background: 'var(--student-surface)', 
-                  borderRadius: '16px', 
-                  border: '1px solid var(--student-border)', 
-                  minHeight: '60vh',
-                  padding: '2rem 3rem',
-                  boxShadow: '0 10px 40px rgba(0,0,0,0.05)'
-                }}
               />
             </div>
-          </motion.div>
+          </div>
+        </motion.div>
         )}
       </AnimatePresence>
     </div>
