@@ -15,6 +15,10 @@ const SemesterPage = () => {
   const [expandedUnit, setExpandedUnit] = useState(null);
   const [fullscreenUnit, setFullscreenUnit] = useState(null);
 
+  // Pinch-to-zoom state
+  const [fontZoomLevel, setFontZoomLevel] = useState(1);
+  const [initialPinchDistance, setInitialPinchDistance] = useState(null);
+
   useEffect(() => {
     const load = async () => {
       const result = await fetchUniversityData();
@@ -45,8 +49,46 @@ const SemesterPage = () => {
     );
   }
 
+  // Touch Handlers for Pinch-to-Zoom
+  const handleTouchStart = (e) => {
+    if (e.touches.length === 2) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      setInitialPinchDistance(dist);
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (e.touches.length === 2 && initialPinchDistance) {
+      // It's a pinch
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const scale = dist / initialPinchDistance;
+      
+      // Calculate new zoom level and clamp it between 0.7x and 2.5x original size
+      const newZoom = Math.min(Math.max(0.7, fontZoomLevel * scale), 2.5);
+      
+      setFontZoomLevel(newZoom);
+      setInitialPinchDistance(dist); // reset to current distance for continuous smooth zooming
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setInitialPinchDistance(null);
+  };
+
   return (
-    <div className="student-module-container">
+    <div 
+      className="student-module-container"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
+    >
       <div className="semester-container">
         <div style={{ position: 'absolute', top: '24px', right: '4%' }}>
           <ThemeToggle />
@@ -177,7 +219,7 @@ const SemesterPage = () => {
                                             <div
                                               className="published-notes"
                                               dangerouslySetInnerHTML={{ __html: unit.notes }}
-                                              style={{ background: 'rgba(0,0,0,0.1)' }}
+                                              style={{ background: 'rgba(0,0,0,0.1)', fontSize: `${0.95 * fontZoomLevel}rem` }}
                                             />
                                           ) : (
                                             <div style={{ padding: '1.5rem', fontSize: '0.85rem', color: 'var(--student-text-muted)', fontStyle: 'italic', textAlign: 'center' }}>
@@ -199,6 +241,7 @@ const SemesterPage = () => {
                           <div
                             className="published-notes"
                             dangerouslySetInnerHTML={{ __html: sub.notes }}
+                            style={{ fontSize: `${0.95 * fontZoomLevel}rem` }}
                           />
                         )}
 
@@ -290,6 +333,7 @@ const SemesterPage = () => {
               <div
                 className="published-notes fullscreen-notes"
                 dangerouslySetInnerHTML={{ __html: fullscreenUnit.notes }}
+                style={{ fontSize: `${0.95 * fontZoomLevel}rem` }}
               />
             </div>
           </div>
