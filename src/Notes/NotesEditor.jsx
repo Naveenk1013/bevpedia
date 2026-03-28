@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Underline from '@tiptap/extension-underline';
 import Placeholder from '@tiptap/extension-placeholder';
+import { Table } from '@tiptap/extension-table';
+import { TableRow } from '@tiptap/extension-table-row';
+import { TableCell } from '@tiptap/extension-table-cell';
+import { TableHeader } from '@tiptap/extension-table-header';
 import {
   Bold, Italic, Underline as UnderlineIcon, Strikethrough,
   List, ListOrdered, Heading1, Heading2, Heading3,
-  Quote, Code, Image as ImageIcon, Minus, Undo, Redo
+  Quote, Code, Image as ImageIcon, Minus, Undo, Redo,
+  Table as TableIcon, ChevronDown, Plus, Trash2, Grid
 } from 'lucide-react';
 
 const MenuButton = ({ onClick, isActive, children, title }) => (
@@ -32,6 +37,137 @@ const MenuButton = ({ onClick, isActive, children, title }) => (
   </button>
 );
 
+/* ─── Table dropdown ─── */
+const TableDropdown = ({ editor }) => {
+  const [open, setOpen] = useState(false);
+  const [rows, setRows] = useState(3);
+  const [cols, setCols] = useState(3);
+  const [hovered, setHovered] = useState({ r: 0, c: 0 });
+  const ref = useRef(null);
+  const GRID = 8; // max grid preview size
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const insertTable = (r, c) => {
+    editor.chain().focus().insertTable({ rows: r, cols: c, withHeaderRow: true }).run();
+    setOpen(false);
+  };
+
+  const isInTable = editor.isActive('table');
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        title="Insert / Edit Table"
+        style={{
+          background: isInTable ? 'rgba(48,200,138,0.2)' : 'transparent',
+          border: '1px solid',
+          borderColor: isInTable ? '#30c88a' : 'var(--student-border)',
+          color: isInTable ? '#30c88a' : 'var(--student-text-muted)',
+          borderRadius: '6px',
+          padding: '6px 8px',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '4px',
+          transition: 'all 0.2s',
+          fontSize: '0.72rem',
+          fontWeight: 600
+        }}
+      >
+        <TableIcon size={14} />
+        <ChevronDown size={11} />
+      </button>
+
+      {open && (
+        <div style={{
+          position: 'absolute',
+          top: 'calc(100% + 6px)',
+          left: 0,
+          zIndex: 999,
+          background: 'var(--student-card)',
+          border: '1px solid var(--student-border)',
+          borderRadius: '10px',
+          padding: '12px',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+          minWidth: '200px'
+        }}>
+          {/* Grid picker */}
+          <p style={{ fontSize: '0.7rem', color: 'var(--student-text-muted)', margin: '0 0 8px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Insert table — {hovered.r > 0 ? `${hovered.r}×${hovered.c}` : 'hover to size'}
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: `repeat(${GRID}, 18px)`, gap: '2px', marginBottom: '12px' }}>
+            {Array.from({ length: GRID * GRID }).map((_, i) => {
+              const r = Math.floor(i / GRID) + 1;
+              const c = (i % GRID) + 1;
+              const active = r <= hovered.r && c <= hovered.c;
+              return (
+                <div
+                  key={i}
+                  onMouseEnter={() => setHovered({ r, c })}
+                  onClick={() => insertTable(hovered.r, hovered.c)}
+                  style={{
+                    width: 18, height: 18,
+                    borderRadius: '3px',
+                    background: active ? 'rgba(48,200,138,0.5)' : 'transparent',
+                    border: `1px solid ${active ? '#30c88a' : 'var(--student-border)'}`,
+                    cursor: 'pointer',
+                    transition: 'all 0.1s'
+                  }}
+                />
+              );
+            })}
+          </div>
+
+          {/* Table manipulation controls (only when cursor is in a table) */}
+          {isInTable && (
+            <>
+              <hr style={{ border: 'none', borderTop: '1px solid var(--student-border)', margin: '4px 0 10px' }} />
+              <p style={{ fontSize: '0.68rem', color: 'var(--student-text-muted)', margin: '0 0 6px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Edit table</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {[
+                  { label: '+ Row above', action: () => editor.chain().focus().addRowBefore().run() },
+                  { label: '+ Row below', action: () => editor.chain().focus().addRowAfter().run() },
+                  { label: '+ Col before', action: () => editor.chain().focus().addColumnBefore().run() },
+                  { label: '+ Col after', action: () => editor.chain().focus().addColumnAfter().run() },
+                  { label: '− Delete row', action: () => editor.chain().focus().deleteRow().run(), danger: true },
+                  { label: '− Delete col', action: () => editor.chain().focus().deleteColumn().run(), danger: true },
+                  { label: '✕ Delete table', action: () => { editor.chain().focus().deleteTable().run(); setOpen(false); }, danger: true },
+                ].map(({ label, action, danger }) => (
+                  <button
+                    key={label}
+                    onClick={action}
+                    style={{
+                      background: 'transparent',
+                      border: `1px solid ${danger ? 'rgba(255,80,80,0.4)' : 'var(--student-border)'}`,
+                      color: danger ? '#ff6b6b' : 'var(--student-text)',
+                      borderRadius: '6px',
+                      padding: '4px 8px',
+                      cursor: 'pointer',
+                      fontSize: '0.72rem',
+                      textAlign: 'left',
+                      transition: 'all 0.15s'
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = danger ? 'rgba(255,80,80,0.1)' : 'rgba(48,200,138,0.08)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const NotesEditor = ({ content, onChange, placeholder = 'Start writing your notes here...' }) => {
   const editor = useEditor({
     extensions: [
@@ -40,7 +176,11 @@ const NotesEditor = ({ content, onChange, placeholder = 'Start writing your note
       }),
       Image.configure({ inline: false, allowBase64: true }),
       Underline,
-      Placeholder.configure({ placeholder })
+      Placeholder.configure({ placeholder }),
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableHeader,
+      TableCell,
     ],
     content: content || '',
     onUpdate: ({ editor }) => {
@@ -125,6 +265,13 @@ const NotesEditor = ({ content, onChange, placeholder = 'Start writing your note
           <MenuButton onClick={() => editor.chain().focus().setHorizontalRule().run()} title="Horizontal Rule">
             <Minus size={15} />
           </MenuButton>
+        </div>
+
+        <div className="notes-toolbar-divider" />
+
+        {/* Table button */}
+        <div className="notes-toolbar-group">
+          <TableDropdown editor={editor} />
         </div>
 
         <div className="notes-toolbar-divider" />

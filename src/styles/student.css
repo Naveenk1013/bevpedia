@@ -561,6 +561,93 @@
   box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
+/* ═══════════════════════════════════════════════════
+   Table Styles — Editor & Published Notes
+   ═══════════════════════════════════════════════════ */
+
+/* Shared table rules applied to both editor and published notes */
+.notes-editor-content .tiptap table,
+.published-notes table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.25rem 0;
+  font-size: 0.9rem;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid var(--student-border);
+}
+
+.notes-editor-content .tiptap table td,
+.notes-editor-content .tiptap table th,
+.published-notes table td,
+.published-notes table th {
+  border: 1px solid var(--student-border);
+  padding: 10px 14px;
+  vertical-align: top;
+  position: relative;
+  min-width: 80px;
+  text-align: left;
+}
+
+/* Header row */
+.notes-editor-content .tiptap table th,
+.published-notes table th {
+  background: rgba(48, 200, 138, 0.12);
+  font-weight: 700;
+  color: var(--student-text);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid rgba(48, 200, 138, 0.4);
+}
+
+/* Zebra striping for body rows */
+.notes-editor-content .tiptap table tbody tr:nth-child(even) td,
+.published-notes table tbody tr:nth-child(even) td {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.notes-editor-content .tiptap table tbody tr:hover td,
+.published-notes table tbody tr:hover td {
+  background: rgba(48, 200, 138, 0.06);
+  transition: background 0.15s;
+}
+
+/* Selected cell highlight (editor only) */
+.notes-editor-content .tiptap table .selectedCell {
+  background: rgba(48, 200, 138, 0.15) !important;
+  outline: 2px solid #30c88a;
+  outline-offset: -2px;
+}
+
+/* Resize handle (shown in editor when resizable: true) */
+.notes-editor-content .tiptap table .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #30c88a;
+  cursor: col-resize;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.notes-editor-content .tiptap table:hover .column-resize-handle {
+  opacity: 0.5;
+}
+
+/* Light mode overrides */
+[data-theme='light'] .notes-editor-content .tiptap table th,
+[data-theme='light'] .published-notes table th {
+  background: rgba(48, 200, 138, 0.08);
+}
+
+[data-theme='light'] .notes-editor-content .tiptap table tbody tr:nth-child(even) td,
+[data-theme='light'] .published-notes table tbody tr:nth-child(even) td {
+  background: rgba(0, 0, 0, 0.02);
+}
+
 /* =========================================
    Mobile Optimization
    ========================================= */
