@@ -393,9 +393,18 @@ const SemesterPage = () => {
                 <span style={{ fontSize: '0.85rem', color: uni.themeColor, fontWeight: 700, background: `${uni.themeColor}15`, padding: '6px 14px', borderRadius: '50px', display: 'inline-block', marginBottom: '1.5rem' }}>
                   {sem.title} • {fullscreenUnit.subjectName}
                 </span>
-                <h1 style={{ fontSize: '2.8rem', margin: 0, color: 'var(--student-text)', lineHeight: 1.2, letterSpacing: '-0.02em', wordBreak: 'break-word' }}>
-                  {fullscreenUnit.title}
-                </h1>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '2rem', marginBottom: '1rem' }}>
+                  <h1 style={{ fontSize: '2.8rem', margin: 0, color: 'var(--student-text)', lineHeight: 1.2, letterSpacing: '-0.02em', wordBreak: 'break-word', flex: 1 }}>
+                    {fullscreenUnit.title}
+                  </h1>
+                  <button 
+                    onClick={() => setPrintingUnit(fullscreenUnit)}
+                    className="admin-btn"
+                    style={{ background: uni.themeColor, color: '#000', padding: '10px 20px', borderRadius: '50px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}
+                  >
+                    <Download size={18} /> Download PDF
+                  </button>
+                </div>
               </div>
 
               <div
