@@ -33,5 +33,12 @@ export const semesters = [
     "programId": "prog_bhmct",
     "title": "Semester 4",
     "order": 4
+  },
+  {
+    "id": "sem_1774781765748",
+    "universityId": "uni_nchmct",
+    "programId": "prog_bsc_hha",
+    "title": "Semester 2",
+    "order": 2
   }
 ];

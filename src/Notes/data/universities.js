@@ -17,7 +17,7 @@ export const universities = [
   {
     "id": "uni_nchmct",
     "name": "NCHMCT",
-    "shortName": "NCHMCT",
+    "shortName": "NCHMCT JNU NOTES",
     "description": "National Council for Hotel Management and Catering Technology BSc programs.",
     "themeColor": "#7c5cfc",
     "icon": "GraduationCap",

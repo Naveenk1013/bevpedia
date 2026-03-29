@@ -10,6 +10,7 @@ import { subjects_sem_gtu_2 } from './data/sem_gtu_2';
 import { subjects_sem_nchmct_1 } from './data/sem_nchmct_1';
 import { subjects_sem_1774678820404 } from './data/sem_1774678820404';
 import { subjects_sem_1774709322001 } from './data/sem_1774709322001';
+import { subjects_sem_1774781765748 } from './data/sem_1774781765748';
 
 export const initialStudentData = {
   universities,
@@ -19,7 +20,8 @@ export const initialStudentData = {
     ...subjects_sem_gtu_2,
     ...subjects_sem_nchmct_1,
     ...subjects_sem_1774678820404,
-    ...subjects_sem_1774709322001
+    ...subjects_sem_1774709322001,
+    ...subjects_sem_1774781765748
   ]
 };
 
