@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -17,8 +17,13 @@ const SemesterPage = () => {
   const [expandedUnit, setExpandedUnit] = useState(null);
   const [fullscreenUnit, setFullscreenUnit] = useState(null);
   const [printingUnit, setPrintingUnit] = useState(null);
-  const printRef = React.useRef();
+  const printRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Derived Data
+  const uni = data ? data.universities.find(u => u.id === uniId) : null;
+  const sem = data ? data.semesters.find(s => s.id === semId) : null;
+  const subjects = data ? data.subjects.filter(s => s.semesterId === semId) : [];
 
   // Pinch-to-zoom state
   const [fontZoomLevel, setFontZoomLevel] = useState(1);
@@ -35,28 +40,30 @@ const SemesterPage = () => {
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
-    documentTitle: printingUnit ? `${printingUnit.title} - ${uni?.shortName}` : 'Notes'
   });
 
   const triggerDownload = (unit, subjectName) => {
     setPrintingUnit({ ...unit, subjectName });
-    // Small delay to ensure the content is rendered in the hidden div
+    const docTitle = `${unit.title} - ${uni?.shortName}`;
+    
+    // We use a small delay but also ensure the component is definitely in the DOM
     setTimeout(() => {
-      handlePrint();
-    }, 150);
+      if (printRef.current) {
+        handlePrint({ documentTitle: docTitle });
+      } else {
+        console.error("Print container not found in DOM");
+      }
+    }, 400); // 400ms is more than enough for React to render the hidden div
   };
 
-  if (loading || !data) {
+  if (loading || !data || !uni || !sem) {
     return (
       <div className="student-module-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
-        <div style={{ color: 'var(--student-text-muted)' }}>Loading Semester...</div>
+        <div style={{ color: 'var(--student-text-muted)' }}>{loading ? "Loading Semester..." : "Semester not found"}</div>
       </div>
     );
   }
 
-  const uni = data.universities.find(u => u.id === uniId);
-  const sem = data.semesters.find(s => s.id === semId);
-  const subjects = data.subjects.filter(s => s.semesterId === semId);
 
   const filteredSubjects = subjects.filter(sub => {
     const query = searchTerm.toLowerCase();
@@ -419,7 +426,7 @@ const SemesterPage = () => {
       </AnimatePresence>
 
       {/* Hidden Print Layout (A4 optimized) */}
-      <div style={{ position: 'fixed', top: '-10000px', left: '-10000px', width: '210mm' }}>
+      <div style={{ position: 'fixed', top: '-10000px', left: '-10000px', width: '210mm', opacity: 0, pointerEvents: 'none' }}>
         <div ref={printRef} className="print-only-wrapper">
           {/* Watermarks */}
           <div className="print-watermark">
