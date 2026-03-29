@@ -34,17 +34,17 @@ const SemesterPage = () => {
   }, [uniId, semId]);
 
   const handlePrint = useReactToPrint({
-    content: () => printRef.current,
-    documentTitle: printingUnit ? `${printingUnit.title} - ${uni?.shortName}` : 'Notes',
-    onAfterPrint: () => setPrintingUnit(null)
+    contentRef: printRef,
+    documentTitle: printingUnit ? `${printingUnit.title} - ${uni?.shortName}` : 'Notes'
   });
 
-  // Trigger print when printingUnit is set
-  useEffect(() => {
-    if (printingUnit) {
+  const triggerDownload = (unit, subjectName) => {
+    setPrintingUnit({ ...unit, subjectName });
+    // Small delay to ensure the content is rendered in the hidden div
+    setTimeout(() => {
       handlePrint();
-    }
-  }, [printingUnit]);
+    }, 150);
+  };
 
   if (loading || !data) {
     return (
@@ -249,7 +249,7 @@ const SemesterPage = () => {
                                       {unit.notes && (
                                         <>
                                           <button 
-                                            onClick={(e) => { e.stopPropagation(); setPrintingUnit({ ...unit, subjectName: sub.name }); }}
+                                            onClick={(e) => { e.stopPropagation(); triggerDownload(unit, sub.name); }}
                                             title="Download PDF"
                                             style={{ background: 'transparent', border: 'none', color: 'var(--student-text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '6px', borderRadius: '50%', transition: 'background 0.2s' }}
                                             onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
@@ -398,7 +398,7 @@ const SemesterPage = () => {
                     {fullscreenUnit.title}
                   </h1>
                   <button 
-                    onClick={() => setPrintingUnit(fullscreenUnit)}
+                    onClick={() => triggerDownload(fullscreenUnit, fullscreenUnit.subjectName)}
                     className="admin-btn"
                     style={{ background: uni.themeColor, color: '#000', padding: '10px 20px', borderRadius: '50px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}
                   >
@@ -419,7 +419,7 @@ const SemesterPage = () => {
       </AnimatePresence>
 
       {/* Hidden Print Layout (A4 optimized) */}
-      <div style={{ display: 'none' }}>
+      <div style={{ position: 'fixed', top: '-10000px', left: '-10000px', width: '210mm' }}>
         <div ref={printRef} className="print-only-wrapper">
           {/* Watermarks */}
           <div className="print-watermark">
