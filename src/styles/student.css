@@ -712,3 +712,128 @@
     padding-right: 1rem;
   }
 }
+
+/* =========================================
+   A4 Print & PDF Formatting
+   ========================================= */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 20mm;
+  }
+
+  /* Global Reset for Print */
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    margin: 0;
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .student-module-container, 
+  .semester-container {
+    background: #fff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Hide UI elements */
+  .back-btn, .theme-toggle-btn, .admin-btn, 
+  .fullscreen-close-btn, .search-container,
+  button, nav, footer {
+    display: none !important;
+  }
+
+  /* Watermark Logic (Recurring diagonally) */
+  .print-watermark {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-content: space-around;
+    opacity: 0.05;
+    transform: rotate(-45deg);
+  }
+
+  .print-watermark span {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #000;
+    margin: 50px;
+    white-space: nowrap;
+  }
+
+  /* A4 Content Wrapper */
+  .print-only-wrapper {
+    display: block !important;
+    width: 100% !important;
+    background: #fff !important;
+  }
+
+  .published-notes {
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    color: #000 !important;
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  .published-notes table {
+    border: 1px solid #ddd !important;
+    page-break-inside: avoid;
+  }
+
+  .published-notes th {
+    background: #f4f4f4 !important;
+    color: #000 !important;
+    border-bottom: 2px solid #ccc !important;
+  }
+
+  .published-notes h1, .published-notes h2, .published-notes h3 {
+    color: #000 !important;
+    page-break-after: avoid;
+  }
+
+  .published-notes img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Header Branding */
+  .print-header {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 2px solid #30c88a;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+  }
+
+  .print-header-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 18pt;
+    font-weight: 700;
+    color: #000;
+  }
+
+  .print-header-info {
+    font-size: 9pt;
+    text-align: right;
+    color: #666;
+  }
+}
+
+/* Hide print layout in normal browser view */
+.print-only-wrapper {
+  display: none;
+}

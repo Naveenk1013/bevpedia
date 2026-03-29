@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useReactToPrint } from 'react-to-print';
 import { motion, AnimatePresence } from 'framer-motion';
 import { fetchUniversityData } from '../Notes/studentData';
 import ThemeToggle from '../Notes/ThemeToggle';
@@ -15,6 +16,8 @@ const SemesterPage = () => {
   const [expandedSubject, setExpandedSubject] = useState(null);
   const [expandedUnit, setExpandedUnit] = useState(null);
   const [fullscreenUnit, setFullscreenUnit] = useState(null);
+  const [printingUnit, setPrintingUnit] = useState(null);
+  const printRef = React.useRef();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Pinch-to-zoom state
@@ -29,6 +32,19 @@ const SemesterPage = () => {
     };
     load();
   }, [uniId, semId]);
+
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+    documentTitle: printingUnit ? `${printingUnit.title} - ${uni?.shortName}` : 'Notes',
+    onAfterPrint: () => setPrintingUnit(null)
+  });
+
+  // Trigger print when printingUnit is set
+  useEffect(() => {
+    if (printingUnit) {
+      handlePrint();
+    }
+  }, [printingUnit]);
 
   if (loading || !data) {
     return (
@@ -229,19 +245,30 @@ const SemesterPage = () => {
                                       <span style={{ fontSize: '0.7rem', color: uni.themeColor, fontWeight: 700, background: `${uni.themeColor}15`, padding: '2px 8px', borderRadius: '10px' }}>Unit {uIdx + 1}</span>
                                       <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>{unit.title}</span>
                                     </div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                      <span style={{ fontSize: '0.75rem', color: 'var(--student-text-muted)' }}>
-                                        {unit.notes ? 'Click to read' : 'Coming soon'}
-                                      </span>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                       {unit.notes && (
-                                        <button 
-                                          onClick={(e) => { e.stopPropagation(); setFullscreenUnit({ ...unit, subjectName: sub.name }); }}
-                                          title="Read in Fullscreen"
-                                          style={{ background: 'transparent', border: 'none', color: 'var(--student-text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-                                        >
-                                          <Maximize size={16} />
-                                        </button>
+                                        <>
+                                          <button 
+                                            onClick={(e) => { e.stopPropagation(); setPrintingUnit({ ...unit, subjectName: sub.name }); }}
+                                            title="Download PDF"
+                                            style={{ background: 'transparent', border: 'none', color: 'var(--student-text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '6px', borderRadius: '50%', transition: 'background 0.2s' }}
+                                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                                          >
+                                            <Download size={16} />
+                                          </button>
+                                          <button 
+                                            onClick={(e) => { e.stopPropagation(); setFullscreenUnit({ ...unit, subjectName: sub.name }); }}
+                                            title="Read in Fullscreen"
+                                            style={{ background: 'transparent', border: 'none', color: 'var(--student-text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '6px', borderRadius: '50%', transition: 'background 0.2s' }}
+                                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                                            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                                          >
+                                            <Maximize size={16} />
+                                          </button>
+                                        </>
                                       )}
+                                      {!unit.notes && <span style={{ fontSize: '0.75rem', color: 'var(--student-text-muted)' }}>Coming soon</span>}
                                     </div>
                                   </div>
 
@@ -381,6 +408,45 @@ const SemesterPage = () => {
         </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Hidden Print Layout (A4 optimized) */}
+      <div style={{ display: 'none' }}>
+        <div ref={printRef} className="print-only-wrapper">
+          {/* Watermarks */}
+          <div className="print-watermark">
+            {[...Array(12)].map((_, i) => <span key={i}>bevpedia.in</span>)}
+          </div>
+          
+          {printingUnit && (
+            <div style={{ padding: '0 10px' }}>
+              <div className="print-header">
+                <div>
+                  <div className="print-header-brand">BEVPEDIA</div>
+                  <div style={{ fontSize: '9pt', color: '#30c88a', fontWeight: 'bold' }}>THE BEVERAGE ENCYCLOPEDIA</div>
+                </div>
+                <div className="print-header-info">
+                  <strong>{uni?.name}</strong><br />
+                  {sem?.title} • {printingUnit.subjectName}<br />
+                  Academic Resource • bevpedia.in
+                </div>
+              </div>
+
+              <h1 style={{ fontSize: '24pt', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
+                {printingUnit.title}
+              </h1>
+
+              <div 
+                className="published-notes" 
+                dangerouslySetInnerHTML={{ __html: printingUnit.notes }} 
+              />
+              
+              <div style={{ marginTop: '40px', borderTop: '1px solid #eee', paddingTop: '10px', fontSize: '8pt', color: '#999', textAlign: 'center' }}>
+                © {new Date().getFullYear()} Bevpedia — Professional Hospitality Study Material. All Rights Reserved.
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
