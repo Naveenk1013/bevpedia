@@ -1,0 +1,1 @@
+export const subjects_sem_nchmct_1 = [];

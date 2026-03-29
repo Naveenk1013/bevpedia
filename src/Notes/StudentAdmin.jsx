@@ -13,15 +13,10 @@ const StudentAdmin = () => {
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState('');
 
-  useEffect(() => {
-    const saved = localStorage.getItem('studentHubData');
-    if (saved) setData(JSON.parse(saved));
-  }, []);
 
   // ── Save to codebase via Vite plugin ──
   const handleSave = async () => {
     setSaving(true);
-    localStorage.setItem('studentHubData', JSON.stringify(data));
     try {
       const res = await fetch('/api/save-student-data', {
         method: 'POST',
