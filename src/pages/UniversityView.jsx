@@ -5,6 +5,7 @@ import { fetchUniversityData } from '../Notes/studentData';
 import ThemeToggle from '../Notes/ThemeToggle';
 import '../styles/student.css';
 import { ArrowLeft, BookOpen, Layers } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const UniversityView = () => {
   const { uniId } = useParams();
@@ -48,6 +49,11 @@ const UniversityView = () => {
 
   return (
     <div className="student-module-container">
+      <SEO 
+        title={`${uni.shortName} Syllabus & Notes`}
+        description={`Access syllabus-aligned notes, study material, and resources for ${uni.name} (${uni.shortName}). Free academic resources for hospitality students.`}
+        canonical={`https://bevpedia.in/students/${uniId}`}
+      />
       <div className="semester-container">
         <div style={{ position: 'absolute', top: '24px', right: '4%' }}>
           <ThemeToggle />

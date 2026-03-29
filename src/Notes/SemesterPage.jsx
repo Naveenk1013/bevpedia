@@ -5,6 +5,7 @@ import { fetchUniversityData } from '../Notes/studentData';
 import ThemeToggle from '../Notes/ThemeToggle';
 import '../styles/student.css';
 import { ArrowLeft, BookOpen, Download, Link2, FileText, Lock, ChevronDown, ChevronRight, Maximize, X, Search } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const SemesterPage = () => {
   const { uniId, semId } = useParams();
@@ -99,6 +100,20 @@ const SemesterPage = () => {
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchEnd}
     >
+      <SEO 
+        title={`${sem.title} Notes - ${uni.shortName}`}
+        description={`Full ${sem.title} syllabus study material for ${uni.shortName}. Access comprehensive subjects, units, notes, and PDF resources for your hospitality course.`}
+        canonical={`https://bevpedia.in/students/${uniId}/${semId}`}
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Student Hub", "item": "https://bevpedia.in/students" },
+            { "@type": "ListItem", "position": 2, "name": uni.shortName, "item": `https://bevpedia.in/students/${uniId}` },
+            { "@type": "ListItem", "position": 3, "name": sem.title, "item": `https://bevpedia.in/students/${uniId}/${semId}` }
+          ]
+        }}
+      />
       <div className="semester-container">
         <div style={{ position: 'absolute', top: '24px', right: '4%' }}>
           <ThemeToggle />
