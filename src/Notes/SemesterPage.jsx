@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { fetchUniversityData } from '../Notes/studentData';
 import ThemeToggle from '../Notes/ThemeToggle';
 import '../styles/student.css';
-import { ArrowLeft, BookOpen, Download, Link2, FileText, Lock, ChevronDown, ChevronRight, Maximize, X } from 'lucide-react';
+import { ArrowLeft, BookOpen, Download, Link2, FileText, Lock, ChevronDown, ChevronRight, Maximize, X, Search } from 'lucide-react';
 
 const SemesterPage = () => {
   const { uniId, semId } = useParams();
@@ -14,6 +14,7 @@ const SemesterPage = () => {
   const [expandedSubject, setExpandedSubject] = useState(null);
   const [expandedUnit, setExpandedUnit] = useState(null);
   const [fullscreenUnit, setFullscreenUnit] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Pinch-to-zoom state
   const [fontZoomLevel, setFontZoomLevel] = useState(1);
@@ -39,6 +40,15 @@ const SemesterPage = () => {
   const uni = data.universities.find(u => u.id === uniId);
   const sem = data.semesters.find(s => s.id === semId);
   const subjects = data.subjects.filter(s => s.semesterId === semId);
+
+  const filteredSubjects = subjects.filter(sub => {
+    const query = searchTerm.toLowerCase();
+    return (
+      sub.name.toLowerCase().includes(query) ||
+      sub.code.toLowerCase().includes(query) ||
+      (sub.units && sub.units.some(u => u.title.toLowerCase().includes(query)))
+    );
+  });
 
   if (!uni || !sem) {
     return (
@@ -115,6 +125,18 @@ const SemesterPage = () => {
           <p style={{ color: 'var(--student-text-muted)', fontSize: '0.9rem', marginBottom: '2rem' }}>
             {subjects.length} subject{subjects.length !== 1 ? 's' : ''} • Click a subject to view and download notes
           </p>
+
+          <div style={{ maxWidth: '100%', marginBottom: '2rem', position: 'relative' }}>
+            <Search size={18} color="var(--student-text-muted)" style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)' }} />
+            <input 
+              type="text" 
+              placeholder="Search subjects or chapters..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="admin-input"
+              style={{ paddingLeft: '48px', borderRadius: '50px', background: 'rgba(255,255,255,0.03)' }}
+            />
+          </div>
         </motion.div>
 
         {/* Subjects */}
@@ -126,9 +148,13 @@ const SemesterPage = () => {
               Subjects and notes for this semester will be added soon.
             </p>
           </div>
+        ) : filteredSubjects.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--student-text-muted)' }}>
+            No matches found for "{searchTerm}"
+          </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {subjects.map((sub, idx) => (
+            {filteredSubjects.map((sub, idx) => (
               <motion.div
                 key={sub.id}
                 className="subject-accordion"
