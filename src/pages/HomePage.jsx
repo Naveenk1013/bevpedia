@@ -21,7 +21,7 @@ import LightPillar from '../components/LightPillar';
 import ShinyText from '../components/ShinyText';
 
 const CATEGORY_CARDS = [
-  { icon: Martini, name: 'Cocktails', path: '/beverages?cat=cocktail', count: '50+', colour: '#7c5cfc', desc: 'Classic & modern cocktail recipes' },
+  { icon: Martini, name: 'Cocktails', path: '/beverages?cat=cocktail', count: '150+', colour: '#7c5cfc', desc: 'Classic & modern cocktail recipes' },
   { icon: CupSoda, name: 'Mocktails', path: '/beverages?cat=mocktail', count: '20+', colour: '#30c88a', desc: 'Non-alcoholic beverages' },
   { icon: Droplets, name: 'Spirits', path: '/spirits', count: '20+', colour: '#c9963a', desc: 'Vodka, gin, rum, whisky & more' },
   { icon: Wine, name: 'Wine', path: '/wine', count: '15+', colour: '#c0407a', desc: 'Red, white, rosé, sparkling, fortified' },
