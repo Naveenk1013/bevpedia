@@ -13,18 +13,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ── All cocktail & mocktail names (copied from data files) ──
 const COCKTAIL_NAMES = [
-  'Screwdriver','Cape Cod','Sea Breeze','Moscow Mule','Bloody Mary',
-  'Cosmopolitan','White Russian','Lemon Drop Martini','Espresso Martini','Appletini',
-  'Gin & Tonic','Negroni','Martini','Tom Collins','Singapore Sling',
-  'Aviation','French 75','Gimlet',
-  'Mojito','Daiquiri','Piña Colada','Dark & Stormy','Hurricane','Mai Tai','Rum Punch',
-  'Margarita','Paloma','Tequila Sunrise',"Tommy's Margarita",'Mezcal Negroni',
-  'Old Fashioned','Manhattan','Whiskey Sour','Mint Julep','Sazerac','Rob Roy',
-  'Irish Coffee','Penicillin',
-  'Sidecar','Brandy Alexander','Vieux Carré',
-  'Mimosa','Bellini','Kir Royale',
-  'Long Island Iced Tea','Sex on the Beach','Amaretto Sour','Aperol Spritz',
-  'Corpse Reviver #2','Clover Club',
+  'AMF', 'Alabama Slammer', 'Amaretto Sour', 'Americano', 'Aperol Spritz', 'Appletini', 'Aviation', 'B-52', 'Bahama Mama', 'Bees Knees', 'Bellini', 'Black Russian', 'Black Widow', 'Bloody Maria', 'Bloody Mary', 'Blood & Sand', 'Blue Hawaiian', 'Boilermaker', 'Boulevardier', 'Brandy Alexander', 'Bronx Cocktail', 'Caipirinha', 'Cape Cod', 'Classic Champagne Cocktail', 'Clover Club', 'Corpse Reviver #2', 'Cosmopolitan', 'Cuba Libre', 'Daiquiri', 'Dark & Stormy', 'Dirty Martini', 'Dry Manhattan', 'El Diablo', 'El Presidente', 'Espresso Martini', 'French 75', 'French Kiss', 'French Mist', 'Fuzzy Navel', 'Georgia Peach', 'Gibson', 'Gimlet', 'Gin Martini', 'Gin & Tonic', 'Godfather', 'Grasshopper', 'Greyhound', 'Hot Toddy', 'Hurricane', 'Irish Coffee', 'Jamaican Me Crazy', 'John Collins', 'Kir', 'Kir Royale', 'Last Word', 'Lemon Drop Martini', 'Long Beach Iced Tea', 'Long Island Iced Tea', 'Lynchburg Lemonade', 'Madras', 'Mai Tai', 'Mango Daiquiri', 'Mango Margarita', 'Manhattan', 'Margarita', 'Martini', 'Mezcal Negroni', 'Mimosa', 'Mint Julep', 'Mojito', 'Moscow Mule', 'Mudslide', 'Negroni', 'Nutty Irishman', 'Old Fashioned', 'Orgasm', 'Painkiller', 'Paloma', 'Penicillin', 'Perfect Manhattan', 'Perfect Martini', 'Pimm\'s Cup', 'Piña Colada', 'Pink Squirrel', 'Pisco Sour', 'Ramos Gin Fizz', 'Rob Roy', 'Rum Runner', 'Rum Punch', 'Rusty Nail', 'Sazerac', 'Scorpion', 'Sea Breeze', 'Screwdriver', 'Sex on the Beach', 'Sidecar', 'Singapore Sling', 'Spritzer', 'Stinger', 'Strawberry Daiquiri', 'Strawberry Margarita', 'Sweet Manhattan', 'Tequila Sunrise', 'Tequila Sunset', 'Texas Tea', 'Toblerone', 'Tokyo Tea', 'Tom Collins', 'Tommy\'s Margarita', 'Vesper', 'Vieux Carré', 'Vodka Martini', 'White Lady', 'White Russian', 'Zombie'
 ];
 
 const MOCKTAIL_NAMES = [
@@ -54,6 +43,27 @@ const ALIASES = {
   'Virgin Mary': 'Bloody Mary',
   'Virgin Strawberry Daiquiri': 'Strawberry Daiquiri',
   'Virgin Cuba Libre': 'Cuba Libre',
+  'Cape Cod': 'Cape Codder',
+  'Lemon Drop Martini': 'Lemon Drop',
+  'Dark & Stormy': 'Dark and Stormy',
+  'Vieux Carré': 'Vieux Carre',
+  'Blood & Sand': 'Blood and Sand',
+  'Blue Hawaiian': 'Blue Hawaii',
+  'Bronx Cocktail': 'Bronx',
+  'Classic Champagne Cocktail': 'Champagne Cocktail',
+  'Dry Manhattan': 'Manhattan',
+  'Sweet Manhattan': 'Manhattan',
+  'Perfect Manhattan': 'Manhattan',
+  'Gin Martini': 'Martini',
+  'Vodka Martini': 'Martini',
+  'Dirty Martini': 'Martini',
+  'Tommy\'s Margarita': 'Tommys Margarita',
+  'Strawberry Margarita': 'Margarita',
+  'Mango Margarita': 'Margarita',
+  'Strawberry Daiquiri': 'Daiquiri',
+  'Mango Daiquiri': 'Daiquiri',
+  'Rum Punch': "Planter's Punch",
+  'Appletini': 'Apple Martini',
 };
 
 async function fetchDrinkImage(name) {
