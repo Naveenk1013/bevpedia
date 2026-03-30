@@ -14,6 +14,7 @@ import {
   School,
   CheckSquare,
   Droplets,
+  PenTool,
   Library
 } from 'lucide-react';
 import LightPillar from '../components/LightPillar';
@@ -29,6 +30,7 @@ const CATEGORY_CARDS = [
   { icon: BookText, name: 'Glossary', path: '/glossary', count: '80+', colour: '#8891a4', desc: 'A–Z bar & beverage terminology' },
   { icon: 'https://nchm.gov.in/themes/nchmct/images/logo.png', name: 'NCHMCT', path: '/nchmct', count: 'JEE/NHTET', colour: '#30c88a', desc: 'Academic guidance & mock testing' },
   { icon: Library, name: 'Student Hub', path: '/students', count: 'New', colour: '#c9963a', desc: 'Global syllabus & academic notes' },
+  { icon: PenTool, name: 'Scholar Notebook', path: '/notebook', count: 'Tool', colour: '#06b6d4', desc: 'Architect academic research & reports' },
   { icon: GraduationCap, name: 'Quiz', path: '/quiz', count: '20 Qs', colour: '#e05c5c', desc: 'Test your beverage knowledge' },
 ];
 
@@ -236,7 +238,9 @@ export default function HomePage() {
                     )}
                   </div>
                   <div className="cat-card-name" style={{ color: cat.colour }}>{cat.name}</div>
-                  <div className="cat-card-count text-muted">{cat.count} entries</div>
+                  <div className="cat-card-count text-muted">
+                    {cat.count}{(!isNaN(parseInt(cat.count)) || cat.count.includes('+')) && ' entries'}
+                  </div>
                   <p style={{ fontSize: '0.8rem', color: 'var(--clr-text-muted)', marginTop: '6px' }}>{cat.desc}</p>
                 </button>
               );

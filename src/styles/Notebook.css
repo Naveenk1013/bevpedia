@@ -1,0 +1,164 @@
+/* ═══════════════════════════════════════════════════
+   SCHOLAR NOTEBOOK — Final Alignment Style v3.0
+   100% Parity for Reference Images
+   ════════════════════════════════════════════════════ */
+
+:root {
+  --nb-bg: #020617;
+  --nb-card-bg: #0a0f1e;
+  --nb-cyan: #06b6d4;
+  --nb-blue: #2563eb;
+  --nb-border: rgba(255, 255, 255, 0.08);
+  --nb-input-bg: rgba(15, 23, 42, 0.6);
+  --nb-text-muted: #94a3b8;
+}
+
+.nb-page {
+  background-color: var(--nb-bg);
+  min-height: 100vh;
+  width: 100%;
+  color: #fff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Ensures content is centered horizontally */
+  overflow-x: hidden;
+}
+
+/* ── Reference Cards ── */
+.nb-card {
+  background: var(--nb-card-bg);
+  border: 1px solid var(--nb-border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.nb-section-group {
+  margin-bottom: 2rem;
+}
+
+/* ── Typography & Labels ── */
+.nb-h-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #f1f5f9;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.nb-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* ── Inputs & Selects ── */
+.nb-input, .nb-select {
+  width: 100%;
+  background: var(--nb-input-bg);
+  border: 1px solid var(--nb-border);
+  border-radius: 0.75rem;
+  color: #fff;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.nb-input:focus, .nb-select:focus {
+  border-color: var(--nb-cyan);
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.nb-textarea {
+  width: 100%;
+  background: var(--nb-input-bg);
+  border: 1px solid var(--nb-border);
+  border-radius: 0.75rem;
+  color: #fff;
+  padding: 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  outline: none;
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* ── Buttons ── */
+.nb-btn-download {
+  background: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
+  color: #fff;
+  padding: 0.75rem 2rem;
+  border-radius: 0.75rem;
+  font-weight: 800;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 10px 20px -5px rgba(6, 182, 212, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.nb-btn-download:hover { transform: scale(1.02); }
+
+.nb-btn-outline {
+  border: 1px solid rgba(6, 182, 212, 0.5);
+  background: rgba(6, 182, 212, 0.1);
+  color: var(--nb-cyan);
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* ── Number Boxes & Tokens ── */
+.nb-number-box {
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #1e293b;
+  border-radius: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 900;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.nb-token {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--nb-cyan);
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  padding: 0.25rem 0.6rem;
+  border-radius: 1rem;
+}
+
+/* ── Action Badges ── */
+.nb-action-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  transition: opacity 0.2s;
+}
+
+.nb-badge-indigo { background: rgba(79, 70, 229, 0.2); border: 1px solid rgba(79, 70, 229, 0.4); color: #818cf8; }
+.nb-badge-emerald { background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; }
+
+/* ── Scrollbars ── */
+.nb-scrollbar::-webkit-scrollbar { width: 4px; }
+.nb-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.nb-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
