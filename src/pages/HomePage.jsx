@@ -15,7 +15,8 @@ import {
   CheckSquare,
   Droplets,
   PenTool,
-  Library
+  Library,
+  ChefHat as FoodIcon
 } from 'lucide-react';
 import LightPillar from '../components/LightPillar';
 import ShinyText from '../components/ShinyText';
@@ -30,6 +31,7 @@ const CATEGORY_CARDS = [
   { icon: BookText, name: 'Glossary', path: '/glossary', count: '80+', colour: '#8891a4', desc: 'A–Z bar & beverage terminology' },
   { icon: 'https://nchm.gov.in/themes/nchmct/images/logo.png', name: 'NCHMCT', path: '/nchmct', count: 'JEE/NHTET', colour: '#30c88a', desc: 'Academic guidance & mock testing' },
   { icon: Library, name: 'Student Hub', path: '/students', count: 'New', colour: '#c9963a', desc: 'Global syllabus & academic notes' },
+  { icon: FoodIcon, name: 'Food Production', path: '/food-production', count: 'Library', colour: '#f59e0b', desc: 'Practical video gallery & study material' },
   { icon: PenTool, name: 'Scholar Notebook', path: '/notebook', count: 'Tool', colour: '#06b6d4', desc: 'Architect academic research & reports' },
   { icon: GraduationCap, name: 'Quiz', path: '/quiz', count: '20 Qs', colour: '#e05c5c', desc: 'Test your beverage knowledge' },
 ];

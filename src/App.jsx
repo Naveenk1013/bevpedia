@@ -19,6 +19,8 @@ import UniversityView from './pages/UniversityView';
 import StudentAdmin from './Notes/StudentAdmin';
 import SemesterPage from './Notes/SemesterPage';
 import NotebookPage from './pages/NotebookPage';
+import FoodProductionPage from './pages/FoodProductionPage';
+
 
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
@@ -63,6 +65,7 @@ export default function App() {
           <Route path="/students/:uniId/:semId" element={<SemesterPage />} />
           <Route path="/admin/students" element={<StudentAdmin />} />
           <Route path="/notebook" element={<NotebookPage />} />
+          <Route path="/food-production" element={<FoodProductionPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/sponsors" element={<SponsorshipPage />} />
         </Routes>
