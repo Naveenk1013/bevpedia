@@ -1,4 +1,178 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
+
+const DonationTier = ({ productId, label, description, price, accentColor, tag }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleDonation = async () => {
+    try {
+      setLoading(true);
+      
+      const isTest = import.meta.env.VITE_DODO_PAYMENTS_ENVIRONMENT === 'test_mode';
+      const baseUrl = isTest ? 'https://test.dodopayments.com' : 'https://api.dodopayments.com';
+      
+      const response = await fetch(`${baseUrl}/checkouts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_DODO_PAYMENTS_API_KEY}`,
+        },
+        body: JSON.stringify({
+          product_cart: [{ product_id: productId, quantity: 1 }],
+          customer: { email: 'guest@example.com', name: 'Supporter' },
+          return_url: import.meta.env.VITE_DODO_PAYMENTS_RETURN_URL || window.location.href,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Payment API Error: ${response.statusText}`);
+      }
+
+      const session = await response.json();
+      
+      if (session.checkout_url) {
+        window.location.href = session.checkout_url;
+      } else {
+        alert("Failed to initialize checkout url properly.");
+      }
+    } catch (err) {
+      console.error("Payment error:", err);
+      window.location.href = `https://checkout.dodopayments.com/buy/${productId}?redirect_url=${encodeURIComponent(import.meta.env.VITE_DODO_PAYMENTS_RETURN_URL || window.location.href)}`;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div style={{ 
+      padding: '2rem 1.5rem', 
+      background: 'transparent', 
+      borderRadius: '24px', 
+      border: `1px solid ${accentColor}44`,
+      textAlign: 'center',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      position: 'relative',
+      transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+      cursor: 'default',
+      backdropFilter: 'blur(10px)',
+      boxShadow: `0 10px 30px -10px ${accentColor}22`
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = 'translateY(-10px)';
+      e.currentTarget.style.borderColor = accentColor;
+      e.currentTarget.style.background = `${accentColor}08`;
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = 'translateY(0)';
+      e.currentTarget.style.borderColor = `${accentColor}44`;
+      e.currentTarget.style.background = 'transparent';
+    }}
+    >
+      {tag && (
+        <span style={{
+          position: 'absolute',
+          top: '-12px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: `linear-gradient(90deg, ${accentColor}, #ff0080)`,
+          color: 'white',
+          padding: '4px 12px',
+          borderRadius: '20px',
+          fontSize: '0.7rem',
+          fontWeight: '900',
+          textTransform: 'uppercase',
+          letterSpacing: '1px',
+          boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+          whiteSpace: 'nowrap'
+        }}>
+          {tag}
+        </span>
+      )}
+      
+      <div>
+        <h4 style={{ color: accentColor, marginBottom: '0.2rem', fontSize: '1.2rem', fontWeight: '800' }}>{label}</h4>
+        <div style={{ fontSize: '2rem', fontWeight: '900', marginBottom: '1rem', color: 'white' }}>
+          ₹{price}
+        </div>
+        <p style={{ fontSize: '0.85rem', color: 'var(--clr-text-muted)', marginBottom: '1.5rem', lineHeight: '1.5' }}>{description}</p>
+      </div>
+
+      <button 
+        onClick={handleDonation} 
+        disabled={loading}
+        className="btn" 
+        style={{ 
+          padding: '1rem', 
+          fontSize: '0.9rem', 
+          fontWeight: '800',
+          background: loading ? 'rgba(255,255,255,0.1)' : `linear-gradient(135deg, ${accentColor} 0%, #1a1a1a 100%)`,
+          border: `1px solid ${accentColor}66`,
+          borderRadius: '12px',
+          color: 'white',
+          cursor: loading ? 'not-allowed' : 'pointer',
+          width: '100%',
+          transition: 'all 0.3s ease',
+          textTransform: 'uppercase',
+          letterSpacing: '1px'
+        }}
+      >
+        {loading ? 'Processing...' : 'Contribute Now'}
+      </button>
+    </div>
+  );
+};
+
+const DonationTiers = () => {
+  const tiers = [
+    {
+      id: import.meta.env.VITE_DODO_PRODUCT_TIER_3,
+      label: 'Hero Support',
+      price: '100',
+      description: 'The ultimate boost that helps us scale and stay ad-free.',
+      color: '#F72585',
+      tag: '🔥 Recommended'
+    },
+    {
+      id: import.meta.env.VITE_DODO_PRODUCT_TIER_2,
+      label: 'Big Gesture',
+      price: '50',
+      description: 'Helps us maintain the data and research new recipes.',
+      color: '#4CC9F0'
+    },
+    {
+      id: import.meta.env.VITE_DODO_PRODUCT_TIER_1,
+      label: 'Small Tip',
+      price: '25',
+      description: 'Just some spare change to show your love for the site.',
+      color: '#30C88A'
+    }
+  ];
+
+  return (
+    <div style={{ 
+      display: 'grid', 
+      gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
+      gap: '2rem', 
+      marginTop: '3.5rem',
+      padding: '1rem'
+    }}>
+      {tiers.map((tier, idx) => (
+        <DonationTier 
+          key={idx}
+          productId={tier.id}
+          label={tier.label}
+          price={tier.price}
+          description={tier.description}
+          accentColor={tier.color}
+          tag={tier.tag}
+        />
+      ))}
+    </div>
+  );
+};
+
 
 export default function SponsorshipPage() {
   return (
@@ -51,6 +225,15 @@ export default function SponsorshipPage() {
                   <div style={{ width: '40px', height: '40px', background: 'rgba(48, 200, 138, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#30C88A', flexShrink: 0 }}>✓</div>
                   <span style={{ fontSize: '0.95rem' }}>Continuous Data Research & Content Updates</span>
                 </div>
+              </div>
+
+              <div style={{ marginTop: '2.5rem', padding: '2rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid rgba(48, 200, 138, 0.2)', textAlign: 'center' }}>
+                <h3 style={{ fontSize: '1.3rem', marginBottom: '1rem', color: 'var(--clr-accent)' }}>Support Our Mission</h3>
+                <p style={{ fontSize: '0.95rem', color: 'var(--clr-text-muted)', lineHeight: '1.6', marginBottom: '1.5rem' }}>
+                  This platform is absolutely free and will remain free for all, without any ads. 
+                  Contributions are entirely optional, but if you'd like to support our hosting, creators, and community efforts, you can contribute below.
+                </p>
+                <DonationTiers />
               </div>
             </div>
 
