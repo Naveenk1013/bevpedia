@@ -4,8 +4,8 @@
   functions = "api"
 
 [build.environment]
-  # Tell Netlify to' ignore these keys during the' secrets' scan since they are' public in the' frontend
-  SECRETS_SCAN_OMIT_KEYS = "VITE_DODO_PAYMENTS_RETURN_URL,VITE_DODO_PRODUCT_TIER_1,VITE_DODO_PRODUCT_TIER_2,VITE_DODO_PRODUCT_TIER_3,VITE_DODO_PAYMENTS_ENVIRONMENT"
+  # Tell Netlify to' ignore these keys during the' secrets' scan since they are' used' in' the' code'
+  SECRETS_SCAN_OMIT_KEYS = "DODO_PAYMENTS_API_KEY,DODO_PAYMENTS_ENVIRONMENT,DODO_PAYMENTS_WEBHOOK_SECRET,VITE_DODO_PAYMENTS_RETURN_URL,VITE_DODO_PRODUCT_TIER_1,VITE_DODO_PRODUCT_TIER_2,VITE_DODO_PRODUCT_TIER_3"
 
 [[redirects]]
   from = "/api/*"
