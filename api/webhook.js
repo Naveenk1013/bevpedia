@@ -30,10 +30,12 @@ export const handler = async (event, context) => {
     console.log("\u2705 Valid Dodo Payment Webhook Received!");
     console.log("Event Type:", payload.type);
 
-    // Business Logic
+    // Business Logic: Log payment success clearly in Netlify logs
     if (payload.type === 'payment.succeeded') {
-      console.log(`Donation transaction successful! ID: ${payload.data?.payment_id}`);
-      // TODO: You can integrate Discord/Slack notifications or Database updates here
+      const { payment_id, customer, amount_total, currency } = payload.data || {};
+      console.log(`🤑 SUCCESS: Payment of ${amount_total} ${currency} received!`);
+      console.log(`Transaction ID: ${payment_id}`);
+      console.log(`Customer: ${customer?.email || 'Anonymous'}`);
     }
 
     return {

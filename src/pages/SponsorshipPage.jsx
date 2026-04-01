@@ -12,8 +12,6 @@ const DonationTier = ({ productId, label, description, price, accentColor, tag }
         method: 'POST',
         body: JSON.stringify({
           productId,
-          customerEmail: 'guest@example.com',
-          customerName: 'Supporter',
           returnUrl: import.meta.env.VITE_DODO_PAYMENTS_RETURN_URL || window.location.href,
         }),
       });

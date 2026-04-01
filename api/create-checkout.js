@@ -26,7 +26,7 @@ export const handler = async (event, context) => {
       },
       body: JSON.stringify({
         product_cart: [{ product_id: productId, quantity: 1 }],
-        customer: { email: customerEmail || 'guest@example.com', name: customerName || 'Supporter' },
+        customer: { email: customerEmail || null, name: customerName || null },
         return_url: returnUrl,
       }),
     });
