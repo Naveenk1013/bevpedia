@@ -13,7 +13,7 @@ export const handler = async (event, context) => {
   }
 
   // Netlify functions provide event.body as the raw body string by default
-  const rawBody = event.body;
+  const rawBody = event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString() : event.body;
 
   try {
     const webhookHeaders = {

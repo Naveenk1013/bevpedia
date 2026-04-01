@@ -8,7 +8,8 @@ export const handler = async (event, context) => {
   }
 
   try {
-    const { productId, customerEmail, customerName, returnUrl } = JSON.parse(event.body);
+    const body = event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString() : event.body;
+    const { productId, customerEmail, customerName, returnUrl } = JSON.parse(body);
 
     const isTest = process.env.DODO_PAYMENTS_ENVIRONMENT === 'test_mode';
     const baseUrl = isTest ? 'https://test.dodopayments.com' : 'https://api.dodopayments.com';
