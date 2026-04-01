@@ -1,30 +1,25 @@
-export const config = {
-  api: {
-    bodyParser: false, // Required by standardwebhooks to read raw body
-  },
-};
-
 import { Webhook } from "standardwebhooks";
 
-// Use environment variable in production, fallback to provided secret for testing
+// Use environment variable in production
 const webhookSecret = process.env.DODO_PAYMENTS_WEBHOOK_SECRET; 
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
+export const handler = async (event, context) => {
+  // Only allow POST requests
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: 'Method Not Allowed' })
+    };
   }
 
-  // standardwebhooks requires the exact raw unparsed text body to verify the cryptographic signature 
-  let rawBody = '';
-  for await (const chunk of req) {
-    rawBody += chunk;
-  }
+  // Netlify functions provide event.body as the raw body string by default
+  const rawBody = event.body;
 
   try {
     const webhookHeaders = {
-      "webhook-id": req.headers["webhook-id"] || "",
-      "webhook-signature": req.headers["webhook-signature"] || "",
-      "webhook-timestamp": req.headers["webhook-timestamp"] || "",
+      "webhook-id": event.headers["webhook-id"] || "",
+      "webhook-signature": event.headers["webhook-signature"] || "",
+      "webhook-timestamp": event.headers["webhook-timestamp"] || "",
     };
 
     const webhook = new Webhook(webhookSecret);
@@ -41,9 +36,15 @@ export default async function handler(req, res) {
       // TODO: You can integrate Discord/Slack notifications or Database updates here
     }
 
-    return res.status(200).json({ received: true });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ received: true })
+    };
   } catch (error) {
     console.error('Webhook signature verification failed:', error.message);
-    return res.status(400).json({ error: 'Webhook signature verification failed', details: error.message });
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Webhook signature verification failed', details: error.message })
+    };
   }
-}
+};

@@ -8,6 +8,11 @@
   SECRETS_SCAN_OMIT_KEYS = "VITE_DODO_PAYMENTS_RETURN_URL,VITE_DODO_PRODUCT_TIER_1,VITE_DODO_PRODUCT_TIER_2,VITE_DODO_PRODUCT_TIER_3,VITE_DODO_PAYMENTS_ENVIRONMENT"
 
 [[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200

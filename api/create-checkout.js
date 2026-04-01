@@ -1,11 +1,14 @@
-export default async function handler(req, res) {
+export const handler = async (event, context) => {
   // Only allow POST requests for creating a checkout session
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: 'Method Not Allowed' })
+    };
   }
 
   try {
-    const { productId, customerEmail, customerName, returnUrl } = JSON.parse(req.body);
+    const { productId, customerEmail, customerName, returnUrl } = JSON.parse(event.body);
 
     const isTest = process.env.DODO_PAYMENTS_ENVIRONMENT === 'test_mode';
     const baseUrl = isTest ? 'https://test.dodopayments.com' : 'https://api.dodopayments.com';
@@ -30,16 +33,25 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      return res.status(response.status).json({ 
-        error: data.message || `Dodo API Error: ${response.statusText}`,
-        details: data 
-      });
+      return {
+        statusCode: response.status,
+        body: JSON.stringify({ 
+          error: data.message || `Dodo API Error: ${response.statusText}`,
+          details: data 
+        })
+      };
     }
 
     // Return the checkout URL to the frontend
-    return res.status(200).json({ checkout_url: data.checkout_url });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ checkout_url: data.checkout_url })
+    };
   } catch (error) {
     console.error('Checkout creation failed:', error.message);
-    return res.status(500).json({ error: 'Internal Server Error', message: error.message });
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Internal Server Error', message: error.message })
+    };
   }
-}
+};

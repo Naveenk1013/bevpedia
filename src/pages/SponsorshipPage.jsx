@@ -122,7 +122,7 @@ const DonationTier = ({ productId, label, description, price, accentColor, tag }
 const DonationTiers = () => {
   const tiers = [
     {
-      id: import.meta.env.VITE_DODO_PRODUCT_TIER_3,
+      id: import.meta.env.VITE_DODO_PRODUCT_TIER_1,
       label: 'Hero Support',
       price: '100',
       description: 'The ultimate boost that helps us scale and stay ad-free.',
@@ -137,7 +137,7 @@ const DonationTiers = () => {
       color: '#4CC9F0'
     },
     {
-      id: import.meta.env.VITE_DODO_PRODUCT_TIER_1,
+      id: import.meta.env.VITE_DODO_PRODUCT_TIER_3,
       label: 'Small Tip',
       price: '25',
       description: 'Just some spare change to show your love for the site.',
