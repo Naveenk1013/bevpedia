@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "api"
+
+[build.environment]
+  # Tell Netlify to' ignore these keys during the' secrets' scan since they are' public in the' frontend
+  SECRETS_SCAN_OMIT_KEYS = "VITE_DODO_PAYMENTS_RETURN_URL,VITE_DODO_PRODUCT_TIER_1,VITE_DODO_PRODUCT_TIER_2,VITE_DODO_PRODUCT_TIER_3,VITE_DODO_PAYMENTS_ENVIRONMENT"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
