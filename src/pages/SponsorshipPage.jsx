@@ -8,35 +8,30 @@ const DonationTier = ({ productId, label, description, price, accentColor, tag }
     try {
       setLoading(true);
       
-      const isTest = import.meta.env.VITE_DODO_PAYMENTS_ENVIRONMENT === 'test_mode';
-      const baseUrl = isTest ? 'https://test.dodopayments.com' : 'https://api.dodopayments.com';
-      
-      const response = await fetch(`${baseUrl}/checkouts`, {
+      const response = await fetch('/api/create-checkout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_DODO_PAYMENTS_API_KEY}`,
-        },
         body: JSON.stringify({
-          product_cart: [{ product_id: productId, quantity: 1 }],
-          customer: { email: 'guest@example.com', name: 'Supporter' },
-          return_url: import.meta.env.VITE_DODO_PAYMENTS_RETURN_URL || window.location.href,
+          productId,
+          customerEmail: 'guest@example.com',
+          customerName: 'Supporter',
+          returnUrl: import.meta.env.VITE_DODO_PAYMENTS_RETURN_URL || window.location.href,
         }),
       });
 
-      if (!response.ok) {
-        throw new Error(`Payment API Error: ${response.statusText}`);
-      }
+      const data = await response.json();
 
-      const session = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `Server Error: ${response.statusText}`);
+      }
       
-      if (session.checkout_url) {
-        window.location.href = session.checkout_url;
+      if (data.checkout_url) {
+        window.location.href = data.checkout_url;
       } else {
-        alert("Failed to initialize checkout url properly.");
+        throw new Error("Missing checkout_url from server.");
       }
     } catch (err) {
       console.error("Payment error:", err);
+      // Secure local fallback using static link if local API fails
       window.location.href = `https://checkout.dodopayments.com/buy/${productId}?redirect_url=${encodeURIComponent(import.meta.env.VITE_DODO_PAYMENTS_RETURN_URL || window.location.href)}`;
     } finally {
       setLoading(false);
