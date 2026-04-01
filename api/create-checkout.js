@@ -11,8 +11,8 @@ export const handler = async (event, context) => {
     const body = event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString() : event.body;
     const { productId, customerEmail, customerName, returnUrl } = JSON.parse(body);
 
-    const isTest = process.env.DODO_PAYMENTS_ENVIRONMENT === 'test_mode';
-    const baseUrl = isTest ? 'https://test.dodopayments.com' : 'https://api.dodopayments.com';
+    const isLive = process.env.DODO_PAYMENTS_ENVIRONMENT === 'live_mode';
+    const baseUrl = isLive ? 'https://api.dodopayments.com' : 'https://test.dodopayments.com';
 
     if (!process.env.DODO_PAYMENTS_API_KEY) {
       throw new Error("Missing DODO_PAYMENTS_API_KEY on the server.");
