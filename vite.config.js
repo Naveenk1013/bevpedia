@@ -85,5 +85,17 @@ export default defineConfig({
   server: {
     port: 5175,
     open: true
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom', 'framer-motion', 'react-helmet-async'],
+          editor: ['@tiptap/react', '@tiptap/starter-kit', 'docx', 'react-to-print', 'file-saver'],
+          graphics: ['three'],
+          map: ['maplibre-gl']
+        }
+      }
+    }
   }
 });
