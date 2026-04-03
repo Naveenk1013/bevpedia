@@ -71,3 +71,7 @@ Rule: YOU MUST KEEP ALL FINAL ANSWERS EXTREMELY CONCISE (3-4 SENTENCES MAX) UNLE
     });
   }
 };
+
+export const config = {
+  path: "/api/sathi-chat"
+};
