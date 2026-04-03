@@ -1,0 +1,157 @@
+.sathi-page {
+  /* Override global accent colour for SATHI AI exclusively */
+  --clr-accent: #f0a113;
+  --clr-accent-glow: rgba(240, 161, 19, 0.3);
+  --clr-border-muted: rgba(240, 161, 19, 0.15);
+  
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 50% 20%, rgba(240, 161, 19, 0.05), transparent 80%);
+}
+
+.sathi-page .unified-box {
+  background: rgba(10, 12, 15, 0.2) !important;
+  border-color: var(--clr-border-muted) !important;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+.sathi-page .glass-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(13, 15, 20, 0.4);
+  backdrop-filter: blur(25px);
+  pointer-events: none;
+}
+
+.sathi-page .chat-history-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  color: rgba(255, 255, 255, 0.6);
+  gap: 0.8rem;
+}
+
+.sathi-page .chat-history-item:hover {
+  background: rgba(240, 161, 19, 0.05);
+  color: var(--clr-accent);
+  border-color: var(--clr-border-muted);
+}
+
+.sathi-page .chat-history-item.active {
+  background: rgba(240, 161, 19, 0.1);
+  color: var(--clr-accent);
+  border-color: var(--clr-border-muted);
+}
+
+.sathi-page .delete-btn {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.2s ease;
+  padding: 6px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.3);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.sathi-page .chat-history-item:hover .delete-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.sathi-page .delete-btn:hover {
+  background: rgba(255, 0, 0, 0.1);
+  color: #ff4444;
+}
+
+.sathi-page .btn {
+  background: var(--clr-accent);
+  color: #000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sathi-page .btn:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 15px var(--clr-accent-glow);
+  transform: translateY(-1px);
+}
+
+.sathi-page .chat-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(240, 161, 19, 0.4) transparent;
+}
+
+.sathi-page .chat-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sathi-page .chat-container::-webkit-scrollbar-thumb {
+  background: rgba(240, 161, 19, 0.4);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.sathi-page .chat-container::-webkit-scrollbar-thumb:hover {
+  background: var(--clr-accent);
+}
+
+/* Sidebar Drawer - Universal */
+.sathi-page .chat-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1000;
+  width: 300px;
+  background: rgba(13, 15, 20, 0.98) !important;
+  backdrop-filter: blur(20px);
+  border-right: 1px solid var(--clr-border-muted);
+  transform: translateX(-100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sathi-page .chat-sidebar.open {
+  transform: translateX(0);
+  box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+}
+
+/* Mobile Overrides */
+@media (max-width: 768px) {
+  .sathi-page {
+    padding: 0 !important;
+  }
+  
+  .sathi-page .chat-sidebar {
+    width: 85% !important;
+    max-width: 320px;
+  }
+
+  .sathi-page .chat-container {
+    border-radius: 0 !important;
+    border-left: none !important;
+    border-right: none !important;
+  }
+
+  .sathi-page form {
+    padding: 1rem;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    margin-top: 0 !important;
+    border-top: 1px solid var(--clr-border-muted);
+  }
+}

@@ -28,8 +28,7 @@ Rule: YOU MUST KEEP ALL FINAL ANSWERS EXTREMELY CONCISE (3-4 SENTENCES MAX) UNLE
       temperature: 1,
       top_p: 0.95,
       max_tokens: 4000,
-      stream: true,
-      extra_body: { "chat_template_kwargs": { "thinking": true } }
+      stream: true
     });
 
     const encoder = new TextEncoder();

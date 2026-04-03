@@ -75,19 +75,27 @@ function studentDataPlugin() {
   };
 }
 
+import OpenAI from 'openai';
+
 function sathiChatPlugin(env) {
   return {
     name: 'sathi-chat-plugin',
     configureServer(server) {
       server.middlewares.use('/api/sathi-chat', async (req, res, next) => {
         if (req.method === 'POST') {
+          console.log('--- SATHI API REQUEST RECEIVED ---');
+          if (!env.NVIDIA_NIMS_API_KEY) {
+            console.error('ERROR: NVIDIA_NIMS_API_KEY missing from .env');
+          } else {
+            console.log('API Key detected:', env.NVIDIA_NIMS_API_KEY.substring(0, 10) + '...');
+          }
+
           let body = '';
           req.on('data', chunk => body += chunk.toString());
           req.on('end', async () => {
             try {
               const { messages } = JSON.parse(body);
               
-              const { default: OpenAI } = await import('openai');
               const openai = new OpenAI({
                 apiKey: env.NVIDIA_NIMS_API_KEY,
                 baseURL: 'https://integrate.api.nvidia.com/v1',
@@ -105,8 +113,8 @@ Rule: YOU MUST KEEP ALL FINAL ANSWERS EXTREMELY CONCISE (3-4 SENTENCES MAX) UNLE
                   { role: "system", content: HOSPITALITY_SYSTEM_PROMPT },
                   ...messages
                 ],
-                temperature: 1,
-                top_p: 0.95,
+                temperature: 0.6,
+                top_p: 0.7,
                 max_tokens: 4000,
                 stream: true,
                 extra_body: { "chat_template_kwargs": { "thinking": true } }
@@ -130,9 +138,14 @@ Rule: YOU MUST KEEP ALL FINAL ANSWERS EXTREMELY CONCISE (3-4 SENTENCES MAX) UNLE
               res.write(`data: [DONE]\n\n`);
               res.end();
             } catch (err) {
-              console.error(err);
+              console.error('SATHI PROXY ERROR:', err);
               res.statusCode = 500;
-              res.end(JSON.stringify({ error: err.message }));
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ 
+                error: "SATHI Proxy Error", 
+                message: err.message,
+                details: err.response?.data || "No additional server details"
+              }));
             }
           });
         } else {
