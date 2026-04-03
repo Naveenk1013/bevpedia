@@ -2,6 +2,8 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import AuthModal from './components/AuthModal';
+import { supabase } from './lib/supabaseClient';
 const HomePage = lazy(() => import('./pages/HomePage'));
 const BeveragePage = lazy(() => import('./pages/BeveragePage'));
 const SpiritsPage = lazy(() => import('./pages/SpiritsPage'));
@@ -20,6 +22,7 @@ const StudentAdmin = lazy(() => import('./Notes/StudentAdmin'));
 const SemesterPage = lazy(() => import('./Notes/SemesterPage'));
 const NotebookPage = lazy(() => import('./pages/NotebookPage'));
 const FoodProductionPage = lazy(() => import('./pages/FoodProductionPage'));
+const SathiPage = lazy(() => import('./pages/SathiPage'));
 
 const PageLoader = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh', flexDirection: 'column', gap: '1rem' }}>
@@ -40,6 +43,22 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem('bevFavourites') || '[]'); }
     catch { return []; }
   });
+  
+  const [user, setUser] = useState(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user || null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+      if (session) setShowAuthModal(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -59,6 +78,7 @@ export default function App() {
   return (
     <>
       <Navbar theme={theme} onToggleTheme={toggleTheme} />
+      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
       <main className="page-wrapper">
         <Suspense fallback={<PageLoader />}>
           <Routes>
@@ -81,6 +101,7 @@ export default function App() {
             <Route path="/food-production" element={<FoodProductionPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/sponsors" element={<SponsorshipPage />} />
+            <Route path="/sathi" element={<SathiPage user={user} onLoginClick={() => setShowAuthModal(true)} onLogout={() => supabase.auth.signOut()} />} />
           </Routes>
         </Suspense>
       </main>

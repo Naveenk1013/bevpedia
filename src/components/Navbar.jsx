@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { to: '/wset', label: 'WSET' },
   { to: '/nchmct', label: 'NCHMCT' },
   { to: '/students', label: 'Student Hub' },
+  { to: '/sathi', label: '✨ SATHI AI' },
   { to: '/quiz', label: '🎓 Quiz' },
 ];
 
