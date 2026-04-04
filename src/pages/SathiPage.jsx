@@ -290,7 +290,7 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                    <span style={{ fontSize: '0.85rem', color: '#fff', fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email?.split('@')[0]}</span>
-                   <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '1px' }}>Hospitality Expert</span>
+                   <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '1px' }}>Welcome Back!!!</span>
                 </div>
                 <button onClick={onLogout} className="sathi-icon-btn" style={{ color: 'var(--clr-accent)', opacity: 0.8 }} title="Logout">
                   <LogOut size={18} />
@@ -300,8 +300,8 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
              <div style={{ pt: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.8rem' }}>
                 <p style={{ fontSize: '0.7rem', color: 'rgba(240,161,19,0.5)', margin: 0, fontWeight: '500', letterSpacing: '0.5px' }}>Developed by Naveen Kumar</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.3rem' }}>
-                   <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.2)' }}>Powered by NVIDIA NIMs</span>
-                   <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.2)' }}>v2.0.4</span>
+                   <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.2)' }}>Powered by Bevpedia.in</span>
+                   <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.2)' }}>v2.1.0</span>
                 </div>
              </div>
           </div>
