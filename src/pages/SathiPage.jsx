@@ -385,7 +385,7 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
                   )}
                   <div className="markdown-body" style={{ color: 'inherit', fontSize: '1rem', lineHeight: '1.8' }}>
                     <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>
-                      {m.content}
+                      {m.content?.replace(/<br\s*\/?>/gi, '\n')}
                     </ReactMarkdown>
                   </div>
                 </motion.div>
