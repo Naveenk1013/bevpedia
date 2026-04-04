@@ -33,6 +33,7 @@ const CATEGORY_CARDS = [
   { icon: Library, name: 'Student Hub', path: '/students', count: 'New', colour: '#c9963a', desc: 'Global syllabus & academic notes' },
   { icon: FoodIcon, name: 'Food Production', path: '/food-production', count: 'Library', colour: '#f59e0b', desc: 'Practical video gallery & study material' },
   { icon: PenTool, name: 'Scholar Notebook', path: '/notebook', count: 'Tool', colour: '#06b6d4', desc: 'Architect academic research & reports' },
+  { icon: Sparkles, name: 'SATHI AI', path: '/sathi', count: '24/7 AI', colour: '#f0a113', desc: 'Interactive holographic beverage expert & study companion' },
   { icon: GraduationCap, name: 'Quiz', path: '/quiz', count: '20 Qs', colour: '#e05c5c', desc: 'Test your beverage knowledge' },
 ];
 

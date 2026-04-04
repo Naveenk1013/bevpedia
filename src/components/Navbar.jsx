@@ -1,5 +1,14 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { 
+  Martini, 
+  Sparkles, 
+  GraduationCap, 
+  Sun, 
+  Moon, 
+  X, 
+  Menu 
+} from 'lucide-react';
 
 const NAV_ITEMS = [
   { to: '/', label: 'Home', exact: true },
@@ -11,8 +20,8 @@ const NAV_ITEMS = [
   { to: '/wset', label: 'WSET' },
   { to: '/nchmct', label: 'NCHMCT' },
   { to: '/students', label: 'Student Hub' },
-  { to: '/sathi', label: '✨ SATHI AI' },
-  { to: '/quiz', label: '🎓 Quiz' },
+  { to: '/sathi', label: 'SATHI AI', icon: Sparkles },
+  { to: '/quiz', label: 'Quiz', icon: GraduationCap },
 ];
 
 export default function Navbar({ theme, onToggleTheme }) {
@@ -32,7 +41,9 @@ export default function Navbar({ theme, onToggleTheme }) {
     <nav className="navbar" role="navigation" aria-label="Main navigation">
       <div className="container">
         <NavLink to="/" className="nav-logo" onClick={() => setMenuOpen(false)}>
-          <span className="nav-logo-icon">🍸</span>
+          <span className="nav-logo-icon">
+            <Martini size={24} color="var(--clr-accent)" />
+          </span>
           <span>Beverage Encyclopedia</span>
         </NavLink>
 
@@ -45,7 +56,10 @@ export default function Navbar({ theme, onToggleTheme }) {
               className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
               onClick={() => setMenuOpen(false)}
             >
-              {item.label}
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                {item.icon && <item.icon size={16} />}
+                {item.label}
+              </span>
             </NavLink>
           ))}
           <input
@@ -66,7 +80,7 @@ export default function Navbar({ theme, onToggleTheme }) {
             aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             title="Toggle theme"
           >
-            {theme === 'dark' ? '☀️' : '🌙'}
+            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
           <button
             className="btn-icon hamburger"
@@ -74,7 +88,7 @@ export default function Navbar({ theme, onToggleTheme }) {
             aria-expanded={menuOpen}
             onClick={() => setMenuOpen(o => !o)}
           >
-            {menuOpen ? '✕' : '☰'}
+            {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
       </div>

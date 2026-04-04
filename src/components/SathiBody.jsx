@@ -19,7 +19,7 @@ export default function SathiBody({ aiState = 'idle' }) {
         color: { value: "transparent" },
       },
       fullScreen: { enable: false },
-      fpsLimit: 60,
+      fpsLimit: 120,
       interactivity: {
         events: {
           resize: true,
