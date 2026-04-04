@@ -11,6 +11,8 @@ import { subjects_sem_nchmct_1 } from './data/sem_nchmct_1';
 import { subjects_sem_1774678820404 } from './data/sem_1774678820404';
 import { subjects_sem_1774709322001 } from './data/sem_1774709322001';
 import { subjects_sem_1774781765748 } from './data/sem_1774781765748';
+import { subjects_sem_research_rpj } from './data/sem_research_rpj';
+import { subjects_sem_research_hotel } from './data/sem_research_hotel';
 
 export const initialStudentData = {
   universities,
@@ -21,7 +23,9 @@ export const initialStudentData = {
     ...subjects_sem_nchmct_1,
     ...subjects_sem_1774678820404,
     ...subjects_sem_1774709322001,
-    ...subjects_sem_1774781765748
+    ...subjects_sem_1774781765748,
+    ...subjects_sem_research_rpj,
+    ...subjects_sem_research_hotel
   ]
 };
 

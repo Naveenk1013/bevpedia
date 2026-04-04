@@ -40,5 +40,19 @@ export const semesters = [
     "programId": "prog_bsc_hha",
     "title": "Semester 2",
     "order": 2
+  },
+  {
+    "id": "sem_research_rpj",
+    "universityId": "uni_research",
+    "programId": "prog_research_papers",
+    "title": "Sample Research Projects (RPJ)",
+    "order": 1
+  },
+  {
+    "id": "sem_research_hotel",
+    "universityId": "uni_research",
+    "programId": "prog_research_papers",
+    "title": "Hotel Overview Presentations",
+    "order": 2
   }
 ];

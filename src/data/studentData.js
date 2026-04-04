@@ -74,6 +74,21 @@ export const initialStudentData = {
       programId: "prog_bsc_hha",
       title: "Semester 1",
       order: 1
+    },
+    // Research Hub Semesters
+    {
+      id: "sem_research_rpj",
+      universityId: "uni_research",
+      programId: "prog_research_papers",
+      title: "Sample Research Projects (RPJ)",
+      order: 1
+    },
+    {
+      id: "sem_research_hotel",
+      universityId: "uni_research",
+      programId: "prog_research_papers",
+      title: "Hotel Overview Presentations",
+      order: 2
     }
   ],
   subjects: [
@@ -96,6 +111,76 @@ export const initialStudentData = {
       resources: [
         { id: "res_3", title: "F&B Organization Chart", type: "doc", link: "#", isFree: true }
       ]
+    },
+
+    // ── Research Hub — Sample RPJ ──
+    {
+      id: "sub_rpj_ai",
+      semesterId: "sem_research_rpj",
+      code: "RPJ-01",
+      name: "Emerging Use of AI in the Indian Hospitality Industry",
+      resources: [
+        { id: "res_rpj_1", title: "Full Research Paper (PDF)", type: "pdf", link: "https://drive.google.com/file/d/14_A_vAh_OLDIXg3AjYLsbRf8uPsBVqgk/view?usp=drive_link", isFree: true }
+      ]
+    },
+    {
+      id: "sub_rpj_coffee",
+      semesterId: "sem_research_rpj",
+      code: "RPJ-02",
+      name: "Analysing the Attributes of Customer Satisfaction in India's Coffee Shop Business",
+      resources: [
+        { id: "res_rpj_2", title: "Full Research Paper (PDF)", type: "pdf", link: "https://drive.google.com/file/d/14_A_vAh_OLDIXg3AjYLsbRf8uPsBVqgk/view?usp=drive_link", isFree: true }
+      ]
+    },
+    {
+      id: "sub_rpj_employee",
+      semesterId: "sem_research_rpj",
+      code: "RPJ-03",
+      name: "Analysing the Lack of Employee in Hotels of Delhi",
+      resources: [
+        { id: "res_rpj_3", title: "Full Research Paper (PDF)", type: "pdf", link: "https://drive.google.com/file/d/14_A_vAh_OLDIXg3AjYLsbRf8uPsBVqgk/view?usp=drive_link", isFree: true }
+      ]
+    },
+    {
+      id: "sub_rpj_bleisure",
+      semesterId: "sem_research_rpj",
+      code: "RPJ-04",
+      name: "An Analysis of Bleisure Travel Implications for Hotel Services and Amenities",
+      resources: [
+        { id: "res_rpj_4", title: "Full Research Paper (PDF)", type: "pdf", link: "https://drive.google.com/file/d/1Bd_J0U5-7ClsBfRgaBw-lOkOX6NX-iq9/view?usp=drive_link", isFree: true }
+      ]
+    },
+    {
+      id: "sub_rpj_vr",
+      semesterId: "sem_research_rpj",
+      code: "RPJ-05",
+      name: "The Role of Virtual Reality in Transforming Hotel Marketing Strategies and Guest Experiences",
+      resources: [
+        { id: "res_rpj_5", title: "Full Research Paper (PDF)", type: "pdf", link: "https://drive.google.com/file/d/1WdpCXP0OAxj91paRzGRZopnD08ha_V_P/view?usp=drive_link", isFree: true }
+      ]
+    },
+    {
+      id: "sub_rpj_coming_6",
+      semesterId: "sem_research_rpj",
+      code: "RPJ-06",
+      name: "Sample 6 — Coming Soon",
+      resources: []
+    },
+    {
+      id: "sub_rpj_coming_7",
+      semesterId: "sem_research_rpj",
+      code: "RPJ-07",
+      name: "Sample 7 — Coming Soon",
+      resources: []
+    },
+
+    // ── Research Hub — Hotel Overview (Coming Soon) ──
+    {
+      id: "sub_hotel_overview_placeholder",
+      semesterId: "sem_research_hotel",
+      code: "HO-01",
+      name: "Hotel Overview Presentations — Coming Soon",
+      resources: []
     }
   ]
 };
