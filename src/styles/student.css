@@ -62,6 +62,7 @@
 [data-theme='dark'] .student-title {
   background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -729,6 +730,7 @@
     margin: 0;
     padding: 0;
     -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .student-module-container, 

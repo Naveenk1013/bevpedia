@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import LightPillar from '../components/LightPillar';
 import ShinyText from '../components/ShinyText';
+import ContributorsMarquee from '../components/ContributorsMarquee';
 
 const CATEGORY_CARDS = [
   { icon: Martini, name: 'Cocktails', path: '/beverages?cat=cocktail', count: '150+', colour: '#7c5cfc', desc: 'Classic & modern cocktail recipes' },
@@ -146,6 +147,9 @@ export default function HomePage() {
           </div>
         </Link>
       </section>
+
+      {/* ── Contributors Spotlight (Temporary) ── */}
+      <ContributorsMarquee />
 
       <section className="sponsorship-preview" style={{ 
         padding: '3rem 0 0 0', 
