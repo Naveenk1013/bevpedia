@@ -13,7 +13,7 @@ export default async (req) => {
       baseURL: 'https://integrate.api.nvidia.com/v1',
     });
 
-    const HOSPITALITY_SYSTEM_PROMPT = `You are SATHI (Smart Assistant for Tourism & Hospitality Innovation), an AI assistant exclusively designed for professionals in the tourism, hotel, restaurant, and Hospitality industries.
+    const HOSPITALITY_SYSTEM_PROMPT = `You are SATHI (Smart Assistant for Tourism & Hospitality Innovation), an AI assistant exclusively designed for professionals in the tourism, hotel, restaurant, Hospitality industries and  specially Hotel and Restaurant.
 
 ### **Your Opening Line:** 
 When a user starts a conversation, your first response should always be a welcoming, brand-appropriate greeting that introduces you as SATHI and asks how you can assist them in providing exceptional service today.
@@ -64,7 +64,7 @@ You can give credit to these people if asked as contributors:
 `;
 
     const completion = await openai.chat.completions.create({
-      model: "deepseek-ai/deepseek-v3.2",
+      model: "deepseek-ai/deepseek-v3.1-terminus",
       messages: [
         { role: "system", content: HOSPITALITY_SYSTEM_PROMPT },
         ...messages

@@ -7,12 +7,14 @@ import 'katex/dist/katex.min.css';
 import '../styles/sathi.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import ShinyText from '../components/ShinyText';
-import { Menu, X, Plus, LogOut, Send, Trash2 } from 'lucide-react';
+import { Menu, X, Plus, LogOut, Send, Trash2, Home } from 'lucide-react';
 import SathiBody from '../components/SathiBody';
+import { useNavigate } from 'react-router-dom';
 
 import { supabase } from '../lib/supabaseClient';
 
 export default function SathiPage({ user, onLoginClick, onLogout }) {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +39,14 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
       fetchConversations();
     }
   }, [user]);
+
+  // Lock body scroll on mount
+  useEffect(() => {
+    document.body.classList.add('sathi-lock');
+    return () => {
+      document.body.classList.remove('sathi-lock');
+    };
+  }, []);
 
   const fetchConversations = async () => {
     const { data } = await supabase
@@ -214,17 +224,23 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
     <div className="sathi-page">
       
       {/* Unified Header Bar (All Devices) */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-black/60 backdrop-blur-md">
+      <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-black/60 backdrop-blur-md" style={{ zIndex: 10 }}>
         <div className="flex items-center gap-3">
-          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} style={{ background: 'none', border: 'none', color: 'var(--clr-accent)', cursor: 'pointer' }}>
-            {isSidebarOpen ? <X size={26} /> : <Menu size={26} />}
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="sathi-icon-btn">
+            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-          <h2 style={{ fontFamily: 'var(--font-display)', color: 'var(--clr-accent)', margin: 0, fontSize: '1.2rem' }}>SATHI</h2>
+          <button onClick={() => navigate('/')} className="sathi-icon-btn hidden md:flex" title="Go Home">
+             <Home size={22} />
+          </button>
+          <h2 style={{ fontFamily: 'var(--font-display)', color: 'var(--clr-accent)', margin: 0, fontSize: '1.2rem', marginLeft: '0.5rem' }}>SATHI</h2>
         </div>
-        <div className="hidden md:block text-muted" style={{ fontSize: '0.9rem' }}>Smart Assistant for Tourism & Hospitality Innovation</div>
+        <div className="hidden md:block text-muted" style={{ fontSize: '0.85rem', opacity: 0.7 }}>Smart Assistant for Tourism & Hospitality Innovation</div>
+        <div className="flex md:hidden">
+           
+        </div>
       </div>
 
-      <div style={{ flex: 1, display: 'flex', gap: '1rem', minHeight: 0, position: 'relative', padding: window.innerWidth > 768 ? '1.5rem' : 0 }}>
+      <div className="sathi-main-layout">
         
         {/* Sidebar Overlay (All Devices when open) */}
         <AnimatePresence>
@@ -240,42 +256,54 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
         </AnimatePresence>
 
         {/* Sidebar */}
-        <aside className={`chat-sidebar detail-card ${isSidebarOpen ? 'open' : ''}`} style={{ 
-          display: 'flex', flexDirection: 'column', background: 'rgba(0,0,0,0.6)', 
-          border: '1px solid var(--clr-border)', borderRadius: '16px', overflow: 'hidden' 
+        <aside className={`chat-sidebar ${isSidebarOpen ? 'open' : ''}`} style={{ 
+          display: 'flex', flexDirection: 'column', background: 'rgba(10,12,15,0.98)', 
+          borderRight: '1px solid var(--clr-border-muted)', height: '100%'
         }}>
-          <div style={{ padding: '1.2rem', borderBottom: '1px solid var(--clr-border)' }}>
-            <button onClick={createNewChat} className="btn flex items-center justify-center gap-2" style={{ width: '100%', padding: '0.8rem', fontWeight: 'bold' }}>
+          <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--clr-border-muted)' }}>
+            <button onClick={createNewChat} className="btn flex items-center justify-center gap-2" style={{ width: '100%', padding: '0.8rem', fontWeight: 'bold', borderRadius: '12px' }}>
                <Plus size={18} /> New Chat
             </button>
           </div>
+          
           <div style={{ flex: 1, overflowY: 'auto', padding: '1.2rem' }}>
-            <p style={{ fontSize: '0.75rem', color: 'var(--clr-accent)', textTransform: 'uppercase', marginBottom: '1.2rem', letterSpacing: '1px', fontWeight: 'bold' }}>History [SYNCED]</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <p style={{ fontSize: '0.7rem', color: 'var(--clr-accent)', textTransform: 'uppercase', marginBottom: '1.2rem', letterSpacing: '2px', fontWeight: 'bold', opacity: 0.6 }}>History</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
               {conversations.map(conv => (
                 <div 
                   key={conv.id} 
                   onClick={() => loadConversation(conv.id)}
-                  className={`chat-history-item border border-white/5 ${conversationId === conv.id ? 'active' : ''}`}
+                  className={`chat-history-item ${conversationId === conv.id ? 'active' : ''}`}
                 >
-                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{conv.title}</span>
-                  <button 
-                    onClick={(e) => handleDeleteConversation(e, conv.id)}
-                    className="delete-btn"
-                    style={{ opacity: 1 /* Force Visible for testing */ }}
-                  >
-                    <Trash2 size={16} />
+                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '0.9rem' }}>{conv.title}</span>
+                  <button onClick={(e) => handleDeleteConversation(e, conv.id)} className="delete-btn">
+                    <Trash2 size={14} />
                   </button>
                 </div>
               ))}
-              {conversations.length === 0 && <p style={{ fontSize: '0.85rem', color: 'var(--clr-text-muted)', textAlign: 'center', marginTop: '2rem' }}>No recent chats.</p>}
+              {conversations.length === 0 && <p style={{ fontSize: '0.85rem', color: 'var(--clr-text-muted)', textAlign: 'center', marginTop: '2rem', opacity: 0.5 }}>No recent chats.</p>}
             </div>
           </div>
-          <div style={{ padding: '1rem', borderTop: '1px solid var(--clr-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.02)' }}>
-             <span style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%', paddingLeft: '0.5rem' }}>{user.email}</span>
-             <button onClick={onLogout} style={{ background: 'none', border: 'none', color: 'var(--clr-accent)', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-               <LogOut size={16} />
-             </button>
+
+          {/* Sidebar Footer */}
+          <div className="sidebar-footer" style={{ padding: '1.2rem', borderTop: '1px solid var(--clr-border-muted)', background: 'rgba(0,0,0,0.2)' }}>
+             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+                   <span style={{ fontSize: '0.85rem', color: '#fff', fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{user.email?.split('@')[0]}</span>
+                   <span style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '1px' }}>Hospitality Expert</span>
+                </div>
+                <button onClick={onLogout} className="sathi-icon-btn" style={{ color: 'var(--clr-accent)', opacity: 0.8 }} title="Logout">
+                  <LogOut size={18} />
+                </button>
+             </div>
+             
+             <div style={{ pt: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.8rem' }}>
+                <p style={{ fontSize: '0.7rem', color: 'rgba(240,161,19,0.5)', margin: 0, fontWeight: '500', letterSpacing: '0.5px' }}>Developed by Naveen Kumar</p>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.3rem' }}>
+                   <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.2)' }}>Powered by NVIDIA NIMs</span>
+                   <span style={{ fontSize: '0.6rem', color: 'rgba(255,255,255,0.2)' }}>v2.0.4</span>
+                </div>
+             </div>
           </div>
         </aside>
 
@@ -314,7 +342,8 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
                 gap: '1.5rem',
                 position: 'relative', 
                 zIndex: 2,
-                minHeight: 0
+                minHeight: 0,
+                overscrollBehavior: 'contain'
               }}
             >
               {messages.length === 0 && (

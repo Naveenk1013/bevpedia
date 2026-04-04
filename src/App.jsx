@@ -75,11 +75,14 @@ export default function App() {
   );
   const isFavourite = (id) => favourites.includes(id);
 
+  const location = useLocation();
+  const isSathiPage = location.pathname === '/sathi';
+
   return (
     <>
-      <Navbar theme={theme} onToggleTheme={toggleTheme} />
+      {!isSathiPage && <Navbar theme={theme} onToggleTheme={toggleTheme} />}
       {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
-      <main className="page-wrapper">
+      <main className={`page-wrapper ${isSathiPage ? 'sathi-route' : ''}`}>
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -105,7 +108,7 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
-      <Footer />
+      {!isSathiPage && <Footer />}
     </>
   );
 }
