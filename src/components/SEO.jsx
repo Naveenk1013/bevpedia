@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
 
-const SEO = ({ title, description, image, type = 'website' }) => {
+const SEO = ({ title, description, image, type = 'website', noindex = false }) => {
   const { pathname } = useLocation();
   const siteUrl = 'https://bevpedia.in';
   
@@ -20,6 +20,7 @@ const SEO = ({ title, description, image, type = 'website' }) => {
       {/* Standard Meta Tags */}
       <title>{fullTitle}</title>
       <meta name="description" content={fullDescription} />
+      {noindex && <meta name="robots" content="noindex, nofollow" />}
       <link rel="canonical" href={canonicalUrl} />
 
       {/* Open Graph / Facebook */}

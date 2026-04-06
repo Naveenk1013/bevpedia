@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { quizQuestions } from '../data/index.js';
+import SEO from '../components/SEO';
 
 function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
@@ -61,6 +62,10 @@ export default function QuizPage() {
   if (!started) {
     return (
       <div className="quiz-wrapper">
+        <SEO 
+          title="Custom Beverage Quiz" 
+          description="Test your knowledge of cocktails, spirits, wine, beer, and bar techniques. Personalize your quiz by difficulty and category to master the art of the bar."
+        />
         <div className="page-hero" style={{ textAlign: 'center', padding: '2rem 0' }}>
           <h1>🎓 Custom Beverage Quiz</h1>
           <p className="page-hero-subtitle">Scale your knowledge at your own pace. Personalize your session below.</p>

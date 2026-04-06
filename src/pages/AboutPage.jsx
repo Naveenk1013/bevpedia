@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import SEO from '../components/SEO';
 const CREATORS = [
   {
     name: "Naveen Kumar",
@@ -340,6 +341,10 @@ const ProfileCard = ({ person, idx }) => {
 export default function AboutPage() {
   return (
     <div className="about-page animate-fade-in" style={{ padding: '6rem 1rem' }}>
+      <SEO 
+        title="About the Creators" 
+        description="Meet the visionaries behind the Beverage Encyclopedia. Discover our mission to bridge hospitality education with digital innovation and join our professional talent pool."
+      />
       <div className="container">
         <header style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <motion.h1 

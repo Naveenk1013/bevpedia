@@ -3,6 +3,7 @@ import { initialStudentData } from './studentData';
 import NotesEditor from './NotesEditor';
 import '../styles/student.css';
 import { Save, Plus, Trash2, Database, ChevronDown, ChevronRight, Edit3, BookOpen, Layers, FileEdit } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const StudentAdmin = () => {
   const [data, setData] = useState(initialStudentData);
@@ -156,6 +157,7 @@ const StudentAdmin = () => {
 
   return (
     <div className="student-module-container" style={{ padding: '2rem 4%' }}>
+      <SEO title="Admin Control Panel" noindex description="Internal management tools for Student Hub data." />
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>

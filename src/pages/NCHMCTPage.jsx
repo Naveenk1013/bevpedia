@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { nchmct_jee_info, jee_questions } from '../data/nchmct_jee';
 import { nhtet_info, nhtet_questions, nhtet_subject_materials } from '../data/nhtet';
+import SEO from '../components/SEO';
 
 const SUBJECT_ICON_MAP = {
   '📚': Library,
@@ -711,6 +712,10 @@ const NCHMCTPage = () => {
 
   return (
     <div style={{minHeight:'100vh', background:'#050505', color:'white', paddingTop:'80px'}}>
+      <SEO 
+        title={`${selectedExam ? selectedExam.toUpperCase() : 'NCHMCT'} Academic Hub`}
+        description="Access NCHMCT JEE and NHTET study materials, previous year papers, and simulated CBT mock examinations. The definitive academic resource for hotel management aspirants."
+      />
       <AnimatePresence mode="wait">
         {phase === 'select-exam' && renderSelection()}
         {phase === 'dashboard' && renderDashboard()}

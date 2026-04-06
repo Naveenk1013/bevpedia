@@ -46,6 +46,9 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      zIndex: {
+        '100': '100',
+      },
     },
   },
   plugins: [],

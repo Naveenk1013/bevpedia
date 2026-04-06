@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { glossary } from '../data/glossary.js';
+import SEO from '../components/SEO';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -19,6 +20,10 @@ export default function GlossaryPage() {
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+      <SEO 
+        title="Bar & Beverage Glossary" 
+        description="Comprehensive A-Z glossary of professional bar and beverage terminology. Essential definitions for hospitality students, bartenders, and sommeliers."
+      />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>📖 Bar &amp; Beverage Glossary</h1>
         <p className="page-hero-subtitle">{glossary.length}+ professional terms — from ABV to Zest. Essential for every hospitality student and practitioner.</p>

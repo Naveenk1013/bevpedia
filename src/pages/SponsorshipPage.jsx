@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import SEO from '../components/SEO';
 
 
 
@@ -7,6 +8,10 @@ import { motion } from 'framer-motion';
 export default function SponsorshipPage() {
   return (
     <div className="sponsorship-page animate-fade-in" style={{ padding: '6rem 1rem' }}>
+      <SEO 
+        title="Industry Solutions & Sponsorship" 
+        description="Partner with Bevpedia to close the hospitality talent gap. Explore sponsorship opportunities, academic collaboration, and access to our elite candidate pool."
+      />
       <div className="container">
         {/* Hero Section */}
         <header style={{ textAlign: 'center', marginBottom: '5rem' }}>

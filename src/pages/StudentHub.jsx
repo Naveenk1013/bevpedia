@@ -5,6 +5,7 @@ import { fetchUniversityData } from '../Notes/studentData';
 import ThemeToggle from '../Notes/ThemeToggle';
 import '../styles/student.css';
 import { Search, GraduationCap, School, Library, BookOpen } from 'lucide-react';
+import SEO from '../components/SEO';
 
 // Icon Map to dynamically render Lucide icons
 const ICONS = {
@@ -75,6 +76,10 @@ const StudentHub = () => {
 
   return (
     <div className="student-module-container">
+      <SEO 
+        title="Global Student Hub" 
+        description="Access free syllabus-aligned notes, study materials, and academic resources for hospitality and tourism students from universities worldwide. Download and contribute today."
+      />
       <div style={{ position: 'absolute', top: '100px', right: '4%' }}>
         <ThemeToggle />
       </div>

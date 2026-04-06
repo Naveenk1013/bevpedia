@@ -4,6 +4,7 @@ import { cocktails } from '../data/cocktails.js';
 import { mocktails } from '../data/mocktails.js';
 import drinkImages from '../data/drink-images.json';
 import BeverageModal from '../components/BeverageModal';
+import SEO from '../components/SEO';
 
 const ALL = [...cocktails, ...mocktails];
 const CATEGORIES = [
@@ -93,6 +94,10 @@ export default function BeveragePage({ toggleFavourite, isFavourite }) {
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+      <SEO 
+        title="Cocktails & Mocktails Recipes" 
+        description="Explore our vast collection of professional cocktail and mocktail recipes. From classic pre-Prohibition drinks to modern zero-proof creations, with step-by-step instructions and history."
+      />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>🍸 Cocktails &amp; Mocktails</h1>
         <p className="page-hero-subtitle">

@@ -10,6 +10,7 @@ import ShinyText from '../components/ShinyText';
 import { Menu, X, Plus, LogOut, Send, Trash2, Home } from 'lucide-react';
 import SathiBody from '../components/SathiBody';
 import { useNavigate } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 import { supabase } from '../lib/supabaseClient';
 
@@ -222,6 +223,10 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
 
   return (
     <div className="sathi-page">
+      <SEO 
+        title="SATHI AI - Your Hospitality Assistant" 
+        description="Interact with SATHI, our Smart Assistant for Tourism & Hospitality Innovation. Powered by advanced AI to answer complex beverage and hospitality questions."
+      />
       
       {/* Unified Header Bar (All Devices) */}
       <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-black/60 backdrop-blur-md" style={{ zIndex: 10 }}>
