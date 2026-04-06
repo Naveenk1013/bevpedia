@@ -22,7 +22,7 @@ const CREATORS = [
       "Designing graphics, layout, and UI/UX",
       "Collecting and structuring majority of data"
     ],
-    image: "image/about/Naveen_Kumar.jpg" // Fallback to your site image if local not found
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451669/Naveen_Kumar_kpdfeo.jpg" // Fallback to your site image if local not found
   },
   {
     name: "Kishan Kumar",
@@ -43,7 +43,7 @@ const CREATORS = [
       "Subject matter expertise and validation",
       "Comprehensive testing of user interface"
     ],
-    image: "image/about/Kishan_kumar.png" // User provided image context
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451669/Kishan_kumar_wpymei.png" // User provided image context
   }
 ];
 
@@ -66,7 +66,7 @@ const CONTRIBUTORS = [
       "Industry expertise & insights",
       "Academic research contribution"
     ],
-    image: "image/about/Mukul_sahu.png"
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451671/Mukul_sahu_bmukyf.png"
   },
   {
     name: "Mahak Agrawal",
@@ -86,7 +86,7 @@ const CONTRIBUTORS = [
       "Academic research contribution",
       "Hospitality & Tourism Management expertise"
     ],
-    image: "image/about/Mahak_agrawal.png" // Guessing image path based on others
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451670/Mahak_agrawal_w6kqnn.png" // Guessing image path based on others
   },
   {
     name: "Nishanth Upadhyayula",
@@ -106,7 +106,7 @@ const CONTRIBUTORS = [
       "Mentorship & Curriculum Development",
       "Event Coordination & Ed-Tech Integration"
     ],
-    image: "image/about/Nishanth_upadhyayula.jpg"
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451669/Nishanth_upadhyayula_kpueyc.jpg"
   },
   {
     name: "Jayant Lohar",
@@ -126,7 +126,7 @@ const CONTRIBUTORS = [
       "Room Division & F&B Management",
       "Training & Placement Coordination"
     ],
-    image: "image/about/Jayant_lohar.png"
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451671/Jayant_lohar_mb1lpq.png"
   },
   {
     name: "Nitesh Kumar",
@@ -147,7 +147,7 @@ const CONTRIBUTORS = [
       "Digital Content Creation",
       "Event & Business Management"
     ],
-    image: "image/about/Nitesh_kumar.png"
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451670/Nitesh_kumar_qvykzf.png"
   },
    {
     name: "Saumya Saini",
@@ -167,7 +167,7 @@ const CONTRIBUTORS = [
       "Service Standards and SOPs Verification",
       "Study Material and Exam Preparation data"
     ],
-    image: "image/about/Saumya_saini.png"
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451670/Saumya_saini_c5mq8d.png"
   },
   {
     name: "Arya Mohan",
@@ -187,7 +187,7 @@ const CONTRIBUTORS = [
       "Service Standards and SOPs Verification",
       "Study Material and Exam Preparation data"
     ],
-    image: "image/about/Arya_mohan.png"
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451671/Arya_mohan_kog5by.png"
   },
   {
     name: "Chanchreek Sharma",
@@ -206,7 +206,7 @@ const CONTRIBUTORS = [
       "UI/UX Design Recomendation",
       "Study Material and Exam Preparation data"
     ],
-    image: "image/about/Chanchreek_sharma.png"
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451671/Chanchreek_sharma_wj4omf.png"
   },
   {
     name: "Abhishek Kumar",
@@ -228,7 +228,7 @@ const CONTRIBUTORS = [
       "Practical Knowledge",
       "Industry Experience & Training"
     ],
-    image: "image/about/Abhishek_kumar.jpg"
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451671/Abhishek_kumar_i9fbku.jpg"
   }
 ];
 

@@ -1,5 +1,5 @@
 import { useNavigate, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { 
   Martini, 
   CupSoda, 
@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import LightPillar from '../components/LightPillar';
 import ShinyText from '../components/ShinyText';
-import ContributorsMarquee from '../components/ContributorsMarquee';
+const ContributorsMarquee = lazy(() => import('../components/ContributorsMarquee'));
 
 const CATEGORY_CARDS = [
   { icon: Martini, name: 'Cocktails', path: '/beverages?cat=cocktail', count: '150+', colour: '#7c5cfc', desc: 'Classic & modern cocktail recipes' },
@@ -149,7 +149,9 @@ export default function HomePage() {
       </section>
 
       {/* ── Contributors Spotlight (Temporary) ── */}
-      <ContributorsMarquee />
+      <Suspense fallback={<div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading contributors...</div>}>
+        <ContributorsMarquee />
+      </Suspense>
 
       <section className="sponsorship-preview" style={{ 
         padding: '3rem 0 0 0', 

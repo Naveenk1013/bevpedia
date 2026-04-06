@@ -15,7 +15,7 @@ const ALL_PEOPLE = [
     role: "Hospitality Educator, Researcher & Tech Enthusiast",
     location: "Ahmedabad, India",
     credit: "Architecture, code, UI/UX & data curation",
-    image: "image/about/Naveen_Kumar.jpg",
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451669/Naveen_Kumar_kpdfeo.jpg",
     type: "creator"
   },
   {
@@ -23,7 +23,7 @@ const ALL_PEOPLE = [
     role: "Hospitality Academician & Exam Controller",
     location: "Varanasi, India",
     credit: "Research, data analysis & subject validation",
-    image: "image/about/Kishan_kumar.png",
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451669/Kishan_kumar_wpymei.png",
     type: "creator"
   },
   // ── Contributors ──
@@ -32,7 +32,7 @@ const ALL_PEOPLE = [
     role: "Chef & Asst. Professor, Food Production",
     location: "Ahmedabad, Gujarat",
     credit: "Industry expertise & academic research",
-    image: "image/about/Mukul_sahu.png",
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451671/Mukul_sahu_bmukyf.png",
     type: "contributor"
   },
   {
@@ -40,7 +40,7 @@ const ALL_PEOPLE = [
     role: "Assistant Professor & PhD Scholar",
     location: "DDU, Gujarat",
     credit: "Hospitality & Tourism Management expertise",
-    image: "image/about/Mahak_agrawal.png",
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451670/Mahak_agrawal_w6kqnn.png",
     type: "contributor"
   },
   {
@@ -48,7 +48,7 @@ const ALL_PEOPLE = [
     role: "Hospitality Educator & Asst. Professor",
     location: "Bangalore, Karnataka",
     credit: "Mentorship & Ed-Tech integration",
-    image: "image/about/Nishanth_upadhyayula.jpg",
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451669/Nishanth_upadhyayula_kpueyc.jpg",
     type: "contributor"
   },
   {
@@ -56,7 +56,7 @@ const ALL_PEOPLE = [
     role: "Assistant Professor & Author",
     location: "Lonavala, Maharashtra",
     credit: "Author of 'Simplifying Service'",
-    image: "image/about/Jayant_lohar.png",
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451671/Jayant_lohar_mb1lpq.png",
     type: "contributor"
   },
   {
@@ -64,7 +64,7 @@ const ALL_PEOPLE = [
     role: "Assistant Professor & Content Creator",
     location: "Bareilly, U.P.",
     credit: "Food Production & digital content",
-    image: "image/about/Nitesh_kumar.png",
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451670/Nitesh_kumar_qvykzf.png",
     type: "contributor"
   },
   {
@@ -72,7 +72,7 @@ const ALL_PEOPLE = [
     role: "Assistant Professor & PhD Scholar",
     location: "Rajasthan, India",
     credit: "Testing, SOPs & study material",
-    image: "image/about/Saumya_saini.png",
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451670/Saumya_saini_c5mq8d.png",
     type: "contributor"
   },
   {
@@ -80,7 +80,7 @@ const ALL_PEOPLE = [
     role: "Assistant Professor & Bestselling Author",
     location: "Punjab, India",
     credit: "Cross-referencing & data verification",
-    image: "image/about/Arya_mohan.png",
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451671/Arya_mohan_kog5by.png",
     type: "contributor"
   },
   {
@@ -88,7 +88,7 @@ const ALL_PEOPLE = [
     role: "Assistant Professor & PhD Scholar",
     location: "Punjab, India",
     credit: "UI/UX recommendations & testing",
-    image: "image/about/Chanchreek_sharma.png",
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451671/Chanchreek_sharma_wj4omf.png",
     type: "contributor"
   },
   {
@@ -96,7 +96,7 @@ const ALL_PEOPLE = [
     role: "Learning & Development Executive",
     location: "Bangalore, India",
     credit: "Industry insights & training expertise",
-    image: "image/about/Abhishek_kumar.jpg",
+    image: "https://res.cloudinary.com/dro6n6co1/image/upload/f_auto,q_auto,w_240,c_fill,g_face/v1775451671/Abhishek_kumar_i9fbku.jpg",
     type: "contributor"
   }
 ];
