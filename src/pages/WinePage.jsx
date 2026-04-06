@@ -3,6 +3,7 @@ import { wines } from '../data/wines.js';
 import BeverageModal from '../components/BeverageModal';
 import WineRegionMap from '../components/wine/WineRegionMap';
 import { Globe } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const WINE_TYPES = ['all', 'red', 'white', 'rosé', 'sparkling', 'fortified'];
 const TYPE_ICONS = { red:'🍷', white:'🥂', rosé:'🌸', sparkling:'✨', fortified:'🍾', all:'🍷' };
@@ -20,6 +21,10 @@ export default function WinePage({ toggleFavourite, isFavourite }) {
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+      <SEO 
+        title="Wine Guide" 
+        description="Comprehensive wine guide covering red, white, rosé, sparkling, and fortified wines. Discover grape varieties, prestigious regions, tasting notes, and food pairings."
+      />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>🍷 Wine Guide</h1>
         <p className="page-hero-subtitle">Red, white, rosé, sparkling & fortified — grape varieties, regions, tasting notes, food pairing &amp; winemaking.</p>

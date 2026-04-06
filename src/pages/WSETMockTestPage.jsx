@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { wsetQuestions } from '../data/wset';
 import { motion, AnimatePresence } from 'framer-motion';
+import SEO from '../components/SEO';
 
 const WSET_LEVELS = [
   {
@@ -134,6 +135,10 @@ export default function WSETMockTestPage() {
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <SEO 
+        title="WSET Certification & Mock Tests" 
+        description="Prepare for your WSET certification with our comprehensive guide and professional CBT mock examinations. Level 1 to Level 4 resources for wine professionals."
+      />
       <header className="page-header animate-fade-up">
         <Link to="/quiz" style={{ color: 'var(--clr-accent)', textDecoration: 'none', marginBottom: '1rem', display: 'inline-block' }}>
           ← Back to Quiz

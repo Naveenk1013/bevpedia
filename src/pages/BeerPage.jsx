@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { beers } from '../data/beers.js';
 import BeverageModal from '../components/BeverageModal';
+import SEO from '../components/SEO';
 
 const BEER_TYPES = ['all', 'lager', 'ale'];
 const TYPE_COLOURS = { lager: '#c9963a', ale: '#d97b30' };
@@ -17,6 +18,10 @@ export default function BeerPage({ toggleFavourite, isFavourite }) {
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+      <SEO 
+        title="Beer Guide" 
+        description="Detailed beer guide exploring lagers, ales, IPAs, stouts, and more. Learn about beer styles, IBU, ABV, historical contexts, and perfect food pairings."
+      />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>🍺 Beer Guide</h1>
         <p className="page-hero-subtitle">Lagers, IPAs, stouts, wheat beers, Belgians, sours & more — styles, IBU, ABV, history & food pairings.</p>

@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { techniques, glassware } from '../data/techniques.js';
-import { glossary } from '../data/glossary.js';   
+import { glossary } from '../data/glossary.js';
+import SEO from '../components/SEO';   
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
@@ -27,6 +28,10 @@ export default function TechniquesPage() {
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+      <SEO 
+        title="Techniques, Glassware & Glossary" 
+        description="Master professional bartending techniques, explore our complete glassware guide, and browse the A-Z beverage glossary for essential industry terminology."
+      />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>⚗️ Techniques &amp; Glassware</h1>
         <p className="page-hero-subtitle">Professional bartending methods with step-by-step instructions, plus the complete glassware guide and glossary.</p>

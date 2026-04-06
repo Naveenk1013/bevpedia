@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import LightPillar from '../components/LightPillar';
 import ShinyText from '../components/ShinyText';
+import SEO from '../components/SEO';
 const ContributorsMarquee = lazy(() => import('../components/ContributorsMarquee'));
 
 const CATEGORY_CARDS = [
@@ -62,6 +63,10 @@ export default function HomePage() {
 
   return (
     <>
+      <SEO 
+        title="Home" 
+        description="The ultimate professional hospitality resource. Explore our comprehensive beverage encyclopedia, mock tests, and academic notes for WSET and hotel management."
+      />
       {/* ── Hero ── */}
       <section className="hero" style={{ position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 0.6 }}>

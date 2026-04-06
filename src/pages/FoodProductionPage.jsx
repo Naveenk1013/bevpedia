@@ -20,6 +20,7 @@ import {
   FileDigit
 } from 'lucide-react';
 import { foodProductionData } from '../data/foodProduction';
+import SEO from '../components/SEO';
 
 // ── Metadata row helper ──────────────────────────────────────────────────────
 function MetaRow({ icon: Icon, label, value }) {
@@ -223,6 +224,10 @@ export default function FoodProductionPage() {
 
   return (
     <div className="food-production-page animate-fade-in" style={{ paddingBottom: '5rem' }}>
+      <SEO 
+        title="Food Production & Culinary Arts" 
+        description="Comprehensive practical video library and study materials for Food Production. Master culinary techniques, regional Indian cuisines, and international cooking styles."
+      />
       {/* ── Hero Section ── */}
       <section className="hero" style={{ minHeight: '60vh', background: 'linear-gradient(to bottom, rgba(13, 15, 20, 0.2), var(--clr-bg)), url("https://images.unsplash.com/photo-1556910103-1c02745aae4d?q=80&w=2070&auto=format&fit=crop") center/cover' }}>
         <div className="hero-bg" style={{ background: 'rgba(0,0,0,0.6)' }} />

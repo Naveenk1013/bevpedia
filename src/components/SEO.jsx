@@ -1,49 +1,40 @@
-
-import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
 
-/**
- * Reusable SEO Component for dynamic head management.
- * Handles Titles, Descriptions, Canonical URLs and JSON-LD Schema.
- */
-const SEO = ({ 
-  title, 
-  description, 
-  canonical, 
-  ogTitle, 
-  ogDescription, 
-  ogImage,
-  schema 
-}) => {
-  const siteTitle = "bevpedia.in";
-  const fullTitle = title ? `${title} | ${siteTitle}` : `Beverage Encyclopedia | ${siteTitle}`;
-  const defaultDesc = "Professional hospitality resources, cocktail recipes, spirits knowledge, and WSET study material.";
+const SEO = ({ title, description, image, type = 'website' }) => {
+  const { pathname } = useLocation();
+  const siteUrl = 'https://bevpedia.in';
+  
+  // Clean up trailing slashes for canonical consistency
+  const cleanPathname = pathname.endsWith('/') && pathname !== '/' 
+    ? pathname.slice(0, -1) 
+    : pathname;
+    
+  const canonicalUrl = `${siteUrl}${cleanPathname}`;
+  const fullTitle = title ? `${title} | Beverage Encyclopedia` : 'Beverage Encyclopedia | Professional Hospitality Resource';
+  const fullDescription = description || 'Comprehensive guides on cocktails, spirits, wine, beer, and bar techniques for hospitality professionals.';
+  const shareImage = image || `${siteUrl}/image/logo.jpg`;
 
   return (
     <Helmet>
-      {/* Basic Metadata */}
+      {/* Standard Meta Tags */}
       <title>{fullTitle}</title>
-      <meta name="description" content={description || defaultDesc} />
-      {canonical && <link rel="canonical" href={canonical} />}
+      <meta name="description" content={fullDescription} />
+      <link rel="canonical" href={canonicalUrl} />
 
       {/* Open Graph / Facebook */}
-      <meta property="og:title" content={ogTitle || fullTitle} />
-      <meta property="og:description" content={ogDescription || description || defaultDesc} />
-      {ogImage && <meta property="og:image" content={ogImage} />}
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={type} />
+      <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:title" content={fullTitle} />
+      <meta property="og:description" content={fullDescription} />
+      <meta property="og:image" content={shareImage} />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={ogTitle || fullTitle} />
-      <meta name="twitter:description" content={ogDescription || description || defaultDesc} />
-      {ogImage && <meta name="twitter:image" content={ogImage} />}
-
-      {/* Structured Data (JSON-LD) */}
-      {schema && (
-        <script type="application/ld+json">
-          {JSON.stringify(schema)}
-        </script>
-      )}
+      <meta name="twitter:url" content={canonicalUrl} />
+      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:description" content={fullDescription} />
+      <meta name="twitter:image" content={shareImage} />
     </Helmet>
   );
 };

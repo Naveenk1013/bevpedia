@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { spirits } from '../data/spirits.js';
 import BeverageModal from '../components/BeverageModal';
+import SEO from '../components/SEO';
 
 const SUBTYPES = ['all', 'vodka', 'gin', 'rum', 'tequila', 'mezcal', 'whisky', 'whiskey', 'brandy', 'absinthe', 'liqueur'];
 
@@ -17,6 +18,10 @@ export default function SpiritsPage({ toggleFavourite, isFavourite }) {
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
+      <SEO 
+        title="Spirits Encyclopedia" 
+        description="Explore our comprehensive spirits encyclopedia. Detailed guides on vodka, gin, rum, tequila, whisky, brandy, and liqueurs including production and tasting notes."
+      />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>🥃 Spirits Encyclopedia</h1>
         <p className="page-hero-subtitle">
