@@ -19,8 +19,8 @@ export default function BeerPage({ toggleFavourite, isFavourite }) {
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
       <SEO 
-        title="Beer Guide" 
-        description="Detailed beer guide exploring lagers, ales, IPAs, stouts, and more. Learn about beer styles, IBU, ABV, historical contexts, and perfect food pairings."
+        title="Beer Styles & Brewing Guide" 
+        description="The ultimate guide to the world of beer. Explore detailed profiles of lagers, ales, IPAs, and stouts with professional insights on IBU, ABV, historical origins, and food pairings."
       />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>🍺 Beer Guide</h1>

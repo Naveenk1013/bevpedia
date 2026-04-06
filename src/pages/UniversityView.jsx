@@ -59,8 +59,8 @@ const UniversityView = () => {
   return (
     <div className="student-module-container">
       <SEO 
-        title={`${uni.shortName} Syllabus & Notes`}
-        description={`Access syllabus-aligned notes, study material, and resources for ${uni.name} (${uni.shortName}). Free academic resources for hospitality students.`}
+        title={`${uni.name} | Curriculum & Academic Resources`}
+        description={`Explore the comprehensive hospitality syllabus and academic resources for ${uni.name} (${uni.shortName}). Access free study materials, research projects, and university-aligned notes.`}
         canonical={`https://bevpedia.in/students/${uniId}`}
       />
       <div className="semester-container">

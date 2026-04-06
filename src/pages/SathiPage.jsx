@@ -224,8 +224,8 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
   return (
     <div className="sathi-page">
       <SEO 
-        title="SATHI AI - Your Hospitality Assistant" 
-        description="Interact with SATHI, our Smart Assistant for Tourism & Hospitality Innovation. Powered by advanced AI to answer complex beverage and hospitality questions."
+        title="SATHI AI | Your Intelligent Hospitality Assistant" 
+        description="Meet SATHI: The Smart Assistant for Tourism & Hospitality Innovation. Get instant, expert answers to complex mixology, viticulture, and hospitality management queries using advanced AI."
       />
       
       {/* Unified Header Bar (All Devices) */}

@@ -77,8 +77,8 @@ const StudentHub = () => {
   return (
     <div className="student-module-container">
       <SEO 
-        title="Global Student Hub" 
-        description="Access free syllabus-aligned notes, study materials, and academic resources for hospitality and tourism students from universities worldwide. Download and contribute today."
+        title="Global Student Academic Hub | Syllabus & Notes" 
+        description="The central intelligence hub for hospitality students. Access syllabus-aligned notes, academic resources, and professional study materials from top universities worldwide."
       />
       <div style={{ position: 'absolute', top: '100px', right: '4%' }}>
         <ThemeToggle />

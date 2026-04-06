@@ -11,9 +11,9 @@ const SEO = ({ title, description, image, type = 'website', noindex = false }) =
     : pathname;
     
   const canonicalUrl = `${siteUrl}${cleanPathname}`;
-  const fullTitle = title ? `${title} | Beverage Encyclopedia` : 'Beverage Encyclopedia | Professional Hospitality Resource';
-  const fullDescription = description || 'Comprehensive guides on cocktails, spirits, wine, beer, and bar techniques for hospitality professionals.';
-  const shareImage = image || `${siteUrl}/image/logo.jpg`;
+  const fullTitle = title ? `${title} | Bevpedia` : 'Bevpedia | The Ultimate Professional Beverage Encyclopedia';
+  const fullDescription = description || 'Master the art of hospitality with Bevpedia. Explore comprehensive guides on spirits, wine, beer, and professional bar techniques designed for industry experts and students.';
+  const shareImage = image || `${siteUrl}/images/og-main.jpg`;
 
   return (
     <Helmet>

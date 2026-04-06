@@ -63,8 +63,8 @@ export default function QuizPage() {
     return (
       <div className="quiz-wrapper">
         <SEO 
-          title="Custom Beverage Quiz" 
-          description="Test your knowledge of cocktails, spirits, wine, beer, and bar techniques. Personalize your quiz by difficulty and category to master the art of the bar."
+          title="Interactive Beverage Knowledge Quiz" 
+          description="Challenge yourself with our professional beverage quiz. Master the technical knowledge of mixology, viticulture, and distillation through customizable difficulty levels and categories."
         />
         <div className="page-hero" style={{ textAlign: 'center', padding: '2rem 0' }}>
           <h1>🎓 Custom Beverage Quiz</h1>

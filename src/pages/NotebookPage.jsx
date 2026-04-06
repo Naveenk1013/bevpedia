@@ -15,8 +15,8 @@ export default function NotebookPage() {
   return (
     <div className="nb-page nb-scrollbar overflow-x-hidden">
       <SEO 
-        title="Scholar Notebook" 
-        description="Architect and export your academic research, reports, and hospitality projects with our professional Scholar Notebook tool. Designed for hotel management students and researchers."
+        title="Scholar Notebook | Academic Research & Report Tool" 
+        description="The ultimate workspace for hospitality researchers. Architect, draft, and export professional academic reports, projects, and research papers with precision."
       />
       {/* Toast Notification */}
       <AnimatePresence>

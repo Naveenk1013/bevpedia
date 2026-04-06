@@ -19,8 +19,8 @@ export default function SpiritsPage({ toggleFavourite, isFavourite }) {
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
       <SEO 
-        title="Spirits Encyclopedia" 
-        description="Explore our comprehensive spirits encyclopedia. Detailed guides on vodka, gin, rum, tequila, whisky, brandy, and liqueurs including production and tasting notes."
+        title="Spirits & Distillation Encyclopedia" 
+        description="The definitive professional guide to global spirits. Explore deep-dive resources on vodka, gin, rum, tequila, whisky, and liqueurs with expert tasting notes and production history."
       />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>🥃 Spirits Encyclopedia</h1>

@@ -124,8 +124,8 @@ const SemesterPage = () => {
       onTouchCancel={handleTouchEnd}
     >
       <SEO 
-        title={`${sem.title} Notes - ${uni.shortName}`}
-        description={`Full ${sem.title} syllabus study material for ${uni.shortName}. Access comprehensive subjects, units, notes, and PDF resources for your hospitality course.`}
+        title={`${sem.title} | ${uni.shortName} Academic Notes`}
+        description={`Get access to professional, syllabus-aligned study materials for ${uni.name} (${sem.title}). Download comprehensive PDF notes, unit guides, and exam preparation resources for hospitality students.`}
         canonical={`https://bevpedia.in/students/${uniId}/${semId}`}
         schema={{
           "@context": "https://schema.org",

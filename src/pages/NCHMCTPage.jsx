@@ -713,8 +713,8 @@ const NCHMCTPage = () => {
   return (
     <div style={{minHeight:'100vh', background:'#050505', color:'white', paddingTop:'80px'}}>
       <SEO 
-        title={`${selectedExam ? selectedExam.toUpperCase() : 'NCHMCT'} Academic Hub`}
-        description="Access NCHMCT JEE and NHTET study materials, previous year papers, and simulated CBT mock examinations. The definitive academic resource for hotel management aspirants."
+        title={`${selectedExam ? selectedExam.toUpperCase() : 'NCHMCT'} Professional Academic Hub`}
+        description="The definitive study portal for hotel management aspirants. Access comprehensive NCHMCT JEE and NHTET resources, including previous year papers, study guides, and simulated CBT mock exams."
       />
       <AnimatePresence mode="wait">
         {phase === 'select-exam' && renderSelection()}

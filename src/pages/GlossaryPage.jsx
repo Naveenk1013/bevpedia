@@ -21,8 +21,8 @@ export default function GlossaryPage() {
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
       <SEO 
-        title="Bar & Beverage Glossary" 
-        description="Comprehensive A-Z glossary of professional bar and beverage terminology. Essential definitions for hospitality students, bartenders, and sommeliers."
+        title="Hospitality & Beverage Glossary | A-Z Terminology" 
+        description="The ultimate reference for hospitality professionals. A comprehensive A-Z glossary of bar, beverage, and service terminology with professional definitions."
       />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>📖 Bar &amp; Beverage Glossary</h1>

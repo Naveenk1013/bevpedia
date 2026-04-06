@@ -342,8 +342,8 @@ export default function AboutPage() {
   return (
     <div className="about-page animate-fade-in" style={{ padding: '6rem 1rem' }}>
       <SEO 
-        title="About the Creators" 
-        description="Meet the visionaries behind the Beverage Encyclopedia. Discover our mission to bridge hospitality education with digital innovation and join our professional talent pool."
+        title="Visionaries & Creators | Bevpedia Mission" 
+        description="Meet the academic and industry leaders behind Bevpedia. Our mission is to democratize hospitality education through technology, research, and professional collaboration."
       />
       <div className="container">
         <header style={{ textAlign: 'center', marginBottom: '4rem' }}>

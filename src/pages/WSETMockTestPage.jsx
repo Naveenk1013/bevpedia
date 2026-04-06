@@ -136,8 +136,8 @@ export default function WSETMockTestPage() {
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
       <SEO 
-        title="WSET Certification & Mock Tests" 
-        description="Prepare for your WSET certification with our comprehensive guide and professional CBT mock examinations. Level 1 to Level 4 resources for wine professionals."
+        title="WSET Certification Guide & CBT Mock Tests" 
+        description="Master the WSET curriculum with Bevpedia. Access detailed certification guides and professional Computer Based Training (CBT) mock exams for WSET Level 1 through Level 4."
       />
       <header className="page-header animate-fade-up">
         <Link to="/quiz" style={{ color: 'var(--clr-accent)', textDecoration: 'none', marginBottom: '1rem', display: 'inline-block' }}>

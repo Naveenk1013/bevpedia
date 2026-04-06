@@ -181,7 +181,6 @@
   margin: 0 0 14px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
-  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -557,7 +556,7 @@
 }
 
 /* Filter Group */
-
+.wm-fgroup {}
 
 .wm-fgroup-label {
   font-size: 10px;
