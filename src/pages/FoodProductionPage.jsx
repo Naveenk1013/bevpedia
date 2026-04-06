@@ -10,15 +10,204 @@ import {
   Filter,
   X,
   Youtube,
-  Book
+  Book,
+  Info,
+  ChevronDown,
+  User,
+  Calendar,
+  Hash,
+  Layers,
+  FileDigit
 } from 'lucide-react';
 import { foodProductionData } from '../data/foodProduction';
+
+// ── Metadata row helper ──────────────────────────────────────────────────────
+function MetaRow({ icon: Icon, label, value }) {
+  if (!value) return null;
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+      <Icon size={13} style={{ color: 'var(--clr-accent)', marginTop: '3px', flexShrink: 0 }} />
+      <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.75rem', minWidth: '70px', flexShrink: 0 }}>{label}</span>
+      <span style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.78rem', lineHeight: '1.4' }}>{value}</span>
+    </div>
+  );
+}
+
+// ── Material card (Bakery variant) ────────────────────────────────────────────
+function BakeryMaterialCard({ material, expanded, onToggle }) {
+  const hasInfo = material.author || material.year || material.edition || material.pages || material.isbn || material.publisher;
+  return (
+    <div className="detail-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {/* Top row */}
+      <div style={{ display: 'flex', gap: '1.2rem', alignItems: 'flex-start' }}>
+        <div style={{
+          width: '56px', height: '56px', borderRadius: '12px',
+          background: 'rgba(201, 150, 58, 0.1)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: 'var(--clr-accent)', flexShrink: 0
+        }}>
+          <BookOpen size={28} />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h4 style={{ fontSize: '1.05rem', marginBottom: '0.3rem', lineHeight: '1.3' }}>{material.title}</h4>
+          <p className="text-muted" style={{ fontSize: '0.82rem', lineHeight: '1.5', marginBottom: '0.85rem' }}>{material.description}</p>
+
+          <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            {material.url !== '#' && (
+              <a href={material.url} target="_blank" rel="noopener noreferrer"
+                className="btn btn-outline" style={{ padding: '0.45rem 0.9rem', fontSize: '0.73rem', gap: '5px' }}>
+                <Download size={13} /> Download PDF
+              </a>
+            )}
+            {material.kindleUrl && (
+              <a href={material.kindleUrl} target="_blank" rel="noopener noreferrer"
+                className="btn btn-primary" style={{ padding: '0.45rem 0.9rem', fontSize: '0.73rem', gap: '5px', background: '#f59e0b', color: '#000' }}>
+                <Book size={13} /> Kindle Edition
+              </a>
+            )}
+            {hasInfo && (
+              <button
+                onClick={onToggle}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '5px',
+                  background: expanded ? 'rgba(201,150,58,0.15)' : 'rgba(255,255,255,0.05)',
+                  border: `1px solid ${expanded ? 'rgba(201,150,58,0.4)' : 'rgba(255,255,255,0.1)'}`,
+                  color: expanded ? 'var(--clr-accent)' : 'rgba(255,255,255,0.5)',
+                  borderRadius: '999px', padding: '0.45rem 0.9rem',
+                  fontSize: '0.73rem', cursor: 'pointer', transition: 'all 0.2s'
+                }}
+              >
+                <Info size={12} />
+                Book Info
+                <ChevronDown size={12} style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s' }} />
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Expandable metadata panel */}
+      <AnimatePresence initial={false}>
+        {expanded && hasInfo && (
+          <motion.div
+            key="meta"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.28, ease: 'easeInOut' }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{
+              borderTop: '1px solid rgba(201,150,58,0.2)',
+              paddingTop: '1rem',
+              background: 'rgba(201,150,58,0.04)',
+              borderRadius: '0 0 10px 10px',
+              padding: '0.85rem 1rem 0.6rem'
+            }}>
+              <p style={{ fontSize: '0.68rem', color: 'var(--clr-accent)', fontWeight: '600', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Book Details</p>
+              <MetaRow icon={User}      label="Author"    value={material.author} />
+              <MetaRow icon={Layers}    label="Publisher" value={material.publisher} />
+              <MetaRow icon={Calendar}  label="Year"      value={material.year} />
+              <MetaRow icon={FileDigit} label="Edition"   value={material.edition} />
+              <MetaRow icon={Hash}      label="Pages"     value={material.pages} />
+              <MetaRow icon={Hash}      label="ISBN"      value={material.isbn} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ── Material card (General variant) ──────────────────────────────────────────
+function GeneralMaterialCard({ material, expanded, onToggle }) {
+  const hasInfo = material.author || material.year || material.edition || material.pages || material.isbn || material.publisher;
+  return (
+    <div className="detail-card" style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+      {/* Main row */}
+      <div style={{ display: 'flex', gap: '1.2rem', padding: '1.4rem', alignItems: 'center' }}>
+        <div style={{
+          width: '56px', height: '56px', borderRadius: '12px',
+          background: 'rgba(255, 255, 255, 0.05)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: 'var(--clr-text-muted)', flexShrink: 0
+        }}>
+          {material.type === 'PDF' ? <FileText size={28} /> : <BookOpen size={28} />}
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h4 style={{ fontSize: '1.05rem', marginBottom: '0.2rem' }}>{material.title}</h4>
+          <p className="text-muted" style={{ fontSize: '0.82rem' }}>{material.description}</p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexShrink: 0 }}>
+          {hasInfo && (
+            <button
+              onClick={onToggle}
+              title="Book Info"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '5px',
+                background: expanded ? 'rgba(201,150,58,0.12)' : 'rgba(255,255,255,0.05)',
+                border: `1px solid ${expanded ? 'rgba(201,150,58,0.35)' : 'rgba(255,255,255,0.08)'}`,
+                color: expanded ? 'var(--clr-accent)' : 'rgba(255,255,255,0.4)',
+                borderRadius: '999px', padding: '0.35rem 0.75rem',
+                fontSize: '0.7rem', cursor: 'pointer', transition: 'all 0.2s'
+              }}
+            >
+              <Info size={11} />
+              Info
+              <ChevronDown size={11} style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.25s' }} />
+            </button>
+          )}
+          {material.url !== '#' ? (
+            <a href={material.url} target="_blank" rel="noopener noreferrer" className="btn-icon" title="Download Resource">
+              <Download size={19} />
+            </a>
+          ) : (
+            <span className="btn-icon" style={{ opacity: 0.25, cursor: 'not-allowed' }} title="Coming soon">
+              <Download size={19} />
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Expandable metadata panel */}
+      <AnimatePresence initial={false}>
+        {expanded && hasInfo && (
+          <motion.div
+            key="meta"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.28, ease: 'easeInOut' }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{
+              borderTop: '1px solid rgba(255,255,255,0.07)',
+              padding: '0.85rem 1.4rem 1rem 1.4rem',
+              background: 'rgba(255,255,255,0.02)',
+            }}>
+              <p style={{ fontSize: '0.68rem', color: 'var(--clr-accent)', fontWeight: '600', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Book Details</p>
+              <MetaRow icon={User}      label="Author"    value={material.author} />
+              <MetaRow icon={Layers}    label="Publisher" value={material.publisher} />
+              <MetaRow icon={Calendar}  label="Year"      value={material.year} />
+              <MetaRow icon={FileDigit} label="Edition"   value={material.edition} />
+              <MetaRow icon={Hash}      label="Pages"     value={material.pages} />
+              <MetaRow icon={Hash}      label="ISBN"      value={material.isbn} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export default function FoodProductionPage() {
   const [selectedSemester, setSelectedSemester] = useState('All');
   const [selectedTopic, setSelectedTopic] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeVideo, setActiveVideo] = useState(null);
+  const [expandedMaterial, setExpandedMaterial] = useState(null);
+
+  const toggleMaterialInfo = (id) => setExpandedMaterial(prev => prev === id ? null : id);
 
   const filteredVideos = useMemo(() => {
     return foodProductionData.videos.filter(video => {
@@ -195,42 +384,16 @@ export default function FoodProductionPage() {
             {/* Bakery Section */}
             <div>
               <h3 style={{ fontSize: '1.4rem', marginBottom: '1.5rem', color: 'var(--clr-accent)', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <ChefHat size={24} /> Bakery & Confectionery
+                <ChefHat size={24} /> Bakery &amp; Confectionery
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.25rem' }}>
                 {foodProductionData.studyMaterials.filter(m => m.topic === 'Bakery').map(material => (
-                  <div key={material.id} className="detail-card" style={{ display: 'flex', gap: '1.5rem', padding: '1.5rem', alignItems: 'flex-start' }}>
-                    <div style={{ 
-                      width: '60px', 
-                      height: '60px', 
-                      borderRadius: '12px', 
-                      background: 'rgba(201, 150, 58, 0.1)', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center',
-                      color: 'var(--clr-accent)',
-                      flexShrink: 0
-                    }}>
-                      <BookOpen size={30} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <h4 style={{ fontSize: '1.1rem', marginBottom: '0.4rem' }}>{material.title}</h4>
-                      <p className="text-muted" style={{ fontSize: '0.85rem', lineHeight: '1.5', marginBottom: '1rem' }}>{material.description}</p>
-                      
-                      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                        {material.url !== '#' && (
-                          <a href={material.url} target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ padding: '0.5rem 1rem', fontSize: '0.75rem', gap: '6px' }}>
-                            <Download size={14} /> Download PDF
-                          </a>
-                        )}
-                        {material.kindleUrl && (
-                          <a href={material.kindleUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.75rem', gap: '6px', background: '#f59e0b' }}>
-                            <Book size={14} /> Kindle Edition
-                          </a>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  <BakeryMaterialCard
+                    key={material.id}
+                    material={material}
+                    expanded={expandedMaterial === material.id}
+                    onToggle={() => toggleMaterialInfo(material.id)}
+                  />
                 ))}
               </div>
             </div>
@@ -240,30 +403,14 @@ export default function FoodProductionPage() {
               <h3 style={{ fontSize: '1.4rem', marginBottom: '1.5rem', color: 'var(--clr-text-muted)', display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <FileText size={24} /> General Culinary Resources
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                 {foodProductionData.studyMaterials.filter(m => m.topic !== 'Bakery').map(material => (
-                  <div key={material.id} className="detail-card" style={{ display: 'flex', gap: '1.5rem', padding: '1.5rem', alignItems: 'center' }}>
-                    <div style={{ 
-                      width: '60px', 
-                      height: '60px', 
-                      borderRadius: '12px', 
-                      background: 'rgba(255, 255, 255, 0.05)', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center',
-                      color: 'var(--clr-text-muted)',
-                      flexShrink: 0
-                    }}>
-                      {material.type === 'PDF' ? <FileText size={30} /> : <BookOpen size={30} />}
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <h4 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>{material.title}</h4>
-                      <p className="text-muted" style={{ fontSize: '0.85rem' }}>{material.description}</p>
-                    </div>
-                    <a href={material.url} target="_blank" rel="noopener noreferrer" className="btn-icon" title="Download Resource">
-                      <Download size={20} />
-                    </a>
-                  </div>
+                  <GeneralMaterialCard
+                    key={material.id}
+                    material={material}
+                    expanded={expandedMaterial === material.id}
+                    onToggle={() => toggleMaterialInfo(material.id)}
+                  />
                 ))}
               </div>
             </div>
