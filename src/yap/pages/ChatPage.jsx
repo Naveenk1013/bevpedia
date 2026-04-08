@@ -4,6 +4,7 @@ import { Send, Users, MessageSquare } from 'lucide-react';
 import YapLayout from '../components/YapLayout';
 import MessageBubble from '../components/MessageBubble';
 import { yapService } from '../services/yapService';
+import { supabase } from '../../lib/supabaseClient';
 
 const ChatPage = ({ user }) => {
     const { groupId } = useParams();
@@ -119,8 +120,8 @@ const ChatPage = ({ user }) => {
             sender_id: user.id,
             created_at: new Date().toISOString(),
             sender: {
-                full_name: user.email?.split('@')[0] || 'Me', // Fallback name
-                avatar_url: null
+                full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Me', // Fallback name
+                avatar_url: user.user_metadata?.avatar_url || null
             }
         };
         

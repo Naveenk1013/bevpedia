@@ -162,7 +162,7 @@ const PrivateChatPage = ({ user }) => {
                             </div>
                         </div>
                         <div>
-                            <h3>{otherUser?.full_name || 'Holographic User'}</h3>
+                            <h3>{otherUser?.full_name || (otherUser?.username ? `@${otherUser.username}` : 'Elite Member')}</h3>
                             <p style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <span style={{ width: 8, height: 8, background: isOnline ? '#30c88a' : '#555', borderRadius: '50%' }}></span>
                                 {isOnline ? 'Active Now' : 'Offline'}
@@ -192,7 +192,7 @@ const PrivateChatPage = ({ user }) => {
                             <div className="yap-auth-logo" style={{ marginBottom: '20px' }}>
                                 <Send size={32} />
                             </div>
-                            <p>Your conversation with {otherUser?.full_name || 'this user'} starts here.</p>
+                            <p>Your conversation with {otherUser?.full_name || (otherUser?.username ? `@${otherUser.username}` : 'this member')} starts here.</p>
                             <p style={{ fontSize: '0.8rem', opacity: 0.5 }}>End-to-end encrypted with Sapience Protocol.</p>
                         </div>
                     )}

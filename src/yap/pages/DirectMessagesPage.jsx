@@ -130,11 +130,11 @@ const DirectMessagesPage = ({ user }) => {
                                     {conv.user?.avatar_url ? (
                                         <img src={conv.user.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
                                     ) : (
-                                        (conv.user?.full_name?.[0] || 'U').toUpperCase()
+                                        (conv.user?.full_name?.[0] || conv.user?.username?.[0] || 'U').toUpperCase()
                                     )}
                                 </div>
                                 <div className="info" style={{ opacity: 1, flex: 1 }}>
-                                    <p className="name" style={{ color: '#fff', fontSize: '1rem' }}>{conv.user?.full_name || 'Guest User'}</p>
+                                    <p className="name" style={{ color: '#fff', fontSize: '1rem' }}>{conv.user?.full_name || `@${conv.user?.username}` || 'Elite Member'}</p>
                                     <p className="status" style={{ fontSize: '0.8rem', opacity: 0.6, width: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                         {conv.lastMessage}
                                     </p>
