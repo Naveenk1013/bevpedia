@@ -37,6 +37,7 @@ const CATEGORY_CARDS = [
   { icon: PenTool, name: 'Scholar Notebook', path: '/notebook', count: 'Tool', colour: '#06b6d4', desc: 'Architect academic research & reports' },
   { icon: Sparkles, name: 'SATHI AI', path: '/sathi', count: '24/7 AI', colour: '#f0a113', desc: 'Interactive holographic beverage expert & study companion' },
   { icon: GraduationCap, name: 'Quiz', path: '/quiz', count: '20 Qs', colour: '#e05c5c', desc: 'Test your beverage knowledge' },
+  { icon: MessageSquare, name: 'YAP Community', path: '/yap/community', count: 'Elite', colour: '#7c5cfc', desc: 'Join exclusive hospitality chapters & network with the elite.' },
 ];
 
 const FUN_FACTS = [

@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -23,6 +23,23 @@ const SemesterPage = lazy(() => import('./Notes/SemesterPage'));
 const NotebookPage = lazy(() => import('./pages/NotebookPage'));
 const FoodProductionPage = lazy(() => import('./pages/FoodProductionPage'));
 const SathiPage = lazy(() => import('./pages/SathiPage'));
+const CommunityPage = lazy(() => import('./yap/pages/CommunityPage'));
+const ChatPage = lazy(() => import('./yap/pages/ChatPage'));
+const MyGroupsPage = lazy(() => import('./yap/pages/MyGroupsPage'));
+const SessionsPage = lazy(() => import('./yap/pages/SessionsPage'));
+const DirectMessagesPage = lazy(() => import('./yap/pages/DirectMessagesPage'));
+const PrivateChatPage = lazy(() => import('./yap/pages/PrivateChatPage'));
+const ProfileSettingsPage = lazy(() => import('./yap/pages/ProfileSettingsPage'));
+const YapLoginPage = lazy(() => import('./yap/pages/YapLoginPage'));
+
+const ProtectedYapRoute = ({ user, loading, children }) => {
+  const location = useLocation();
+  if (loading) return <PageLoader />;
+  if (!user) {
+    return <Navigate to="/yap/login" state={{ from: location }} replace />;
+  }
+  return children;
+};
 
 const PageLoader = () => (
   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh', flexDirection: 'column', gap: '1rem' }}>
@@ -45,15 +62,18 @@ export default function App() {
   });
   
   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
+      setAuthLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
+      setAuthLoading(false);
       if (session) setShowAuthModal(false);
     });
 
@@ -76,13 +96,13 @@ export default function App() {
   const isFavourite = (id) => favourites.includes(id);
 
   const location = useLocation();
-  const isSathiPage = location.pathname === '/sathi';
+  const isSpecialPage = location.pathname === '/sathi' || location.pathname.startsWith('/yap');
 
   return (
     <>
-      {!isSathiPage && <Navbar theme={theme} onToggleTheme={toggleTheme} />}
+      {!isSpecialPage && <Navbar theme={theme} onToggleTheme={toggleTheme} />}
       {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
-      <main className={`page-wrapper ${isSathiPage ? 'sathi-route' : ''}`}>
+      <main className={`page-wrapper ${isSpecialPage ? 'special-route no-padding' : ''}`}>
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -105,10 +125,20 @@ export default function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/sponsors" element={<SponsorshipPage />} />
             <Route path="/sathi" element={<SathiPage user={user} onLoginClick={() => setShowAuthModal(true)} onLogout={() => supabase.auth.signOut()} />} />
+            
+            {/* YAP Routes */}
+            <Route path="/yap/login" element={<YapLoginPage />} />
+            <Route path="/yap/community" element={<ProtectedYapRoute user={user} loading={authLoading}><CommunityPage user={user} /></ProtectedYapRoute>} />
+            <Route path="/yap/chat/:groupId" element={<ProtectedYapRoute user={user} loading={authLoading}><ChatPage user={user} /></ProtectedYapRoute>} />
+            <Route path="/yap/my-groups" element={<ProtectedYapRoute user={user} loading={authLoading}><MyGroupsPage user={user} /></ProtectedYapRoute>} />
+            <Route path="/yap/sessions" element={<ProtectedYapRoute user={user} loading={authLoading}><SessionsPage user={user} /></ProtectedYapRoute>} />
+            <Route path="/yap/messages" element={<ProtectedYapRoute user={user} loading={authLoading}><DirectMessagesPage user={user} /></ProtectedYapRoute>} />
+            <Route path="/yap/messages/:otherUserId" element={<ProtectedYapRoute user={user} loading={authLoading}><PrivateChatPage user={user} /></ProtectedYapRoute>} />
+            <Route path="/yap/profile" element={<ProtectedYapRoute user={user} loading={authLoading}><ProfileSettingsPage user={user} /></ProtectedYapRoute>} />
           </Routes>
         </Suspense>
       </main>
-      {!isSathiPage && <Footer />}
+      {!isSpecialPage && <Footer />}
     </>
   );
 }

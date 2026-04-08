@@ -316,7 +316,7 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
         {/* Main Chat Area */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: '100%', position: 'relative' }}>
           
-          <div className="chat-container" style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', background: 'transparent', overflow: 'hidden' }}>
+          <div className="sathi-chat-layout">
             
             {/* 1. Sathi Body (Bottom Layer) */}
             <div style={{ 
@@ -327,36 +327,32 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
                display: 'flex',
                alignItems: 'center',
                justifyContent: 'center',
-               opacity: 1
+               opacity: 0.6 /* Subtle transparency for better readability */
             }}>
                 <SathiBody aiState={aiState} />
             </div>
 
-            {/* 2. Simplified Glass Overlay (Now correctly allows clicks through) */}
-            <div className="glass-overlay" style={{ background: 'rgba(0,0,0,0.2)', backdropFilter: 'none', pointerEvents: 'none' }} />
+            {/* 2. Simplified Glass Overlay */}
+            <div className="glass-overlay" style={{ background: 'rgba(0,0,0,0.1)', backdropFilter: 'none', pointerEvents: 'none' }} />
 
             {/* 3. Messages (Top Layer - Scrollable) */}
             <div 
               id="sathi-message-scroll"
-              style={{ 
-                flex: 1, 
-                overflowY: 'auto', 
-                padding: '1.5rem', 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: '1.5rem',
-                position: 'relative', 
-                zIndex: 2,
-                minHeight: 0,
-                overscrollBehavior: 'contain'
-              }}
+              className="sathi-messages-scroll"
             >
               {messages.length === 0 && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} style={{ textAlign: 'center', color: 'var(--clr-text-muted)', margin: 'auto', maxWidth: '500px' }}>
-                  <p style={{ fontSize: '1.5rem', marginBottom: '1.5rem', color: 'rgba(255,255,255,0.9)' }}>How can I help you today?</p>
+                <motion.div 
+                  initial={{ opacity: 0 }} 
+                  animate={{ opacity: 1 }} 
+                  transition={{ delay: 0.5 }} 
+                  className="sathi-welcome-container"
+                >
+                  <p style={{ fontSize: '1.6rem', marginBottom: '1.5rem', color: 'rgba(255,255,255,0.95)', fontWeight: '500' }}>
+                    How can I help you today?
+                  </p>
                   <div style={{ display: 'flex', gap: '0.8rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                    <span className="btn outline" style={{ fontSize: '0.85rem', padding: '0.6rem 1.2rem', background: 'rgba(240,161,19,0.1)', border: '1px solid rgba(240,161,19,0.3)', color: 'var(--clr-accent)' }} onClick={() => setInput("Can you generate a standard SOP for hotel morning check-outs?")}>Suggest an SOP</span>
-                    <span className="btn outline" style={{ fontSize: '0.85rem', padding: '0.6rem 1.2rem', background: 'rgba(240,161,19,0.1)', border: '1px solid rgba(240,161,19,0.3)', color: 'var(--clr-accent)' }} onClick={() => setInput("What is the Angel's Share in whisky production?")}>Define Angel's Share</span>
+                    <span className="btn outline" style={{ fontSize: '0.85rem', padding: '0.6rem 1.2rem', background: 'rgba(240,161,19,0.1)', border: '1px solid rgba(240,161,19,0.3)', color: 'var(--clr-accent)', cursor: 'pointer' }} onClick={() => setInput("Can you generate a standard SOP for hotel morning check-outs?")}>Suggest an SOP</span>
+                    <span className="btn outline" style={{ fontSize: '0.85rem', padding: '0.6rem 1.2rem', background: 'rgba(240,161,19,0.1)', border: '1px solid rgba(240,161,19,0.3)', color: 'var(--clr-accent)', cursor: 'pointer' }} onClick={() => setInput("What is the Angel's Share in whisky production?")}>Define Angel's Share</span>
                   </div>
                 </motion.div>
               )}
@@ -404,26 +400,16 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
             </div>
 
             {/* 4. Input Area (Fixed/Pinned Bottom) */}
-            <form onSubmit={handleSubmit} style={{ 
-                padding: '1.5rem', 
-                display: 'flex', 
-                gap: '0.8rem', 
-                flexShrink: 0, 
-                background: 'rgba(0,0,0,0.85)', 
-                backdropFilter: 'blur(20px)', 
-                borderTop: '1px solid rgba(255,255,255,0.1)',
-                position: 'relative',
-                zIndex: 3
-            }}>
+            <form onSubmit={handleSubmit} className="sathi-input-area">
                 <input 
                   type="text" 
                   value={input} 
                   onChange={(e) => setInput(e.target.value)} 
                   placeholder="Ask SATHI a question..." 
-                  style={{ flex: 1, padding: '1.2rem 1.8rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: 'white', outline: 'none', minWidth: 0, fontSize: '1.1rem' }}
+                  style={{ flex: 1, padding: '1rem 1.5rem', borderRadius: '30px', border: 'none', background: 'rgba(255,255,255,0.05)', color: 'white', outline: 'none', minWidth: 0, fontSize: '1.1rem' }}
                 />
-                <button type="submit" disabled={isLoading} className="btn flex items-center justify-center" style={{ width: '60px', height: '60px', borderRadius: '50%', padding: 0, flexShrink: 0, background: 'var(--clr-accent)' }}>
-                  <Send size={24} color="#000" />
+                <button type="submit" disabled={isLoading} className="btn flex items-center justify-center" style={{ width: '50px', height: '50px', borderRadius: '50%', padding: 0, flexShrink: 0, background: 'var(--clr-accent)' }}>
+                  <Send size={20} color="#000" />
                 </button>
             </form>
           </div>
