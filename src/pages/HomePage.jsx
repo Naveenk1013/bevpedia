@@ -16,7 +16,8 @@ import {
   Droplets,
   PenTool,
   Library,
-  ChefHat as FoodIcon
+  ChefHat as FoodIcon,
+  MessageSquare
 } from 'lucide-react';
 import LightPillar from '../components/LightPillar';
 import ShinyText from '../components/ShinyText';
