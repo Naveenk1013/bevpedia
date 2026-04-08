@@ -2,21 +2,26 @@ import { supabase } from '../../lib/supabaseClient';
 
 export const yapService = {
     // Group operations
-    async getPublicGroups() {
-        const { data, error } = await supabase
+    async getPublicGroups(category = null) {
+        let query = supabase
             .from('groups')
             .select('*, member_count:group_members(count)')
-            .eq('is_public', true)
-            .order('created_at', { ascending: false });
+            .eq('is_public', true);
+            
+        if (category && category !== 'All') {
+            query = query.eq('category', category);
+        }
+
+        const { data, error } = await query.order('created_at', { ascending: false });
         if (error) throw error;
         // Supabase returns count as an object in v2 join syntax
         return data.map(g => ({ ...g, member_count: g.member_count?.[0]?.count || 0 }));
     },
 
-    async createGroup(name, description, userId) {
+    async createGroup(name, description, userId, isPublic = true, pin = null, category = 'Others') {
         const { data, error } = await supabase
             .from('groups')
-            .insert([{ name, description, created_by: userId }])
+            .insert([{ name, description, created_by: userId, is_public: isPublic, pin, category }])
             .select()
             .single();
         if (error) throw error;
@@ -26,10 +31,68 @@ export const yapService = {
         return data;
     },
 
+    async updateGroupPrivacy(groupId, isPublic, pin) {
+        const { data, error } = await supabase
+            .from('groups')
+            .update({ is_public: isPublic, pin })
+            .eq('id', groupId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
     async joinGroup(groupId, userId, role = 'member') {
         const { error } = await supabase
             .from('group_members')
             .upsert([{ group_id: groupId, user_id: userId, role }], { onConflict: 'group_id,user_id' });
+        if (error) throw error;
+    },
+
+    async updateGroup(groupId, name, description) {
+        const { data, error } = await supabase
+            .from('groups')
+            .update({ name, description })
+            .eq('id', groupId)
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
+    async deleteGroup(groupId) {
+        const { data, error } = await supabase
+            .from('groups')
+            .delete()
+            .eq('id', groupId)
+            .select();
+            
+        if (error) throw error;
+        if (!data || data.length === 0) {
+            throw new Error("Lounge not found or you don't have permission to delete it.");
+        }
+    },
+
+    async getGroupMembers(groupId) {
+        const { data, error } = await supabase
+            .from('group_members')
+            .select(`
+                user_id,
+                role,
+                joined_at,
+                profiles:user_id(full_name, avatar_url, username)
+            `)
+            .eq('group_id', groupId);
+        if (error) throw error;
+        return data;
+    },
+
+    async removeMember(groupId, userId) {
+        const { error } = await supabase
+            .from('group_members')
+            .delete()
+            .eq('group_id', groupId)
+            .eq('user_id', userId);
         if (error) throw error;
     },
 
@@ -176,7 +239,7 @@ export const yapService = {
         return conversations;
     },
 
-    subscribeToMessages(groupId, userProfile, onMessage, onPresence, onTyping) {
+    subscribeToMessages(groupId, userProfile, onMessage, onDelete, onPresence, onTyping) {
         const channel = supabase.channel(`group-${groupId}`);
         
         return channel
@@ -187,6 +250,14 @@ export const yapService = {
                 filter: `group_id=eq.${groupId}`
             }, (payload) => {
                 onMessage(payload.new);
+            })
+            .on('postgres_changes', {
+                event: 'DELETE',
+                schema: 'public',
+                table: 'community_messages',
+                filter: `group_id=eq.${groupId}`
+            }, (payload) => {
+                onDelete(payload.old.id);
             })
             .on('presence', { event: 'sync' }, () => {
                 const state = channel.presenceState();
@@ -217,7 +288,7 @@ export const yapService = {
         });
     },
 
-    subscribeToPrivateMessages(userId, userProfile, onMessage, onPresence, onTyping) {
+    subscribeToPrivateMessages(userId, userProfile, onMessage, onDelete, onPresence, onTyping) {
         const channel = supabase.channel(`private-${userId}`);
         
         return channel
@@ -228,6 +299,14 @@ export const yapService = {
                 filter: `receiver_id=eq.${userId}`
             }, (payload) => {
                 onMessage(payload.new);
+            })
+            .on('postgres_changes', {
+                event: 'DELETE',
+                schema: 'public',
+                table: 'private_messages',
+                filter: `receiver_id=eq.${userId}`
+            }, (payload) => {
+                onDelete(payload.old.id);
             })
             .on('presence', { event: 'sync' }, () => {
                 const state = channel.presenceState();
@@ -257,6 +336,74 @@ export const yapService = {
             event: 'typing',
             payload: { userId, fullName, isTyping },
         });
+    },
+
+    async deleteGroupMessage(messageId) {
+        const { data, error } = await supabase
+            .from('community_messages')
+            .delete()
+            .eq('id', messageId)
+            .select();
+        
+        if (error) throw error;
+        if (!data || data.length === 0) {
+            throw new Error("Message not found or you don't have permission to retract it.");
+        }
+    },
+
+    async deletePrivateMessage(messageId) {
+        const { data, error } = await supabase
+            .from('private_messages')
+            .delete()
+            .eq('id', messageId)
+            .select();
+
+        if (error) throw error;
+        if (!data || data.length === 0) {
+            throw new Error("Message not found or you don't have permission to retract it.");
+        }
+    },
+
+    async verifyLoungePin(groupId, pin) {
+        const { data, error } = await supabase
+            .from('groups')
+            .select('pin')
+            .eq('id', groupId)
+            .single();
+        if (error) throw error;
+        return data.pin === pin;
+    },
+
+    async sendSocialInvite(groupId, inviterId, inviteeId) {
+        const { data, error } = await supabase
+            .from('invitations')
+            .insert([{ group_id: groupId, inviter_id: inviterId, invitee_id: inviteeId }])
+            .select()
+            .single();
+        if (error) throw error;
+        return data;
+    },
+
+    async getInvitations(userId) {
+        const { data, error } = await supabase
+            .from('invitations')
+            .select('*, group:groups(*), inviter:profiles!invitations_inviter_id_fkey(full_name, username)')
+            .eq('invitee_id', userId)
+            .eq('status', 'pending');
+        if (error) throw error;
+        return data;
+    },
+
+    async respondToInvite(inviteId, status, groupId, userId) {
+        const { error } = await supabase
+            .from('invitations')
+            .update({ status })
+            .eq('id', inviteId);
+        if (error) throw error;
+
+        if (status === 'accepted') {
+            await this.joinGroup(groupId, userId);
+        }
     },
 
     async getProfile(userId) {

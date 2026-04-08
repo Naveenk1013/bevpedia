@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Send, Users, MessageSquare } from 'lucide-react';
+import { Send, Users, MessageSquare, Settings } from 'lucide-react';
 import YapLayout from '../components/YapLayout';
 import MessageBubble from '../components/MessageBubble';
+import GroupSettingsModal from '../components/GroupSettingsModal';
 import { yapService } from '../services/yapService';
 import { supabase } from '../../lib/supabaseClient';
 
@@ -15,6 +16,7 @@ const ChatPage = ({ user }) => {
     const [loading, setLoading] = useState(true);
     const [typingUsers, setTypingUsers] = useState({});
     const [activeUsers, setActiveUsers] = useState([]);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const messagesEndRef = useRef(null);
     const channelRef = useRef(null);
     const typingTimeoutRef = useRef(null);
@@ -80,6 +82,9 @@ const ChatPage = ({ user }) => {
                     });
                 }
                 setTimeout(scrollToBottom, 50);
+            },
+            async (deletedId) => {
+                setMessages(prev => prev.filter(m => m.id !== deletedId));
             },
             (users) => {
                 setActiveUsers(users);
@@ -174,12 +179,26 @@ const ChatPage = ({ user }) => {
                             </p>
                         </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '12px' }}>
+                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                         {group?.created_by === user?.id && (
+                             <button className="btn-icon" onClick={() => setIsSettingsOpen(true)} title="Admin Lounge Controls">
+                                 <Settings size={20} color="var(--clr-accent)" />
+                             </button>
+                         )}
                          <button className="btn-icon" onClick={() => navigate('/yap/community')}>
                             <Users size={20} />
                          </button>
                     </div>
                 </header>
+
+                <GroupSettingsModal 
+                    isOpen={isSettingsOpen}
+                    group={group}
+                    currentUser={user}
+                    onClose={() => setIsSettingsOpen(false)}
+                    onUpdate={(updatedGroup) => setGroup(prev => ({ ...prev, ...updatedGroup }))}
+                    onDelete={() => navigate('/yap/community')}
+                />
 
                 <div className="chat-messages">
                     {Object.values(typingUsers).filter(Boolean).length > 0 && (
@@ -195,6 +214,8 @@ const ChatPage = ({ user }) => {
                                 key={msg.id} 
                                 message={msg} 
                                 isMe={msg.sender_id === user?.id} 
+                                isAdmin={group?.created_by === user?.id}
+                                onDelete={(id) => setMessages(prev => prev.filter(m => m.id !== id))}
                             />
                         ))
                     ) : (

@@ -1,7 +1,7 @@
 -- ==========================================
 -- UNIFIED SUPABASE SCHEMA (SATHI AI + YAP)
 -- ==========================================
--- Version: 2.5 (Profile Identity & User Search)
+-- Version: 2.6 (PIN Security, Social Invitations, Message Deletion)
 
 -- 1. EXTENSIONS
 CREATE EXTENSION IF NOT EXISTS vector;
@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS public.groups (
     created_by UUID REFERENCES public.profiles(id),
     is_public BOOLEAN DEFAULT true,
     max_members INTEGER DEFAULT 100,
+    pin TEXT, -- 4-6 digit security PIN for private lounges
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -115,6 +116,18 @@ CREATE TABLE IF NOT EXISTS public.private_messages (
 
 ALTER TABLE public.private_messages REPLICA IDENTITY FULL;
 
+CREATE TABLE IF NOT EXISTS public.invitations (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    group_id UUID REFERENCES public.groups(id) ON DELETE CASCADE,
+    inviter_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    invitee_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
+    status TEXT CHECK (status IN ('pending', 'accepted', 'declined')) DEFAULT 'pending',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    UNIQUE(group_id, invitee_id)
+);
+
+ALTER TABLE public.invitations ENABLE ROW LEVEL SECURITY;
+
 -- ==========================================
 -- LOGIC & SECURITY
 -- ==========================================
@@ -134,7 +147,8 @@ BEGIN;
     public.group_members, 
     public.community_messages, 
     public.private_messages, 
-    public.profiles;
+    public.profiles,
+    public.invitations;
 COMMIT;
 
 -- Private Message Policies
@@ -171,6 +185,32 @@ DROP POLICY IF EXISTS "Members can insert community messages" ON public.communit
 CREATE POLICY "Members can insert community messages" ON public.community_messages FOR INSERT WITH CHECK (
     EXISTS (SELECT 1 FROM public.group_members WHERE group_members.group_id = community_messages.group_id AND group_members.user_id = auth.uid())
 );
+
+-- Message Deletion Policies
+DROP POLICY IF EXISTS "Users can delete their own community messages" ON public.community_messages;
+CREATE POLICY "Users can delete their own community messages" ON public.community_messages 
+FOR DELETE USING (auth.uid() = sender_id OR EXISTS (
+    SELECT 1 FROM public.group_members WHERE group_members.group_id = community_messages.group_id AND group_members.user_id = auth.uid() AND group_members.role = 'admin'
+));
+
+DROP POLICY IF EXISTS "Users can delete their own private messages" ON public.private_messages;
+CREATE POLICY "Users can delete their own private messages" ON public.private_messages 
+FOR DELETE USING (auth.uid() = sender_id);
+
+-- Invitation Policies
+DROP POLICY IF EXISTS "Users can view their own invitations" ON public.invitations;
+CREATE POLICY "Users can view their own invitations" ON public.invitations 
+FOR SELECT USING (auth.uid() = inviter_id OR auth.uid() = invitee_id);
+
+DROP POLICY IF EXISTS "Admins can send invitations" ON public.invitations;
+CREATE POLICY "Admins can send invitations" ON public.invitations 
+FOR INSERT WITH CHECK (EXISTS (
+    SELECT 1 FROM public.group_members WHERE group_members.group_id = invitations.group_id AND group_members.user_id = auth.uid() AND group_members.role = 'admin'
+));
+
+DROP POLICY IF EXISTS "Invitee can update invitation status" ON public.invitations;
+CREATE POLICY "Invitee can update invitation status" ON public.invitations 
+FOR UPDATE USING (auth.uid() = invitee_id);
 
 -- REPAIR / BACKFILL (Ensure everyone has a username)
 UPDATE public.profiles p

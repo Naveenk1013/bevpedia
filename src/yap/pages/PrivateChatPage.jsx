@@ -67,6 +67,9 @@ const PrivateChatPage = ({ user }) => {
                     setTimeout(scrollToBottom, 50);
                 }
             },
+            async (deletedId) => {
+                setMessages(prev => prev.filter(m => m.id !== deletedId));
+            },
             (users) => {
                 // Check if other user is in our presence list
                 setIsOnline(users.some(u => u.id === otherUserId));
@@ -185,6 +188,7 @@ const PrivateChatPage = ({ user }) => {
                                 key={msg.id} 
                                 message={msg} 
                                 isMe={msg.sender_id === user?.id} 
+                                onDelete={(id) => setMessages(prev => prev.filter(m => m.id !== id))}
                             />
                         ))
                     ) : (
