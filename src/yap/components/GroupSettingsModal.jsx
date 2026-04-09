@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, Trash2, UserPlus, Shield, UserMinus, Lock, Globe, Search, Send } from 'lucide-react';
+import { useSound } from '../utils/soundEngine';
 import { yapService } from '../services/yapService';
 
 const GroupSettingsModal = ({ group, isOpen, onClose, onUpdate, onDelete, currentUser }) => {
@@ -11,6 +12,7 @@ const GroupSettingsModal = ({ group, isOpen, onClose, onUpdate, onDelete, curren
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('settings'); // 'settings', 'members', 'privacy', 'invite'
     const [deleteConfirm, setDeleteConfirm] = useState('');
+    const { play } = useSound('ui/click_1');
     
     // Invite related
     const [searchQuery, setSearchQuery] = useState('');
@@ -38,6 +40,7 @@ const GroupSettingsModal = ({ group, isOpen, onClose, onUpdate, onDelete, curren
 
     const handleSave = async (e) => {
         if (e) e.preventDefault();
+        play();
         setLoading(true);
         try {
             const updated = await yapService.updateGroup(group.id, name, description);
@@ -51,6 +54,7 @@ const GroupSettingsModal = ({ group, isOpen, onClose, onUpdate, onDelete, curren
     };
 
     const handlePrivacySave = async () => {
+        play();
         setLoading(true);
         try {
             const updated = await yapService.updateGroupPrivacy(group.id, isPublic, pin);
@@ -83,6 +87,7 @@ const GroupSettingsModal = ({ group, isOpen, onClose, onUpdate, onDelete, curren
     };
 
     const handleInvite = async (userId) => {
+        play();
         try {
             await yapService.sendSocialInvite(group.id, currentUser.id, userId);
             setSearchResults(prev => prev.filter(r => r.id !== userId));
@@ -136,7 +141,10 @@ const GroupSettingsModal = ({ group, isOpen, onClose, onUpdate, onDelete, curren
                             <button 
                                 key={tab.id}
                                 className={`btn-tab ${activeTab === tab.id ? 'active' : ''}`}
-                                onClick={() => setActiveTab(tab.id)}
+                                onClick={() => {
+                                    play();
+                                    setActiveTab(tab.id);
+                                }}
                                 style={{ 
                                     background: 'transparent', 
                                     border: 'none', 

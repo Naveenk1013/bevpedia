@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Send, Users, MessageSquare, Settings } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useSound } from '../utils/soundEngine';
 import YapLayout from '../components/YapLayout';
 import MessageBubble from '../components/MessageBubble';
 import GroupSettingsModal from '../components/GroupSettingsModal';
@@ -17,12 +19,23 @@ const ChatPage = ({ user }) => {
     const [typingUsers, setTypingUsers] = useState({});
     const [activeUsers, setActiveUsers] = useState([]);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [showMembers, setShowMembers] = useState(false);
+    const [groupMembers, setGroupMembers] = useState([]);
     const messagesEndRef = useRef(null);
+    const chatContainerRef = useRef(null);
     const channelRef = useRef(null);
     const typingTimeoutRef = useRef(null);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const { play: playSend } = useSound('ui/click_1');
+    const { play: playReceive } = useSound('notifications/glass_ping');
+
+    const scrollToBottom = (behavior = "smooth") => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTo({
+                top: chatContainerRef.current.scrollHeight,
+                behavior: behavior === "smooth" ? "smooth" : "auto"
+            });
+        }
     };
 
     useEffect(() => {
@@ -33,10 +46,11 @@ const ChatPage = ({ user }) => {
 
         const loadData = async () => {
             try {
-                // Fetch messages and group info in parallel for speed
-                const [msgData, groupData] = await Promise.all([
+                // Fetch messages, group info, and members
+                const [msgData, groupData, membersData] = await Promise.all([
                     yapService.getMessages(groupId),
-                    supabase.from('groups').select('*, member_count:group_members(count)').eq('id', groupId).single()
+                    supabase.from('groups').select('*, member_count:group_members(count)').eq('id', groupId).single(),
+                    yapService.getGroupMembers(groupId)
                 ]);
 
                 setMessages(msgData);
@@ -44,8 +58,11 @@ const ChatPage = ({ user }) => {
                     const g = groupData.data;
                     setGroup({ ...g, member_count: g.member_count?.[0]?.count || 0 });
                 }
+                if (membersData) {
+                    setGroupMembers(membersData);
+                }
                 setLoading(false);
-                setTimeout(scrollToBottom, 100);
+                setTimeout(() => scrollToBottom("auto"), 100);
             } catch (err) {
                 console.error("Failed to load data:", err);
             }
@@ -63,8 +80,8 @@ const ChatPage = ({ user }) => {
             groupId, 
             userProfile,
             async (newMessage) => {
-                // If it's from another user, fetch the full details (with joins)
                 if (newMessage.sender_id !== user.id) {
+                    playReceive();
                     try {
                         const fullMessage = await yapService.getMessageById(newMessage.id);
                         setMessages(prev => {
@@ -75,13 +92,12 @@ const ChatPage = ({ user }) => {
                         console.error("Failed to fetch realtime message details:", err);
                     }
                 } else {
-                    // If it's from us, it's already added optimistically (or will be soon)
                     setMessages(prev => {
                         if (prev.some(m => m.id === newMessage.id)) return prev;
                         return [...prev, newMessage];
                     });
                 }
-                setTimeout(scrollToBottom, 50);
+                setTimeout(() => scrollToBottom(), 50);
             },
             async (deletedId) => {
                 setMessages(prev => prev.filter(m => m.id !== deletedId));
@@ -113,11 +129,11 @@ const ChatPage = ({ user }) => {
         const content = input;
         setInput(""); // Clear input
         
-        // Stop typing indicator instantly
         if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
         yapService.sendTyping(groupId, user.id, user.email?.split('@')[0], false, channelRef.current);
 
-        // Optimistic UI update
+        playSend();
+
         const tempId = Date.now().toString();
         const optimisticMessage = {
             id: tempId,
@@ -125,21 +141,19 @@ const ChatPage = ({ user }) => {
             sender_id: user.id,
             created_at: new Date().toISOString(),
             sender: {
-                full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Me', // Fallback name
+                full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Me',
                 avatar_url: user.user_metadata?.avatar_url || null
             }
         };
         
         setMessages(prev => [...prev, optimisticMessage]);
-        setTimeout(scrollToBottom, 50);
+        setTimeout(() => scrollToBottom(), 50);
 
         try {
             const confirmedMessage = await yapService.sendMessage(groupId, user.id, content);
-            // Replace optimistic message with the confirmed one
             setMessages(prev => prev.map(m => m.id === tempId ? confirmedMessage : m));
         } catch (err) {
             console.error("Send failed:", err);
-            // Remove optimistic message on failure
             setMessages(prev => prev.filter(m => m.id !== tempId));
             alert("Failed to send message.");
         }
@@ -148,7 +162,6 @@ const ChatPage = ({ user }) => {
     const handleInputChange = (val) => {
         setInput(val);
         
-        // Broadcast typing
         if (!typingTimeoutRef.current) {
             yapService.sendTyping(groupId, user.id, user.email?.split('@')[0], true, channelRef.current);
         }
@@ -163,7 +176,11 @@ const ChatPage = ({ user }) => {
 
     return (
         <YapLayout user={user}>
-            <div className="chat-window">
+            <motion.div 
+                className="chat-window"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+            >
                 <header className="chat-header">
                     <div className="chat-header-info">
                         <div className="status-avatar-wrapper" style={{ width: 40, height: 40, padding: 2 }}>
@@ -173,21 +190,42 @@ const ChatPage = ({ user }) => {
                         </div>
                         <div>
                             <h3 style={{ textTransform: 'capitalize' }}>{group?.name || 'Loading...'}</h3>
-                            <p style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <span style={{ width: 8, height: 8, background: activeUsers.length > 0 ? '#30c88a' : '#555', borderRadius: '50%' }}></span>
-                                {activeUsers.length} members active in lounge
-                            </p>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <motion.span 
+                                    className={`presence-dot ${activeUsers.length > 0 ? 'online' : 'offline'}`}
+                                ></motion.span>
+                                <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>
+                                    {activeUsers.length} members active
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                         {group?.created_by === user?.id && (
-                             <button className="btn-icon" onClick={() => setIsSettingsOpen(true)} title="Admin Lounge Controls">
-                                 <Settings size={20} color="var(--clr-accent)" />
-                             </button>
-                         )}
-                         <button className="btn-icon" onClick={() => navigate('/yap/community')}>
+                         <motion.button 
+                            whileTap={{ scale: 0.9 }}
+                            className="btn-icon" 
+                            onClick={() => { playSend(); setShowMembers(true); }}
+                            title="View Members"
+                         >
                             <Users size={20} />
-                         </button>
+                         </motion.button>
+                         {group?.created_by === user?.id && (
+                             <motion.button 
+                                whileTap={{ scale: 0.9 }}
+                                className="btn-icon" 
+                                onClick={() => { playSend(); setIsSettingsOpen(true); }} title="Admin Lounge Controls"
+                             >
+                                 <Settings size={20} color="var(--clr-accent)" />
+                             </motion.button>
+                         )}
+                         <motion.button 
+                            whileTap={{ scale: 0.9 }}
+                            className="btn-icon" 
+                            onClick={() => { playSend(); navigate('/yap/community'); }}
+                            title="Exit Lounge"
+                         >
+                            X
+                         </motion.button>
                     </div>
                 </header>
 
@@ -200,35 +238,67 @@ const ChatPage = ({ user }) => {
                     onDelete={() => navigate('/yap/community')}
                 />
 
-                <div className="chat-messages">
-                    {Object.values(typingUsers).filter(Boolean).length > 0 && (
-                        <div className="typing-indicator" style={{ padding: '10px 20px', fontSize: '0.8rem', color: 'var(--clr-accent)', fontStyle: 'italic', opacity: 0.8 }}>
-                            {Object.values(typingUsers).filter(Boolean).join(', ')} {Object.values(typingUsers).filter(Boolean).length > 1 ? 'are' : 'is'} typing...
-                        </div>
-                    )}
-                    {loading ? (
-                        <div className="text-muted">Loading secure connection...</div>
-                    ) : messages.length > 0 ? (
-                        messages.map(msg => (
-                            <MessageBubble 
-                                key={msg.id} 
-                                message={msg} 
-                                isMe={msg.sender_id === user?.id} 
-                                isAdmin={group?.created_by === user?.id}
-                                onDelete={(id) => setMessages(prev => prev.filter(m => m.id !== id))}
-                            />
-                        ))
-                    ) : (
-                        <div className="text-muted" style={{ textAlign: 'center', marginTop: 'auto', padding: '40px' }}>
-                            <MessageSquare size={48} style={{ opacity: 0.1, marginBottom: '20px' }} />
-                            <p>No messages yet.<br/>Start the conversation.</p>
-                        </div>
-                    )}
+                <div className="chat-messages" ref={chatContainerRef}>
+                    <AnimatePresence>
+                        {loading ? (
+                            <motion.div 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="text-muted"
+                            >
+                                Initialized secure connection...
+                            </motion.div>
+                        ) : messages.length > 0 ? (
+                                <motion.div
+                                    initial="hidden"
+                                    animate="visible"
+                                    variants={{
+                                        visible: { transition: { staggerChildren: 0.05 } }
+                                    }}
+                                    style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
+                                >
+                                {messages.map(msg => (
+                                    <MessageBubble 
+                                        key={msg.id} 
+                                        message={msg} 
+                                        isMe={msg.sender_id === user?.id} 
+                                        currentUserId={user?.id}
+                                        isAdmin={group?.created_by === user?.id}
+                                        onDelete={(id) => setMessages(prev => prev.filter(m => m.id !== id))}
+                                    />
+                                ))}
+                            </motion.div>
+                        ) : (
+                            <motion.div 
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="text-muted" 
+                                style={{ textAlign: 'center', marginTop: 'auto', padding: '40px' }}
+                            >
+                                <MessageSquare size={48} style={{ opacity: 0.1, marginBottom: '20px' }} />
+                                <p>No messages yet.<br/>Start the conversation.</p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                    
+                    <AnimatePresence>
+                        {Object.values(typingUsers).filter(Boolean).length > 0 && (
+                            <motion.div 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                className="typing-indicator" 
+                                style={{ padding: '10px 20px', fontSize: '0.8rem', color: 'var(--clr-accent)', fontStyle: 'italic' }}
+                            >
+                                {Object.values(typingUsers).filter(Boolean).join(', ')} {Object.values(typingUsers).filter(Boolean).length > 1 ? 'are' : 'is'} typing...
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                     <div ref={messagesEndRef} />
                 </div>
 
                 <form className="chat-input-area" onSubmit={handleSend}>
-                    <div className="chat-input-wrapper">
+                    <div className="chat-input-wrapper glass-morphism">
                         <input 
                             type="text" 
                             className="chat-input" 
@@ -236,12 +306,80 @@ const ChatPage = ({ user }) => {
                             value={input}
                             onChange={(e) => handleInputChange(e.target.value)}
                         />
-                        <button type="submit" className="send-btn">
+                        <motion.button 
+                            whileTap={{ scale: 0.8 }}
+                            type="submit" 
+                            className="send-btn"
+                        >
                             <Send size={20} />
-                        </button>
+                        </motion.button>
                     </div>
                 </form>
-            </div>
+            </motion.div>
+            <GroupSettingsModal 
+                isOpen={isSettingsOpen} 
+                onClose={() => setIsSettingsOpen(false)} 
+                group={group} 
+            />
+
+            <AnimatePresence>
+                {showMembers && (
+                    <div className="yap-modal-overlay" onClick={() => setShowMembers(false)}>
+                        <motion.div 
+                            className="yap-modal-content"
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            onClick={e => e.stopPropagation()}
+                            style={{ maxWidth: '400px' }}
+                        >
+                            <div className="yap-modal-header">
+                                <h3 style={{ margin: 0, color: 'white', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <Users size={18} color="var(--clr-accent)" />
+                                    Members ({groupMembers.length})
+                                </h3>
+                                <button className="btn-icon" onClick={() => setShowMembers(false)}>×</button>
+                            </div>
+                            <div style={{ padding: '20px', maxHeight: '50vh', overflowY: 'auto' }}>
+                                {groupMembers.map(member => {
+                                    const isUserOnline = activeUsers.some(u => u.id === member.user.id);
+                                    return (
+                                        <div 
+                                            key={member.user.id} 
+                                            onClick={() => navigate(`/yap/user/${member.user.id}`)}
+                                            style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', marginBottom: '8px', cursor: 'pointer' }}
+                                        >
+                                            <div className="status-avatar-wrapper" style={{ width: 44, height: 44, padding: '2px' }}>
+                                                <div className="status-avatar">
+                                                    {member.user.avatar_url ? (
+                                                        <img src={member.user.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+                                                    ) : (
+                                                        <span style={{ fontSize: '1.2rem' }}>{(member.user.full_name?.[0] || 'U').toUpperCase()}</span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <span style={{ fontWeight: 'bold', color: 'white', fontSize: '0.9rem' }}>{member.user.full_name}</span>
+                                                    {member.role === 'admin' ? (
+                                                        <span style={{ fontSize: '0.7rem', color: '#000', background: 'var(--clr-accent)', padding: '2px 8px', borderRadius: '10px', textTransform: 'uppercase', fontWeight: 'bold' }}>Founder</span>
+                                                    ) : (
+                                                        <span style={{ fontSize: '0.7rem', color: 'gray', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: '10px', textTransform: 'uppercase' }}>Member</span>
+                                                    )}
+                                                </div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', opacity: 0.7, marginTop: '4px' }}>
+                                                    <span className={`presence-dot ${isUserOnline ? 'online' : 'offline'}`}></span>
+                                                    <span>{isUserOnline ? 'Active Now' : 'Offline'}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </YapLayout>
     );
 };

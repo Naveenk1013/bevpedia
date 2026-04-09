@@ -1,18 +1,43 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Globe, Users, GraduationCap, MessageSquare, Coffee, Wine, GlassWater, Hotel, Check, X, Bell } from 'lucide-react';
+import { Globe, Users, GraduationCap, MessageSquare, Coffee, Wine, GlassWater, Hotel, Check, X, Bell, Plus, Search, Filter } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useSound } from '../utils/soundEngine';
 import YapLayout from '../components/YapLayout';
 import GroupCard from '../components/GroupCard';
 import CreateGroupModal from '../components/CreateGroupModal';
 import { yapService } from '../services/yapService';
 
 const CATEGORIES = [
-    { id: 'All', name: 'All Lounges', icon: Globe, color: 'var(--clr-accent)' },
+    { id: 'All', name: 'All', icon: Globe, color: 'var(--clr-accent)' },
     { id: 'Mixology', name: 'Mixology', icon: Wine, color: '#c9963a' },
     { id: 'Baristi', name: 'Baristi', icon: Coffee, color: '#7c5cfc' },
     { id: 'Sommelier', name: 'Sommelier', icon: GlassWater, color: '#30c88a' },
     { id: 'Front Office', name: 'Front Office', icon: Hotel, color: '#e05c5c' }
 ];
+
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.05
+        }
+    }
+};
+
+const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+        y: 0,
+        opacity: 1,
+        transition: {
+            type: "spring",
+            stiffness: 100,
+            damping: 15
+        }
+    }
+};
 
 const CommunityPage = ({ user }) => {
     const [groups, setGroups] = useState([]);
@@ -20,7 +45,10 @@ const CommunityPage = ({ user }) => {
     const [loading, setLoading] = useState(true);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isSearchFocused, setIsSearchFocused] = useState(false);
     const navigate = useNavigate();
+    const { play } = useSound('ui/click_1');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,11 +69,16 @@ const CommunityPage = ({ user }) => {
     }, [user]);
 
     const filteredGroups = useMemo(() => {
-        if (selectedCategory === 'All') return groups;
-        return groups.filter(g => g.category === selectedCategory);
-    }, [groups, selectedCategory]);
+        return groups.filter(g => {
+            const matchesCategory = selectedCategory === 'All' || g.category === selectedCategory;
+            const matchesSearch = g.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                 (g.description && g.description.toLowerCase().includes(searchTerm.toLowerCase()));
+            return matchesCategory && matchesSearch;
+        });
+    }, [groups, selectedCategory, searchTerm]);
 
-    const handleJoin = async (groupId, pin = null) => {
+    const handleJoin = async (groupId) => {
+        play();
         if (!user) {
             alert("Please login to join a group!");
             return;
@@ -54,7 +87,7 @@ const CommunityPage = ({ user }) => {
             await yapService.joinGroup(groupId, user.id);
             navigate(`/yap/chat/${groupId}`);
         } catch (err) {
-            if (err.code === '23505') { // Unique constraint violation (already joined)
+            if (err.code === '23505') {
                 navigate(`/yap/chat/${groupId}`);
             } else {
                 console.error("Join failed:", err);
@@ -76,142 +109,197 @@ const CommunityPage = ({ user }) => {
 
     return (
         <YapLayout user={user}>
-            {/* Active Groups / Stories Bar */}
-            <div className="status-bar" style={{ 
-                padding: '20px', 
-                display: 'flex', 
-                gap: '20px', 
-                overflowX: 'auto', 
-                scrollbarWidth: 'none',
-                background: 'rgba(0,0,0,0.2)',
-                marginBottom: '10px'
-            }}>
-                {CATEGORIES.map(cat => (
-                    <div 
-                        key={cat.id} 
-                        className={`status-item ${selectedCategory === cat.id ? 'active' : ''}`}
-                        onClick={() => setSelectedCategory(cat.id)}
-                        style={{ cursor: 'pointer', textAlign: 'center', transition: 'all 0.3s ease' }}
-                    >
-                        <div className="status-avatar-wrapper" style={{ 
-                            background: selectedCategory === cat.id ? cat.color : 'rgba(255,255,255,0.05)',
-                            padding: '2px',
-                            border: `2px solid ${selectedCategory === cat.id ? cat.color : 'transparent'}`,
-                            boxShadow: selectedCategory === cat.id ? `0 0 20px ${cat.color}44` : 'none',
-                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                            transform: selectedCategory === cat.id ? 'scale(1.1)' : 'scale(1)'
-                        }}>
-                            <div className="status-avatar" style={{ background: selectedCategory === cat.id ? '#000' : 'transparent' }}>
-                                <cat.icon size={24} color={selectedCategory === cat.id ? cat.color : '#fff'} />
-                            </div>
+            <div className="community-page-wrapper" style={{ position: 'relative', minHeight: '100%' }}>
+                
+                {/* STICKY GLASS HEADER */}
+                <header className="discovery-header sticky-header" style={{ 
+                    position: 'sticky', 
+                    top: 0, 
+                    zIndex: 100, 
+                    background: 'rgba(10, 10, 10, 0.7)',
+                    backdropFilter: 'blur(20px)',
+                    borderBottom: '1px solid var(--yap-glass-border)',
+                    padding: '15px 20px',
+                    margin: 0
+                }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                        <div>
+                            <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 'bold', letterSpacing: '-0.02em' }}>Network</h1>
+                            <p style={{ margin: 0, fontSize: '0.75rem', opacity: 0.5 }}>{filteredGroups.length} channels available</p>
                         </div>
-                        <span className="status-name" style={{ 
-                            color: selectedCategory === cat.id ? '#fff' : '#888',
-                            fontSize: '0.75rem',
-                            fontWeight: selectedCategory === cat.id ? 'bold' : 'normal',
-                            marginTop: '8px',
-                            display: 'block',
-                            letterSpacing: '0.02em'
-                        }}>{cat.name}</span>
+                        <motion.button 
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => setShowCreateModal(true)}
+                            className="btn-icon mobile-only"
+                            style={{ background: 'var(--clr-accent)', color: 'black', borderRadius: '12px', width: 40, height: 40 }}
+                        >
+                            <Plus size={24} />
+                        </motion.button>
                     </div>
-                ))}
-            </div>
 
-            <div style={{ padding: '0 20px' }}>
-                {invitations.length > 0 && (
-                    <div className="invitations-section animate-fade-in" style={{ 
-                        margin: '20px 0', 
-                        padding: '20px', 
-                        background: 'rgba(201, 150, 58, 0.05)', 
-                        border: '1px solid rgba(201, 150, 58, 0.1)', 
-                        borderRadius: '20px' 
-                    }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '15px' }}>
-                            <Bell size={18} color="var(--clr-accent)" />
-                            <h3 style={{ fontSize: '0.9rem', fontWeight: 'bold', margin: 0, letterSpacing: '0.05em' }}>LOUNGE INVITATIONS</h3>
+                    {/* SEARCH & FILTERS */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                        <div className={`search-bar glass-morphism ${isSearchFocused ? 'focused' : ''}`}>
+                            <Search size={16} className="search-icon" style={{ opacity: 0.5, color: isSearchFocused ? 'var(--clr-accent)' : 'inherit', transition: 'color 0.3s' }} />
+                            <input 
+                                type="text" 
+                                placeholder="Search hospitality lounges..." 
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onFocus={() => setIsSearchFocused(true)}
+                                onBlur={() => setIsSearchFocused(false)}
+                            />
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            {invitations.map(invite => (
-                                <div key={invite.id} className="yap-user-brief" style={{ 
-                                    opacity: 1, 
-                                    background: 'rgba(255,255,255,0.03)', 
-                                    padding: '12px 16px', 
-                                    borderRadius: '14px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '12px'
-                                }}>
-                                    <div className="avatar" style={{ width: 36, height: 36, background: 'var(--yap-accent-gradient)' }}>
-                                        {invite.inviter?.full_name?.[0]?.toUpperCase() || 'E'}
+
+                        <div className="status-bar" style={{  
+                            padding: '5px 0', 
+                            display: 'flex', 
+                            gap: '20px', 
+                            overflowX: 'auto', 
+                            scrollbarWidth: 'none',
+                            margin: '0 -5px'
+                        }}>
+                            {CATEGORIES.map(cat => (
+                                <motion.div 
+                                    key={cat.id} 
+                                    className={`status-item ${selectedCategory === cat.id ? 'active' : ''}`}
+                                    onClick={() => setSelectedCategory(cat.id)}
+                                    whileTap={{ scale: 0.94 }}
+                                    style={{ cursor: 'pointer', textAlign: 'center', minWidth: '60px' }}
+                                >
+                                    <div className="status-avatar-wrapper" style={{ 
+                                        width: 48,
+                                        height: 48,
+                                        background: selectedCategory === cat.id ? cat.color : 'rgba(255,255,255,0.05)',
+                                        border: `2px solid ${selectedCategory === cat.id ? cat.color : 'transparent'}`,
+                                        transition: 'all 0.3s ease',
+                                        transform: selectedCategory === cat.id ? 'scale(1.05)' : 'scale(1)'
+                                    }}>
+                                        <div className="status-avatar" style={{ background: selectedCategory === cat.id ? '#000' : 'transparent' }}>
+                                            <cat.icon size={20} color={selectedCategory === cat.id ? cat.color : '#fff'} />
+                                        </div>
                                     </div>
-                                    <div className="info" style={{ opacity: 1, flex: 1 }}>
-                                        <p style={{ fontSize: '0.85rem' }}>
-                                            <strong>{invite.inviter?.full_name}</strong> invited you to join <strong>{invite.group?.name}</strong>
-                                        </p>
-                                    </div>
-                                    <div style={{ display: 'flex', gap: '8px' }}>
-                                        <button className="btn-icon" onClick={() => handleInviteAction(invite, 'accepted')} style={{ background: 'var(--clr-accent)', color: '#000', borderRadius: '50%', width: 32, height: 32 }}>
-                                            <Check size={16} />
-                                        </button>
-                                        <button className="btn-icon" onClick={() => handleInviteAction(invite, 'declined')} style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '50%', width: 32, height: 32 }}>
-                                            <X size={16} />
-                                        </button>
-                                    </div>
-                                </div>
+                                    <span style={{ 
+                                        color: selectedCategory === cat.id ? '#fff' : '#888',
+                                        fontSize: '0.65rem',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.05em',
+                                        marginTop: '6px',
+                                        display: 'block'
+                                    }}>{cat.name}</span>
+                                </motion.div>
                             ))}
                         </div>
                     </div>
-                )}
-            </div>
+                </header>
 
-            <header className="community-header">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                    <div>
-                        <h1 className="community-title">
-                            {selectedCategory === 'All' ? 'Discover Communities' : `${selectedCategory} Lounges`}
-                        </h1>
-                        <p className="community-subtitle">
-                            {selectedCategory === 'All' 
-                                ? 'The official Bevpedia network for hospitality elite.' 
-                                : `Connecting the world's finest ${selectedCategory.toLowerCase()} professionals.`}
-                        </p>
-                    </div>
-                    {selectedCategory !== 'All' && (
-                        <button className="text-link" onClick={() => setSelectedCategory('All')} style={{ fontSize: '0.8rem', opacity: 0.6 }}>
-                            Clear Filter
-                        </button>
-                    )}
+                <div className="community-scroll-content" style={{ padding: '20px' }}>
+                    <AnimatePresence>
+                        {invitations.length > 0 && (
+                            <motion.div 
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                style={{ marginBottom: '20px', overflow: 'hidden' }}
+                            >
+                                <div style={{ 
+                                    padding: '20px', 
+                                    background: 'rgba(201, 150, 58, 0.05)', 
+                                    border: '1px solid rgba(201, 150, 58, 0.1)', 
+                                    borderRadius: '20px' 
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '15px' }}>
+                                        <Bell size={16} color="var(--clr-accent)" />
+                                        <h3 style={{ fontSize: '0.75rem', fontWeight: 'bold', margin: 0, letterSpacing: '0.1em', opacity: 0.7 }}>PENDING INVITATIONS</h3>
+                                    </div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                        {invitations.map(invite => (
+                                            <div key={invite.id} style={{ 
+                                                background: 'rgba(255,255,255,0.03)', 
+                                                padding: '12px', 
+                                                borderRadius: '12px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '12px'
+                                            }}>
+                                                <div className="avatar" style={{ width: 32, height: 32, fontSize: '0.8rem' }}>
+                                                    {invite.inviter?.full_name?.[0]?.toUpperCase() || 'E'}
+                                                </div>
+                                                <div style={{ flex: 1 }}>
+                                                    <p style={{ fontSize: '0.8rem', margin: 0, lineHeight: '1.4' }}>
+                                                        <strong>{invite.inviter?.full_name}</strong> invited you to <strong>{invite.group?.name}</strong>
+                                                    </p>
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '5px' }}>
+                                                    <button onClick={() => handleInviteAction(invite, 'accepted')} style={{ background: 'var(--clr-accent)', color: '#000', border: 'none', borderRadius: '50%', width: 30, height: 30, cursor: 'pointer' }}>
+                                                        <Check size={14} />
+                                                    </button>
+                                                    <button onClick={() => handleInviteAction(invite, 'declined')} style={{ background: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none', borderRadius: '50%', width: 30, height: 30, cursor: 'pointer' }}>
+                                                        <X size={14} />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    <motion.div 
+                        className="groups-grid"
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                        key={`${selectedCategory}-${searchTerm}`}
+                    >
+                        {loading ? (
+                            <div className="text-muted">Analyzing legacy channels...</div>
+                        ) : filteredGroups.length > 0 ? (
+                            filteredGroups.map(group => (
+                                <motion.div key={group.id} variants={itemVariants} whileTap={{ scale: 0.98 }}>
+                                    <GroupCard 
+                                        group={group} 
+                                        onJoin={handleJoin} 
+                                    />
+                                </motion.div>
+                            ))
+                        ) : (
+                            <motion.div 
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                className="text-muted" 
+                                style={{ gridColumn: '1/-1', textAlign: 'center', padding: '100px 40px' }}
+                            >
+                                <Globe size={48} style={{ opacity: 0.1, marginBottom: '20px' }} />
+                                <p>No {selectedCategory !== 'All' ? selectedCategory : ''} active lounges found.<br/>The network is waiting for you.</p>
+                                <button className="btn btn-primary" style={{ marginTop: '20px' }} onClick={() => setShowCreateModal(true)}>
+                                    Initiate Legacy
+                                </button>
+                            </motion.div>
+                        )}
+                    </motion.div>
                 </div>
-            </header>
 
-            <div className="groups-grid">
-                {loading ? (
-                    <div className="text-muted">Analyzing networks...</div>
-                ) : filteredGroups.length > 0 ? (
-                    filteredGroups.map(group => (
-                        <GroupCard 
-                            key={group.id} 
-                            group={group} 
-                            onJoin={handleJoin} 
-                        />
-                    ))
-                ) : (
-                    <div className="text-muted" style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px 40px' }}>
-                        <Globe size={48} style={{ opacity: 0.1, marginBottom: '20px' }} />
-                        <p>No active {selectedCategory !== 'All' ? selectedCategory : ''} chapters found.<br/>Be the first to start this legacy.</p>
-                        <button className="btn btn-primary" style={{ marginTop: '20px' }} onClick={() => setShowCreateModal(true)}>
-                            Launch {selectedCategory !== 'All' ? selectedCategory : 'New'} Lounge
-                        </button>
-                    </div>
+                {/* MOBILE FAB */}
+                <motion.button 
+                    className="mobile-fab"
+                    whileTap={{ scale: 0.8 }}
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    onClick={() => setShowCreateModal(true)}
+                    style={{ position: 'fixed', bottom: '100px', right: '25px', zIndex: 1000, boxShadow: '0 8px 32px rgba(48, 200, 138, 0.4)' }}
+                >
+                    <Plus size={32} />
+                </motion.button>
+
+                {showCreateModal && (
+                    <CreateGroupModal 
+                        user={user} 
+                        onClose={() => setShowCreateModal(false)} 
+                    />
                 )}
             </div>
-
-            {showCreateModal && (
-                <CreateGroupModal 
-                    user={user} 
-                    onClose={() => setShowCreateModal(false)} 
-                />
-            )}
         </YapLayout>
     );
 };

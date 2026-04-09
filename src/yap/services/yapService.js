@@ -180,7 +180,7 @@ export const yapService = {
                 *,
                 sender:profiles!private_messages_sender_id_fkey(full_name, avatar_url)
             `)
-            .or(`and(sender_id.eq.${userId},receiver_id.eq.${otherUserId}),and(sender_id.eq.${otherUserId},receiver_id.eq.${userId})`)
+            .or(`and(sender_id.eq.${userId},receiver_id.eq.${otherUserId},deleted_by_sender.eq.false),and(sender_id.eq.${otherUserId},receiver_id.eq.${userId},deleted_by_receiver.eq.false)`)
             .order('created_at', { ascending: true })
             .limit(limit);
         if (error) throw error;
@@ -209,10 +209,12 @@ export const yapService = {
                 receiver_id,
                 content,
                 created_at,
+                deleted_by_sender,
+                deleted_by_receiver,
                 sender:profiles!private_messages_sender_id_fkey(full_name, avatar_url),
                 receiver:profiles!private_messages_receiver_id_fkey(full_name, avatar_url)
             `)
-            .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
+            .or(`and(sender_id.eq.${userId},deleted_by_sender.eq.false),and(receiver_id.eq.${userId},deleted_by_receiver.eq.false)`)
             .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -288,8 +290,23 @@ export const yapService = {
         });
     },
 
-    subscribeToPrivateMessages(userId, userProfile, onMessage, onDelete, onPresence, onTyping) {
-        const channel = supabase.channel(`private-${userId}`);
+    getSharedPrivateChannelId(userId1, userId2) {
+        return `private-${[userId1, userId2].sort().join('-')}`;
+    },
+
+    sendPrivateTyping(recipientId, userId, fullName, isTyping, activeChannel = null) {
+        const channelId = this.getSharedPrivateChannelId(userId, recipientId);
+        const channel = activeChannel || supabase.channel(channelId);
+        return channel.send({
+            type: 'broadcast',
+            event: 'typing',
+            payload: { userId, fullName, isTyping },
+        });
+    },
+
+    subscribeToPrivateMessages(userId, otherUserId, userProfile, onMessage, onDelete, onPresence, onTyping) {
+        const channelId = this.getSharedPrivateChannelId(userId, otherUserId);
+        const channel = supabase.channel(channelId);
         
         return channel
             .on('postgres_changes', {
@@ -339,29 +356,47 @@ export const yapService = {
     },
 
     async deleteGroupMessage(messageId) {
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('community_messages')
             .delete()
-            .eq('id', messageId)
-            .select();
+            .eq('id', messageId);
         
         if (error) throw error;
-        if (!data || data.length === 0) {
-            throw new Error("Message not found or you don't have permission to retract it.");
-        }
     },
 
-    async deletePrivateMessage(messageId) {
+    async getGroupMembers(groupId) {
         const { data, error } = await supabase
+            .from('group_members')
+            .select('role, user:profiles(*)')
+            .eq('group_id', groupId);
+        if (error) throw error;
+        return data;
+    },
+
+    async deletePrivateMessage(messageId, userId) {
+        const { data: msg, error: fetchErr } = await supabase
             .from('private_messages')
-            .delete()
+            .select('sender_id, receiver_id')
             .eq('id', messageId)
-            .select();
+            .single();
+            
+        if (fetchErr || !msg) throw new Error("Message not found.");
+
+        let updateData = {};
+        if (msg.sender_id === userId) {
+            updateData = { deleted_by_sender: true };
+        } else if (msg.receiver_id === userId) {
+            updateData = { deleted_by_receiver: true };
+        } else {
+            throw new Error("Permission denied.");
+        }
+
+        const { error } = await supabase
+            .from('private_messages')
+            .update(updateData)
+            .eq('id', messageId);
 
         if (error) throw error;
-        if (!data || data.length === 0) {
-            throw new Error("Message not found or you don't have permission to retract it.");
-        }
     },
 
     async verifyLoungePin(groupId, pin) {
@@ -424,6 +459,9 @@ export const yapService = {
                 username: profileData.username,
                 avatar_url: profileData.avatar_url,
                 bio: profileData.bio,
+                is_public: profileData.is_public !== undefined ? profileData.is_public : true,
+                location: profileData.location,
+                company: profileData.company,
                 updated_at: new Date().toISOString()
             })
             .eq('id', userId)
@@ -442,5 +480,11 @@ export const yapService = {
             .limit(10);
         if (error) throw error;
         return data;
+    },
+
+    async deleteAccount() {
+        const { error } = await supabase.rpc('delete_own_account');
+        if (error) throw error;
+        return true;
     }
 };

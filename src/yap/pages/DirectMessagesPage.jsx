@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Search, User } from 'lucide-react';
+import { useSound } from '../utils/soundEngine';
 import YapLayout from '../components/YapLayout';
 import { yapService } from '../services/yapService';
 
@@ -11,6 +12,7 @@ const DirectMessagesPage = ({ user }) => {
     const [loading, setLoading] = useState(true);
     const [searching, setSearching] = useState(false);
     const navigate = useNavigate();
+    const { play } = useSound('ui/click_1');
 
     useEffect(() => {
         if (!user) {
@@ -84,7 +86,10 @@ const DirectMessagesPage = ({ user }) => {
                                     key={result.id} 
                                     className="yap-nav-item" 
                                     style={{ padding: '12px', background: 'rgba(201,150,58,0.05)', borderRadius: '12px', marginBottom: '8px', cursor: 'pointer' }}
-                                    onClick={() => navigate(`/yap/messages/${result.id}`)}
+                                    onClick={() => {
+                                        play();
+                                        navigate(`/yap/messages/${result.id}`);
+                                    }}
                                 >
                                     <div className="yap-user-brief">
                                         <div className="avatar" style={{ width: 40, height: 40 }}>
@@ -123,7 +128,10 @@ const DirectMessagesPage = ({ user }) => {
                                 cursor: 'pointer',
                                 background: 'transparent'
                             }}
-                            onClick={() => navigate(`/yap/messages/${conv.id}`)}
+                            onClick={() => {
+                                play();
+                                navigate(`/yap/messages/${conv.id}`);
+                            }}
                         >
                             <div className="yap-user-brief">
                                 <div className="avatar" style={{ width: 50, height: 50 }}>

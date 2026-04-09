@@ -1,17 +1,21 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { MessageSquare, Globe, Users, GraduationCap, LogOut, User } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useSound } from '../utils/soundEngine';
 import { supabase } from '../../lib/supabaseClient';
 import YapMobileNav from './YapMobileNav';
 import '../../styles/yap.css';
 
 const YapLayout = ({ children, user }) => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { play: playTick } = useSound('ui/click_1');
 
     return (
         <div className="yap-container">
             {/* Main Sidebar (Desktop Rail) */}
             <aside className="yap-sidebar">
-                <div className="yap-sidebar-header" onClick={() => navigate('/yap/community')}>
+                <div className="yap-sidebar-header" onClick={() => window.location.href = 'https://bevpedia.in'}>
                     <div className="status-avatar-wrapper" style={{ width: 44, height: 44 }}>
                         <div className="status-avatar">
                             <MessageSquare size={20} color="var(--clr-accent)" />
@@ -21,23 +25,23 @@ const YapLayout = ({ children, user }) => {
                 </div>
                 
                 <nav className="yap-nav">
-                    <NavLink to="/yap/community" className={({isActive}) => isActive ? "yap-nav-item active" : "yap-nav-item"}>
+                    <NavLink to="/yap/community" onClick={() => playTick()} className={({isActive}) => isActive ? "yap-nav-item active" : "yap-nav-item"}>
                         <Globe className="icon" size={24} />
                         <span>Discovery</span>
                     </NavLink>
-                    <NavLink to="/yap/my-groups" className={({isActive}) => isActive ? "yap-nav-item active" : "yap-nav-item"}>
+                    <NavLink to="/yap/my-groups" onClick={() => playTick()} className={({isActive}) => isActive ? "yap-nav-item active" : "yap-nav-item"}>
                         <Users className="icon" size={24} />
                         <span>My Groups</span>
                     </NavLink>
-                    <NavLink to="/yap/sessions" className={({isActive}) => isActive ? "yap-nav-item active" : "yap-nav-item"}>
+                    <NavLink to="/yap/sessions" onClick={() => playTick()} className={({isActive}) => isActive ? "yap-nav-item active" : "yap-nav-item"}>
                         <GraduationCap className="icon" size={24} />
                         <span>Study Rooms</span>
                     </NavLink>
-                    <NavLink to="/yap/messages" className={({isActive}) => isActive ? "yap-nav-item active" : "yap-nav-item"}>
+                    <NavLink to="/yap/messages" onClick={() => playTick()} className={({isActive}) => isActive ? "yap-nav-item active" : "yap-nav-item"}>
                         <MessageSquare className="icon" size={24} />
                         <span>Direct</span>
                     </NavLink>
-                    <NavLink to="/yap/profile" className={({isActive}) => isActive ? "yap-nav-item active" : "yap-nav-item"}>
+                    <NavLink to="/yap/profile" onClick={() => playTick()} className={({isActive}) => isActive ? "yap-nav-item active" : "yap-nav-item"}>
                         <User className="icon" size={24} />
                         <span>Profile</span>
                     </NavLink>
@@ -47,6 +51,7 @@ const YapLayout = ({ children, user }) => {
                             className="yap-nav-item" 
                             style={{ background: 'transparent', border: 'none', width: '100%', cursor: 'pointer' }}
                             onClick={async () => {
+                                playTick();
                                 await supabase.auth.signOut();
                                 navigate('/yap/login');
                             }}
@@ -77,7 +82,18 @@ const YapLayout = ({ children, user }) => {
 
             {/* Main Content Area */}
             <main className="yap-content">
-                {children}
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={location.pathname}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2, ease: "easeInOut" }}
+                        style={{ width: '100%', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
+                    >
+                        {children}
+                    </motion.div>
+                </AnimatePresence>
             </main>
 
             {/* Mobile Bottom Navigation */}

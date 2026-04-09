@@ -21,6 +21,9 @@ CREATE TABLE IF NOT EXISTS public.profiles (
 -- Migration: Ensure new columns exist for existing tables
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS username TEXT UNIQUE;
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS bio TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS is_public BOOLEAN DEFAULT true;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS location TEXT;
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS company TEXT;
 
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
@@ -111,6 +114,8 @@ CREATE TABLE IF NOT EXISTS public.private_messages (
     receiver_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE,
     content TEXT NOT NULL,
     is_read BOOLEAN DEFAULT false,
+    deleted_by_sender BOOLEAN DEFAULT false,
+    deleted_by_receiver BOOLEAN DEFAULT false,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -159,6 +164,10 @@ FOR SELECT USING (auth.uid() = sender_id OR auth.uid() = receiver_id);
 DROP POLICY IF EXISTS "Users can send private messages" ON public.private_messages;
 CREATE POLICY "Users can send private messages" ON public.private_messages 
 FOR INSERT WITH CHECK (auth.uid() = sender_id);
+
+DROP POLICY IF EXISTS "Users can update private messages for deletion" ON public.private_messages;
+CREATE POLICY "Users can update private messages for deletion" ON public.private_messages
+FOR UPDATE USING (auth.uid() = sender_id OR auth.uid() = receiver_id);
 
 -- YAP Policies
 DROP POLICY IF EXISTS "Public groups are viewable by everyone" ON public.groups;

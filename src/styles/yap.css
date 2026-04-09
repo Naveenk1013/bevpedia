@@ -9,12 +9,15 @@
 
 .yap-container {
     display: flex;
-    height: 100vh;
+    flex: 1;
+    min-height: 0;
     background: #000;
     color: var(--clr-text);
     overflow: hidden;
     font-family: var(--font-body);
 }
+
+
 
 /* Sidebar Rail (Desktop) */
 .yap-sidebar {
@@ -75,7 +78,7 @@
 .yap-nav-item {
     display: flex;
     align-items: center;
-    height: 54px;
+    height: 58px; /* Standardize touch target */
     padding: 0 16px;
     border-radius: 12px;
     color: #fff;
@@ -83,6 +86,7 @@
     transition: all 0.2s;
     text-decoration: none;
     position: relative;
+    cursor: pointer;
 }
 
 .yap-nav-item .icon {
@@ -163,6 +167,7 @@
 /* Content Area */
 .yap-content {
     flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     background: #000;
@@ -178,6 +183,7 @@
     overflow-x: auto;
     border-bottom: 1px solid var(--yap-glass-border);
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch; /* Buttery smooth scroll */
 }
 
 .status-bar::-webkit-scrollbar { display: none; }
@@ -225,8 +231,19 @@
 .groups-grid {
     padding: 20px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
+}
+
+@media (max-width: 480px) {
+    .groups-grid {
+        grid-template-columns: 1fr;
+        padding: 16px;
+    }
+    
+    .community-header {
+        padding: 30px 16px 16px;
+    }
 }
 
 .yap-card {
@@ -252,14 +269,51 @@
     font-weight: 700;
     background: linear-gradient(to right, #fff, #888);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+/* Community Discovery Search */
+.search-bar {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--yap-glass-border);
+    border-radius: 14px;
+    gap: 12px;
+    transition: all 0.3s ease;
+}
+
+.search-bar.focused {
+    border-color: var(--clr-accent);
+    box-shadow: 0 0 20px rgba(48, 200, 138, 0.15);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.search-bar input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    height: 100%;
+    width: 100%;
+}
+
+.search-bar input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
 }
 
 /* Chat Page Overhaul */
 .chat-window {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .chat-header {
@@ -287,20 +341,25 @@
 
 .chat-messages {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
     background: radial-gradient(circle at 50% 50%, rgba(124, 92, 252, 0.05), transparent 70%);
 }
 
 .message-bubble {
-    max-width: 75%;
+    max-width: 85%;
     display: flex;
     flex-direction: column;
     margin-bottom: 4px;
     position: relative;
+}
+
+@media (min-width: 769px) {
+    .message-bubble {
+        max-width: 75%;
+    }
 }
 
 .message-bubble:hover .delete-msg-btn {
@@ -727,6 +786,50 @@
     100% { filter: drop-shadow(0 0 5px var(--clr-accent)); }
 }
 
+/* Mobile Floating Action Button */
+.mobile-fab, .fab-mobile {
+    display: none;
+    position: fixed;
+    right: 20px;
+    bottom: 84px; /* Above mobile nav */
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--clr-accent);
+    color: #000;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 32px rgba(48, 200, 138, 0.4);
+    border: none;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .mobile-fab, .fab-mobile {
+        display: flex;
+    }
+}
+
 .icon-glow {
     animation: icon-glow 3s infinite ease-in-out;
+}
+
+/* Category Slider Mobile Improvements */
+@media (max-width: 768px) {
+    .status-bar {
+        padding: 16px;
+        gap: 12px;
+        mask-image: linear-gradient(to right, black 85%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    }
+    
+    .status-item {
+        min-width: 65px;
+    }
+    
+    .status-avatar-wrapper {
+        width: 60px;
+        height: 60px;
+    }
 }

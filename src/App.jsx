@@ -30,6 +30,7 @@ const SessionsPage = lazy(() => import('./yap/pages/SessionsPage'));
 const DirectMessagesPage = lazy(() => import('./yap/pages/DirectMessagesPage'));
 const PrivateChatPage = lazy(() => import('./yap/pages/PrivateChatPage'));
 const ProfileSettingsPage = lazy(() => import('./yap/pages/ProfileSettingsPage'));
+const PublicProfilePage = lazy(() => import('./yap/pages/PublicProfilePage'));
 const YapLoginPage = lazy(() => import('./yap/pages/YapLoginPage'));
 
 const ProtectedYapRoute = ({ user, loading, children }) => {
@@ -134,6 +135,7 @@ export default function App() {
             <Route path="/yap/sessions" element={<ProtectedYapRoute user={user} loading={authLoading}><SessionsPage user={user} /></ProtectedYapRoute>} />
             <Route path="/yap/messages" element={<ProtectedYapRoute user={user} loading={authLoading}><DirectMessagesPage user={user} /></ProtectedYapRoute>} />
             <Route path="/yap/messages/:otherUserId" element={<ProtectedYapRoute user={user} loading={authLoading}><PrivateChatPage user={user} /></ProtectedYapRoute>} />
+            <Route path="/yap/user/:userId" element={<ProtectedYapRoute user={user} loading={authLoading}><PublicProfilePage user={user} /></ProtectedYapRoute>} />
             <Route path="/yap/profile" element={<ProtectedYapRoute user={user} loading={authLoading}><ProfileSettingsPage user={user} /></ProtectedYapRoute>} />
           </Routes>
         </Suspense>

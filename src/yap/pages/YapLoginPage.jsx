@@ -53,10 +53,20 @@ const YapLoginPage = () => {
             
             <div className="yap-auth-container">
                 <div className="yap-auth-branding">
-                    <div className="yap-auth-logo">
+                    <div 
+                        className="yap-auth-logo" 
+                        onClick={() => window.location.href = 'https://bevpedia.in'}
+                        style={{ cursor: 'pointer' }}
+                    >
                         <Globe size={48} className="icon-glow" />
                     </div>
-                    <h1 className="yap-auth-title">YAP COMMUNITY</h1>
+                    <h1 
+                        className="yap-auth-title" 
+                        onClick={() => window.location.href = 'https://bevpedia.in'}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        BEVPEDIA
+                    </h1>
                     <p className="yap-auth-subtitle">Join the elite network of hospitality professionals.</p>
                 </div>
 

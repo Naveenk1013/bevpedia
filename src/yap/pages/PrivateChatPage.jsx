@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Send, User, ChevronLeft } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useSound } from '../utils/soundEngine';
 import YapLayout from '../components/YapLayout';
 import MessageBubble from '../components/MessageBubble';
 import { yapService } from '../services/yapService';
@@ -15,11 +17,20 @@ const PrivateChatPage = ({ user }) => {
     const [isOnline, setIsOnline] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef(null);
+    const chatContainerRef = useRef(null);
     const channelRef = useRef(null);
     const typingTimeoutRef = useRef(null);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const { play: playSend } = useSound('ui/click_1');
+    const { play: playReceive } = useSound('notifications/glass_ping');
+
+    const scrollToBottom = (behavior = "smooth") => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTo({
+                top: chatContainerRef.current.scrollHeight,
+                behavior: behavior === "smooth" ? "smooth" : "auto"
+            });
+        }
     };
 
     useEffect(() => {
@@ -38,7 +49,7 @@ const PrivateChatPage = ({ user }) => {
                 const data = await yapService.getPrivateMessages(user.id, otherUserId);
                 setMessages(data);
                 setLoading(false);
-                setTimeout(scrollToBottom, 100);
+                setTimeout(() => scrollToBottom("auto"), 100);
             } catch (err) {
                 console.error("Failed to load chat data:", err);
             }
@@ -54,9 +65,11 @@ const PrivateChatPage = ({ user }) => {
 
         const subscription = yapService.subscribeToPrivateMessages(
             user.id, 
+            otherUserId,
             userProfile,
             async (newMessage) => {
                 if (newMessage.sender_id === otherUserId) {
+                    playReceive();
                     setMessages(prev => {
                         if (prev.some(m => m.id === newMessage.id)) return prev;
                         return [...prev, {
@@ -64,14 +77,13 @@ const PrivateChatPage = ({ user }) => {
                             sender: otherUser
                         }];
                     });
-                    setTimeout(scrollToBottom, 50);
+                    setTimeout(() => scrollToBottom(), 50);
                 }
             },
             async (deletedId) => {
                 setMessages(prev => prev.filter(m => m.id !== deletedId));
             },
             (users) => {
-                // Check if other user is in our presence list
                 setIsOnline(users.some(u => u.id === otherUserId));
             },
             (typingData) => {
@@ -87,7 +99,7 @@ const PrivateChatPage = ({ user }) => {
             subscription.unsubscribe();
             channelRef.current = null;
         };
-    }, [otherUserId, user, navigate]);
+    }, [otherUserId, user, navigate, otherUser]);
 
     const handleSend = async (e) => {
         e.preventDefault();
@@ -96,11 +108,11 @@ const PrivateChatPage = ({ user }) => {
         const content = input;
         setInput("");
         
-        // Stop typing instantly
         if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
         yapService.sendPrivateTyping(otherUserId, user.id, user.email?.split('@')[0], false, channelRef.current);
 
-        // Optimistic UI
+        playSend();
+
         const tempId = Date.now().toString();
         const optimisticMessage = {
             id: tempId,
@@ -115,7 +127,7 @@ const PrivateChatPage = ({ user }) => {
         };
 
         setMessages(prev => [...prev, optimisticMessage]);
-        setTimeout(scrollToBottom, 50);
+        setTimeout(() => scrollToBottom(), 50);
 
         try {
             const confirmedMessage = await yapService.sendPrivateMessage(user.id, otherUserId, content);
@@ -130,7 +142,6 @@ const PrivateChatPage = ({ user }) => {
     const handleInputChange = (val) => {
         setInput(val);
         
-        // Broadcast typing to the other user
         if (!typingTimeoutRef.current) {
             yapService.sendPrivateTyping(otherUserId, user.id, user.email?.split('@')[0], true, channelRef.current);
         }
@@ -145,17 +156,26 @@ const PrivateChatPage = ({ user }) => {
 
     return (
         <YapLayout user={user}>
-            <div className="chat-window">
+            <motion.div 
+                className="chat-window"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+            >
                 <header className="chat-header">
                     <div className="chat-header-info">
-                        <button 
+                        <motion.button 
+                            whileTap={{ scale: 0.9 }}
                             className="btn-icon" 
                             style={{ background: 'transparent', marginRight: '10px' }}
                             onClick={() => navigate('/yap/messages')}
                         >
                             <ChevronLeft size={24} />
-                        </button>
-                        <div className="status-avatar-wrapper" style={{ width: 40, height: 40, padding: 2 }}>
+                        </motion.button>
+                        <div 
+                            className="status-avatar-wrapper" 
+                            style={{ width: 40, height: 40, padding: 2, cursor: 'pointer' }}
+                            onClick={() => navigate(`/yap/user/${otherUserId}`)}
+                        >
                             <div className="status-avatar">
                                 {otherUser?.avatar_url ? (
                                     <img src={otherUser.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
@@ -164,47 +184,86 @@ const PrivateChatPage = ({ user }) => {
                                 )}
                             </div>
                         </div>
-                        <div>
+                        <div 
+                            onClick={() => navigate(`/yap/user/${otherUserId}`)}
+                            style={{ cursor: 'pointer' }}
+                        >
                             <h3>{otherUser?.full_name || (otherUser?.username ? `@${otherUser.username}` : 'Elite Member')}</h3>
-                            <p style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                <span style={{ width: 8, height: 8, background: isOnline ? '#30c88a' : '#555', borderRadius: '50%' }}></span>
-                                {isOnline ? 'Active Now' : 'Offline'}
-                            </p>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <motion.span 
+                                    className={`presence-dot ${isOnline ? 'online' : 'offline'}`}
+                                ></motion.span>
+                                <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>
+                                    {isOnline ? 'Active Now' : 'Offline'}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </header>
 
-                <div className="chat-messages">
-                    {isTyping && (
-                        <div className="typing-indicator" style={{ padding: '10px 20px', fontSize: '0.8rem', color: 'var(--clr-accent)', fontStyle: 'italic', opacity: 0.8 }}>
-                            {otherUser?.full_name || 'Member'} is typing...
-                        </div>
-                    )}
-                    {loading ? (
-                        <div className="text-muted">Initializing secure line...</div>
-                    ) : messages.length > 0 ? (
-                        messages.map(msg => (
-                            <MessageBubble 
-                                key={msg.id} 
-                                message={msg} 
-                                isMe={msg.sender_id === user?.id} 
-                                onDelete={(id) => setMessages(prev => prev.filter(m => m.id !== id))}
-                            />
-                        ))
-                    ) : (
-                        <div className="text-muted" style={{ textAlign: 'center', marginTop: 'auto', padding: '40px' }}>
-                            <div className="yap-auth-logo" style={{ marginBottom: '20px' }}>
-                                <Send size={32} />
-                            </div>
-                            <p>Your conversation with {otherUser?.full_name || (otherUser?.username ? `@${otherUser.username}` : 'this member')} starts here.</p>
-                            <p style={{ fontSize: '0.8rem', opacity: 0.5 }}>End-to-end encrypted with Sapience Protocol.</p>
-                        </div>
-                    )}
+                <div className="chat-messages" ref={chatContainerRef}>
+                    <AnimatePresence>
+                        {loading ? (
+                            <motion.div 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="text-muted"
+                            >
+                                Initializing secure line...
+                            </motion.div>
+                        ) : messages.length > 0 ? (
+                                <motion.div
+                                    initial="hidden"
+                                    animate="visible"
+                                    variants={{
+                                        visible: { transition: { staggerChildren: 0.05 } }
+                                    }}
+                                    style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}
+                                >
+                                {messages.map(msg => (
+                                    <MessageBubble 
+                                        key={msg.id} 
+                                        message={msg} 
+                                        isMe={msg.sender_id === user?.id} 
+                                        currentUserId={user?.id}
+                                        onDelete={(id) => setMessages(prev => prev.filter(m => m.id !== id))}
+                                    />
+                                ))}
+                            </motion.div>
+                        ) : (
+                            <motion.div 
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="text-muted" 
+                                style={{ textAlign: 'center', marginTop: 'auto', padding: '40px' }}
+                            >
+                                <div className="yap-auth-logo" style={{ marginBottom: '20px' }}>
+                                    <Send size={32} />
+                                </div>
+                                <p>Your conversation with {otherUser?.full_name || (otherUser?.username ? `@${otherUser.username}` : 'this member')} starts here.</p>
+                                <p style={{ fontSize: '0.8rem', opacity: 0.5 }}>End-to-end encrypted with Sapience Protocol.</p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    <AnimatePresence>
+                        {isTyping && (
+                            <motion.div 
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 10 }}
+                                className="typing-indicator" 
+                                style={{ padding: '10px 20px', fontSize: '0.8rem', color: 'var(--clr-accent)', fontStyle: 'italic' }}
+                            >
+                                {otherUser?.full_name || 'Member'} is typing...
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                     <div ref={messagesEndRef} />
                 </div>
 
                 <form className="chat-input-area" onSubmit={handleSend}>
-                    <div className="chat-input-wrapper">
+                    <div className="chat-input-wrapper glass-morphism">
                         <input 
                             type="text" 
                             className="chat-input" 
@@ -212,12 +271,16 @@ const PrivateChatPage = ({ user }) => {
                             value={input}
                             onChange={(e) => handleInputChange(e.target.value)}
                         />
-                        <button type="submit" className="send-btn">
+                        <motion.button 
+                            whileTap={{ scale: 0.8 }}
+                            type="submit" 
+                            className="send-btn"
+                        >
                             <Send size={20} />
-                        </button>
+                        </motion.button>
                     </div>
                 </form>
-            </div>
+            </motion.div>
         </YapLayout>
     );
 };
