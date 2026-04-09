@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Search, Plus } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useSound } from '../utils/soundEngine';
 import YapLayout from '../components/YapLayout';
 import GroupCard from '../components/GroupCard';
@@ -40,45 +41,64 @@ const MyGroupsPage = ({ user }) => {
 
     return (
         <YapLayout user={user}>
-            <header className="community-header">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                        <h1 className="community-title">My Communities</h1>
-                        <p className="community-subtitle">Your active hospitality networks.</p>
+            <div className="community-page-wrapper">
+                <header className="discovery-header sticky-header">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                            <h1>My Communities</h1>
+                            <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.5 }}>Your active hospitality networks</p>
+                        </div>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <motion.button 
+                                whileTap={{ scale: 0.95 }}
+                                className="btn-icon" 
+                                style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '14px', width: 44, height: 44, border: '1px solid rgba(255,255,255,0.1)' }}
+                                onClick={() => { play(); setShowCreateModal(true); }}
+                            >
+                                <Plus size={20} />
+                            </motion.button>
+                            <motion.button 
+                                whileTap={{ scale: 0.95 }}
+                                className="btn btn-primary" 
+                                style={{ borderRadius: '14px', padding: '0 20px', height: 44, fontSize: '0.85rem' }}
+                                onClick={() => { play(); navigate('/yap/community'); }}
+                            >
+                                Discover
+                            </motion.button>
+                        </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '12px' }}>
-                        <button className="btn outline flex items-center gap-2" onClick={() => { play(); setShowCreateModal(true); }}>
-                            <Plus size={18} /> Create
-                        </button>
-                        <button className="btn btn-primary flex items-center gap-2" onClick={() => { play(); navigate('/yap/community'); }}>
-                            <Plus size={18} /> Join New
-                        </button>
+                </header>
+
+                <div className="community-scroll-content">
+                    <div className="groups-grid">
+                        {loading ? (
+                            <div className="text-muted" style={{ padding: '40px', textAlign: 'center', gridColumn: '1/-1' }}>
+                                <div className="loader-dots">Analyzing legacy connections...</div>
+                            </div>
+                        ) : groups.length > 0 ? (
+                            groups.map(group => (
+                                <motion.div key={group.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+                                    <GroupCard 
+                                        group={group} 
+                                        onJoin={() => handleJoin(group.id)} 
+                                        isJoined={true}
+                                    />
+                                </motion.div>
+                            ))
+                        ) : (
+                            <div className="text-muted" style={{ gridColumn: '1/-1', textAlign: 'center', padding: '120px 40px' }}>
+                                <Users size={64} style={{ opacity: 0.05, marginBottom: '24px' }} />
+                                <h3 style={{ color: '#fff', marginBottom: '12px' }}>No active chapters</h3>
+                                <p style={{ maxWidth: '300px', margin: '0 auto 32px' }}>You haven't joined any communities yet. The network is waiting for you.</p>
+                                <button className="btn btn-primary" style={{ padding: '12px 32px' }} onClick={() => { play(); navigate('/yap/community'); }}>
+                                    Discover Communities
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
-            </header>
-
-            <div className="groups-grid">
-                {loading ? (
-                    <div className="text-muted">Loading your chapters...</div>
-                ) : groups.length > 0 ? (
-                    groups.map(group => (
-                        <GroupCard 
-                            key={group.id} 
-                            group={group} 
-                            onJoin={() => handleJoin(group.id)} 
-                            isJoined={true}
-                        />
-                    ))
-                ) : (
-                    <div className="text-muted" style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px' }}>
-                        <Users size={48} style={{ opacity: 0.1, marginBottom: '20px' }} />
-                        <p>You haven't joined any communities yet.</p>
-                        <button className="btn outline" style={{ marginTop: '20px' }} onClick={() => { play(); navigate('/yap/community'); }}>
-                            Discover Communities
-                        </button>
-                    </div>
-                )}
             </div>
+
             {showCreateModal && (
                 <CreateGroupModal 
                     user={user} 

@@ -109,29 +109,20 @@ const CommunityPage = ({ user }) => {
 
     return (
         <YapLayout user={user}>
-            <div className="community-page-wrapper" style={{ position: 'relative', minHeight: '100%' }}>
+            <div className="community-page-wrapper">
                 
-                {/* STICKY GLASS HEADER */}
-                <header className="discovery-header sticky-header" style={{ 
-                    position: 'sticky', 
-                    top: 0, 
-                    zIndex: 100, 
-                    background: 'rgba(10, 10, 10, 0.7)',
-                    backdropFilter: 'blur(20px)',
-                    borderBottom: '1px solid var(--yap-glass-border)',
-                    padding: '15px 20px',
-                    margin: 0
-                }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                {/* PREMIUM DISCOVERY HEADER */}
+                <header className="discovery-header sticky-header">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                         <div>
-                            <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 'bold', letterSpacing: '-0.02em' }}>Network</h1>
-                            <p style={{ margin: 0, fontSize: '0.75rem', opacity: 0.5 }}>{filteredGroups.length} channels available</p>
+                            <h1>Network</h1>
+                            <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.5 }}>{filteredGroups.length} active hospitality lounges</p>
                         </div>
                         <motion.button 
                             whileTap={{ scale: 0.9 }}
                             onClick={() => setShowCreateModal(true)}
                             className="btn-icon mobile-only"
-                            style={{ background: 'var(--clr-accent)', color: 'black', borderRadius: '12px', width: 40, height: 40 }}
+                            style={{ background: 'var(--clr-accent)', color: '#000', borderRadius: '16px', width: 44, height: 44 }}
                         >
                             <Plus size={24} />
                         </motion.button>
@@ -140,10 +131,10 @@ const CommunityPage = ({ user }) => {
                     {/* SEARCH & FILTERS */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                         <div className={`search-bar glass-morphism ${isSearchFocused ? 'focused' : ''}`}>
-                            <Search size={16} className="search-icon" style={{ opacity: 0.5, color: isSearchFocused ? 'var(--clr-accent)' : 'inherit', transition: 'color 0.3s' }} />
+                            <Search size={18} className="search-icon" style={{ opacity: 0.5, color: isSearchFocused ? 'var(--clr-accent)' : 'inherit', transition: 'color 0.3s' }} />
                             <input 
                                 type="text" 
-                                placeholder="Search hospitality lounges..." 
+                                placeholder="Search lounges..." 
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 onFocus={() => setIsSearchFocused(true)}
@@ -151,41 +142,27 @@ const CommunityPage = ({ user }) => {
                             />
                         </div>
 
-                        <div className="status-bar" style={{  
-                            padding: '5px 0', 
-                            display: 'flex', 
-                            gap: '20px', 
-                            overflowX: 'auto', 
-                            scrollbarWidth: 'none',
-                            margin: '0 -5px'
-                        }}>
+                        <div className="status-bar">
                             {CATEGORIES.map(cat => (
                                 <motion.div 
                                     key={cat.id} 
                                     className={`status-item ${selectedCategory === cat.id ? 'active' : ''}`}
                                     onClick={() => setSelectedCategory(cat.id)}
                                     whileTap={{ scale: 0.94 }}
-                                    style={{ cursor: 'pointer', textAlign: 'center', minWidth: '60px' }}
                                 >
-                                    <div className="status-avatar-wrapper" style={{ 
-                                        width: 48,
-                                        height: 48,
-                                        background: selectedCategory === cat.id ? cat.color : 'rgba(255,255,255,0.05)',
-                                        border: `2px solid ${selectedCategory === cat.id ? cat.color : 'transparent'}`,
-                                        transition: 'all 0.3s ease',
-                                        transform: selectedCategory === cat.id ? 'scale(1.05)' : 'scale(1)'
-                                    }}>
-                                        <div className="status-avatar" style={{ background: selectedCategory === cat.id ? '#000' : 'transparent' }}>
-                                            <cat.icon size={20} color={selectedCategory === cat.id ? cat.color : '#fff'} />
+                                    <div className="status-avatar-wrapper">
+                                        <div className="status-avatar">
+                                            <cat.icon size={22} color={selectedCategory === cat.id ? cat.color : '#fff'} strokeWidth={selectedCategory === cat.id ? 2.5 : 2} />
                                         </div>
                                     </div>
                                     <span style={{ 
                                         color: selectedCategory === cat.id ? '#fff' : '#888',
-                                        fontSize: '0.65rem',
-                                        textTransform: 'uppercase',
+                                        fontSize: '0.7rem',
+                                        fontWeight: selectedCategory === cat.id ? '700' : '500',
                                         letterSpacing: '0.05em',
-                                        marginTop: '6px',
-                                        display: 'block'
+                                        marginTop: '4px',
+                                        display: 'block',
+                                        transition: 'all 0.3s'
                                     }}>{cat.name}</span>
                                 </motion.div>
                             ))}
@@ -193,7 +170,8 @@ const CommunityPage = ({ user }) => {
                     </div>
                 </header>
 
-                <div className="community-scroll-content" style={{ padding: '20px' }}>
+                <div className="community-scroll-content">
+
                     <AnimatePresence>
                         {invitations.length > 0 && (
                             <motion.div 
@@ -281,17 +259,17 @@ const CommunityPage = ({ user }) => {
                     </motion.div>
                 </div>
 
-                {/* MOBILE FAB */}
+                {/* MOBILE FAB - Refined for safe distance from nav */}
                 <motion.button 
                     className="mobile-fab"
-                    whileTap={{ scale: 0.8 }}
+                    whileTap={{ scale: 0.9 }}
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     onClick={() => setShowCreateModal(true)}
-                    style={{ position: 'fixed', bottom: '100px', right: '25px', zIndex: 1000, boxShadow: '0 8px 32px rgba(48, 200, 138, 0.4)' }}
                 >
-                    <Plus size={32} />
+                    <Plus size={28} />
                 </motion.button>
+
 
                 {showCreateModal && (
                     <CreateGroupModal 

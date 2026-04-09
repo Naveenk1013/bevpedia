@@ -17,7 +17,14 @@ const YapMobileNav = () => {
     ];
 
     return (
-        <nav className="yap-mobile-nav" style={{ overflow: 'hidden' }}>
+        <nav className="yap-mobile-nav" style={{ 
+            overflow: 'hidden', 
+            height: 'calc(64px + env(safe-area-inset-bottom))',
+            paddingBottom: 'env(safe-area-inset-bottom)',
+            background: 'rgba(10, 10, 10, 0.75)',
+            backdropFilter: 'blur(30px) saturate(180%)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.05)'
+        }}>
             {navItems.map((item) => {
                 const isActive = location.pathname === item.path;
                 return (
@@ -26,38 +33,41 @@ const YapMobileNav = () => {
                         to={item.path} 
                         className="yap-nav-item"
                         onClick={() => playTick()}
-                        style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        style={{ position: 'relative', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
                     >
                         {isActive && (
                             <motion.div 
                                 layoutId="nav-pill"
-                                className="nav-active-bubble"
-                                transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                                className="nav-active-indicator"
+                                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                                 style={{
                                     position: 'absolute',
-                                    width: '45px',
-                                    height: '45px',
+                                    top: '12px',
+                                    width: '40px',
+                                    height: '4px',
                                     background: 'var(--clr-accent)',
-                                    borderRadius: '16px',
+                                    borderRadius: '2px',
                                     zIndex: 0,
-                                    opacity: 0.15
+                                    boxShadow: '0 0 10px rgba(201, 150, 58, 0.4)'
                                 }}
                             />
                         )}
                         <motion.div
                             animate={{ 
-                                scale: isActive ? 1.2 : 1,
-                                color: isActive ? 'var(--clr-accent)' : '#888'
+                                scale: isActive ? 1.1 : 1,
+                                color: isActive ? 'var(--clr-accent)' : '#666'
                             }}
-                            style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}
                         >
-                            <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                            <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+                            <span style={{ fontSize: '0.6rem', fontWeight: isActive ? '700' : '500', opacity: isActive ? 1 : 0.6 }}>{item.label}</span>
                         </motion.div>
                     </NavLink>
                 );
             })}
         </nav>
     );
+
 };
 
 export default YapMobileNav;

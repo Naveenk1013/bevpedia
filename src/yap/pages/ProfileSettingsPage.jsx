@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Camera, Save, ArrowLeft, Trash2, AlertTriangle, ShieldX, MapPin, Briefcase, Eye, EyeOff } from 'lucide-react';
+import { User, Camera, Save, ArrowLeft, Trash2, AlertTriangle, ShieldX, MapPin, Briefcase, Eye, EyeOff, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import YapLayout from '../components/YapLayout';
@@ -105,6 +105,19 @@ const ProfileSettingsPage = ({ user }) => {
                         <h1 className="discovery-title" style={{ fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', margin: 0 }}>Dashboard</h1>
                         <p className="discovery-subtitle" style={{ margin: 0 }}>Manage your elite trajectory.</p>
                     </div>
+                    
+                    {/* MOBILE LOGOUT */}
+                    <motion.button
+                        whileTap={{ scale: 0.9 }}
+                        className="mobile-only btn-icon"
+                        style={{ background: 'rgba(224, 92, 92, 0.1)', color: '#e05c5c', borderRadius: '16px', border: '1px solid rgba(224, 92, 92, 0.2)' }}
+                        onClick={async () => {
+                            await supabase.auth.signOut();
+                            navigate('/yap/login');
+                        }}
+                    >
+                        <LogOut size={20} />
+                    </motion.button>
                 </motion.div>
 
                 {/* Dashboard Tabs */}
