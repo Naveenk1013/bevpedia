@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
-import { Globe, Lock, Mail, UserPlus, ChevronRight } from 'lucide-react';
+import { Globe, Lock, Mail, UserPlus, ChevronRight, User, Calendar, ShieldCheck, ShieldAlert, Info } from 'lucide-react';
 import "../../styles/yap.css";
 
 const YapLoginPage = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [age, setAge] = useState('');
+    const [isDeclared, setIsDeclared] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -27,12 +30,19 @@ const YapLoginPage = () => {
                 if (error) throw error;
                 navigate(from, { replace: true });
             } else {
+                // Validation for signup
+                if (!fullName.trim()) throw new Error("A legacy requires a name.");
+                if (!age || parseInt(age) < 18) throw new Error("You must be 18+ to join this network.");
+                if (!isDeclared) throw new Error("Please accept the legal declaration.");
+
                 const { error } = await supabase.auth.signUp({ 
                     email, 
                     password,
                     options: {
                         data: {
-                            full_name: email.split('@')[0], // Default name
+                            full_name: fullName,
+                            age: parseInt(age),
+                            signup_declaration: true
                         }
                     }
                 });
@@ -79,6 +89,32 @@ const YapLoginPage = () => {
                     {error && <div className="auth-error-banner">{error}</div>}
 
                     <form onSubmit={handleAuth} className="yap-auth-form">
+                        {!isLogin && (
+                            <>
+                                <div className="auth-input-group animate-fade-in">
+                                    <label><User size={16} /> Full Name</label>
+                                    <input 
+                                        type="text" 
+                                        value={fullName} 
+                                        onChange={(e) => setFullName(e.target.value)}
+                                        placeholder="Enter your real identity"
+                                        required 
+                                    />
+                                </div>
+                                <div className="auth-input-group animate-fade-in">
+                                    <label><Calendar size={16} /> Age</label>
+                                    <input 
+                                        type="number" 
+                                        value={age} 
+                                        onChange={(e) => setAge(e.target.value)}
+                                        placeholder="Min 18 required"
+                                        required 
+                                        min="18"
+                                    />
+                                </div>
+                            </>
+                        )}
+
                         <div className="auth-input-group">
                             <label><Mail size={16} /> Email Address</label>
                             <input 
@@ -101,6 +137,25 @@ const YapLoginPage = () => {
                                 minLength={6}
                             />
                         </div>
+
+                        {!isLogin && (
+                            <div className="auth-security-notice animate-fade-in">
+                                <div className="notice-header">
+                                    <ShieldCheck size={16} color="var(--clr-accent)" />
+                                    <span>Sapience Security Protocol</span>
+                                </div>
+                                <p>We are a highly secured messaging platform. Your data is never shared. Once you <strong>Purge</strong> your account, all traces of your data are wiped forever from our network.</p>
+                                
+                                <label className="auth-checkbox-group">
+                                    <input 
+                                        type="checkbox" 
+                                        checked={isDeclared} 
+                                        onChange={(e) => setIsDeclared(e.target.checked)} 
+                                    />
+                                    <span className="checkbox-text">I am 18+ and legally allowed to use social media. I agree to be a responsible user of the network.</span>
+                                </label>
+                            </div>
+                        )}
 
                         <button type="submit" className="yap-auth-btn" disabled={loading}>
                             {loading ? 'Authenticating...' : (isLogin ? 'Enter The Hub' : 'Register Now')}
