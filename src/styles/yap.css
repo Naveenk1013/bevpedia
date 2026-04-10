@@ -177,7 +177,8 @@
     flex-direction: column;
     background: #050505;
     position: relative;
-    overflow: hidden; /* Prevent overall page scroll, let internal views handle it */
+    overflow: hidden;
+    height: 100dvh; /* Force fill the screen from here */
 }
 
 /* Story/Status Bar - Apple style discovery */
@@ -240,6 +241,14 @@
     font-size: 0.75rem;
     font-weight: 500;
     color: var(--clr-text-muted);
+}
+
+.community-page-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
 
 /* Network Header refinement */
@@ -402,10 +411,12 @@
 .chat-window {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
     width: 100%;
     overflow: hidden;
     position: relative;
+    background: inherit;
 }
 
 .chat-header {
@@ -609,12 +620,14 @@
 @media (max-width: 768px) {
     .yap-sidebar { display: none; }
     .yap-mobile-nav { display: flex; }
-    .yap-content { padding-bottom: 64px; }
+    .yap-content { 
+        padding-bottom: env(safe-area-inset-bottom);
+        height: 100dvh;
+    }
     
-    .chat-header {
-        height: 60px;
-        padding-top: env(safe-area-inset-top);
-        height: calc(60px + env(safe-area-inset-top));
+    /* Ensure the chat input area accounts for the mobile nav */
+    .chat-input-area {
+        padding-bottom: calc(16px + 64px + env(safe-area-inset-bottom));
     }
     
     .discovery-header {
