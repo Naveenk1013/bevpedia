@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Send, User, ChevronLeft } from 'lucide-react';
+import { Send, User, ChevronLeft, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSound } from '../utils/soundEngine';
 import YapLayout from '../components/YapLayout';
@@ -221,7 +221,7 @@ const PrivateChatPage = ({ user }) => {
                             title="Clear Conversation History"
                             style={{ color: '#ff6b6b' }}
                          >
-                            <span style={{ fontSize: '1.2rem' }}>🗑️</span>
+                            <Trash2 size={18} />
                          </motion.button>
                     </div>
                 </header>
@@ -319,7 +319,7 @@ const PrivateChatPage = ({ user }) => {
                             style={{ maxWidth: '400px', textAlign: 'center', padding: '30px' }}
                         >
                             <div className="yap-auth-logo" style={{ marginBottom: '20px', background: 'rgba(255, 107, 107, 0.1)', color: '#ff6b6b' }}>
-                                🗑️
+                                <Trash2 size={32} />
                             </div>
                             <h3 style={{ margin: '0 0 10px 0', color: 'white' }}>Clear Conversation?</h3>
                             <p className="text-muted" style={{ fontSize: '0.9rem', marginBottom: '25px' }}>

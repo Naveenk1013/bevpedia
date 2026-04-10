@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Send, Users, MessageSquare, Settings } from 'lucide-react';
+import { Send, Users, MessageSquare, Settings, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSound } from '../utils/soundEngine';
 import YapLayout from '../components/YapLayout';
@@ -239,7 +239,7 @@ const ChatPage = ({ user }) => {
                                     title="Clear All Messages"
                                     style={{ color: '#ff6b6b' }}
                                  >
-                                    <span style={{ fontSize: '1.2rem' }}>🗑️</span>
+                                    <Trash2 size={18} />
                                  </motion.button>
                                  <motion.button 
                                     whileTap={{ scale: 0.9 }}
@@ -358,7 +358,7 @@ const ChatPage = ({ user }) => {
                             style={{ maxWidth: '400px', textAlign: 'center', padding: '30px' }}
                         >
                             <div className="yap-auth-logo" style={{ marginBottom: '20px', background: 'rgba(255, 107, 107, 0.1)', color: '#ff6b6b' }}>
-                                🗑️
+                                <Trash2 size={32} />
                             </div>
                             <h3 style={{ margin: '0 0 10px 0', color: 'white' }}>Clear Lounge History?</h3>
                             <p className="text-muted" style={{ fontSize: '0.9rem', marginBottom: '25px' }}>
