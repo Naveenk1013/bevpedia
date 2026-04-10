@@ -193,6 +193,7 @@ const ChatPage = ({ user }) => {
                 className="chat-window"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
+                style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}
             >
                 <header className="chat-header sticky-header">
                     <div className="chat-header-info">

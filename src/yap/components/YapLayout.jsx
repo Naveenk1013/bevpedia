@@ -89,7 +89,7 @@ const YapLayout = ({ children, user }) => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-                        style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column' }}
+                        style={{ width: '100%', flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}
                     >
                         {children}
                     </motion.div>
