@@ -177,10 +177,7 @@
     flex-direction: column;
     background: #050505;
     position: relative;
-    overflow-y: auto; /* Core scroll fix */
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
+    overflow: hidden; /* Prevent overall page scroll, let internal views handle it */
 }
 
 /* Story/Status Bar - Apple style discovery */
@@ -281,8 +278,10 @@
 
 /* Community Content & Scrolling */
 .community-scroll-content {
+    flex: 1;
+    overflow-y: auto;
     background: transparent;
-    padding: 20px 0 100px !important; /* Fixed padding for mobile nav */
+    padding: 20px 0 100px !important;
 }
 
 /* Group Cards Grid - Optimized for all screens */
@@ -403,9 +402,10 @@
 .chat-window {
     display: flex;
     flex-direction: column;
-    flex: 1;
-    min-height: 0;
+    height: 100%;
+    width: 100%;
     overflow: hidden;
+    position: relative;
 }
 
 .chat-header {
