@@ -38,12 +38,14 @@ export default function GlossaryPage() {
         title: `${selectedTerm.term} - Definition & Meaning`,
         description: selectedTerm.definition?.substring(0, 160) || `Meaning of ${selectedTerm.term} in hospitality and beverage industry.`,
         keywords: `${selectedTerm.term}, definition, glossary, bartending, beverage`,
-        structuredData: glossarySchema(selectedTerm)
+        structuredData: glossarySchema(selectedTerm),
+        breadcrumbs: [{ name: 'Glossary', item: '/glossary' }, { name: selectedTerm.term, item: `/glossary/${selectedTerm.slug || getSlug(selectedTerm.term)}` }]
       };
     }
     return {
       title: "Hospitality & Beverage Glossary | A-Z Terminology",
-      description: "A comprehensive A-Z glossary of bar, beverage, and service terminology with professional definitions."
+      description: "A comprehensive A-Z glossary of bar, beverage, and service terminology with professional definitions.",
+      breadcrumbs: [{ name: 'Glossary', item: '/glossary' }]
     };
   }, [selectedTerm]);
 

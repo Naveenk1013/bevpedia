@@ -105,7 +105,8 @@ export default function HomePage() {
           />
         </div>
         <h1 className="hero-title animate-fade-up" style={{ position: 'relative', zIndex: 2 }}>
-          The Complete<br /><span>Beverage Encyclopedia</span>
+          <span style={{ display: 'block', fontSize: '0.45em', opacity: 0.9, letterSpacing: '0.1em', marginBottom: '0.2em' }}>The Complete</span>
+          Beverage Encyclopedia
         </h1>
         <p className="hero-subtitle animate-fade-up" style={{ position: 'relative', zIndex: 2 }}>
           Your definitive reference for cocktails, mocktails, spirits, wine, beer, bartending
@@ -245,6 +246,7 @@ export default function HomePage() {
                   className="cat-card animate-fade-up"
                   onClick={() => navigate(cat.path)}
                   style={{ '--cat-colour': cat.colour }}
+                  aria-label={`Explore ${cat.name}: ${cat.desc}`}
                 >
                   <div className="cat-card-icon">
                     {typeof IconComponent === 'string' ? (

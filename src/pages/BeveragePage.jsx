@@ -114,12 +114,17 @@ export default function BeveragePage({ toggleFavourite, isFavourite }) {
         description: selected.description || `Learn how to make the perfect ${selected.name}. Professional recipe, ingredients, and expert tips from Bevpedia.`,
         image: drinkImages[selected.name],
         keywords: `${selected.name}, cocktail recipe, ${selected.spirit || ''}, mixology`,
-        structuredData: cocktailSchema(selected)
+        structuredData: cocktailSchema(selected),
+        breadcrumbs: [
+          { name: 'Beverages', item: '/beverages' },
+          { name: selected.name, item: `/beverages/${selected.slug || selected.id}` }
+        ]
       };
     }
     return {
       title: "Mixology & Beverage Library | Classic & Modern Recipes",
-      description: "Master the art of the bar with our curated collection of cocktails and mocktails. Professional recipes, historical context, and step-by-step mixology guides."
+      description: "Master the art of the bar with our curated collection of cocktails and mocktails. Professional recipes, historical context, and step-by-step mixology guides.",
+      breadcrumbs: [{ name: 'Beverages', item: '/beverages' }]
     };
   }, [selected]);
 

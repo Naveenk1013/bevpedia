@@ -39,13 +39,18 @@ export default function WinePage({ toggleFavourite, isFavourite }) {
       return {
         title: selected.name,
         description: selected.tastingNotes?.substring(0, 160) || `Comprehensive guide to ${selected.name}. Discover grape varieties, origin, tasting notes, and food pairings.`,
-        keywords: `${selected.name}, ${selected.type} wine, ${selected.grapeVariety}, viticulture`,
-        structuredData: wineSchema(selected)
+        keywords: `${selected.name}, ${selected.type}, wine, viticulture, sommelier`,
+        structuredData: wineSchema(selected),
+        breadcrumbs: [
+          { name: 'Wine', item: '/wine' },
+          { name: selected.name, item: `/wine/${selected.slug || getSlug(selected.name)}` }
+        ]
       };
     }
     return {
-      title: "Wine Guide & Global Terroir Encyclopedia",
-      description: "Explore global wine varieties, regions, and tasting notes. From red and white to sparkling and fortified wines."
+      title: "The Wine Encyclopedia",
+      description: "Master the world of wine. Professional resources on red, white, sparkling, and fortified wines from major global regions.",
+      breadcrumbs: [{ name: 'Wine', item: '/wine' }]
     };
   }, [selected]);
 

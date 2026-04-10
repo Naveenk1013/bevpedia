@@ -36,13 +36,18 @@ export default function BeerPage({ toggleFavourite, isFavourite }) {
       return {
         title: selected.name,
         description: selected.tastingNotes?.substring(0, 160) || `Deep dive into ${selected.name} style. Learn about IBU, ABV, historical origins, and food pairings.`,
-        keywords: `${selected.name}, beer style, brewing, ${selected.type}`,
-        structuredData: beerSchema(selected)
+        keywords: `${selected.name}, ${selected.style}, beer, brewing, hops, malt`,
+        structuredData: beerSchema(selected),
+        breadcrumbs: [
+          { name: 'Beer', item: '/beer' },
+          { name: selected.name, item: `/beer/${selected.slug || getSlug(selected.name)}` }
+        ]
       };
     }
     return {
-      title: "Beer Styles & Brewing Guide",
-      description: "The ultimate guide to the world of beer. Explore detailed profiles of lagers, ales, IPAs, and stouts."
+      title: "Global Beer Encyclopedia",
+      description: "Explore the world of beer. Professional guides to ale, lager, stout, IPA, and seasonal beer styles.",
+      breadcrumbs: [{ name: 'Beer', item: '/beer' }]
     };
   }, [selected]);
 

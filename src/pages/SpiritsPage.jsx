@@ -37,12 +37,17 @@ export default function SpiritsPage({ toggleFavourite, isFavourite }) {
         title: selected.name,
         description: selected.tastingNotes?.substring(0, 160) || `Professional guide to ${selected.name}. Production methods, history, and tasting notes from Bevpedia.`,
         keywords: `${selected.name}, ${selected.subtype}, spirits, distillation, bartending`,
-        structuredData: spiritSchema(selected)
+        structuredData: spiritSchema(selected),
+        breadcrumbs: [
+          { name: 'Spirits', item: '/spirits' },
+          { name: selected.name, item: `/spirits/${selected.slug || getSlug(selected.name)}` }
+        ]
       };
     }
     return {
       title: "Spirits & Distillation Encyclopedia",
-      description: "The definitive professional guide to global spirits. Explore deep-dive resources on vodka, gin, rum, tequila, whisky, and liqueurs."
+      description: "The definitive professional guide to global spirits. Explore deep-dive resources on vodka, gin, rum, tequila, whisky, and liqueurs.",
+      breadcrumbs: [{ name: 'Spirits', item: '/spirits' }]
     };
   }, [selected]);
 

@@ -15,7 +15,8 @@ const SEO = ({
   author = 'Bevpedia',
   type = 'website',
   noindex = false,
-  structuredData = null
+  structuredData = null,
+  breadcrumbs = [] // Array of { name, item }
 }) => {
   const { pathname } = useLocation();
   const siteUrl = 'https://bevpedia.in';
@@ -94,6 +95,30 @@ const SEO = ({
       {structuredData && (
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
+        </script>
+      )}
+
+      {/* Breadcrumb Schema */}
+      {breadcrumbs.length > 0 && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": siteUrl
+              },
+              ...breadcrumbs.map((bc, index) => ({
+                "@type": "ListItem",
+                "position": index + 2,
+                "name": bc.name,
+                "item": bc.item.startsWith('http') ? bc.item : `${siteUrl}${bc.item}`
+              }))
+            ]
+          })}
         </script>
       )}
 

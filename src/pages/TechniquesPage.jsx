@@ -54,12 +54,17 @@ export default function TechniquesPage() {
         title: `${selectedTech.name} Technique - Pro Bartending Guide`,
         description: selectedTech.description || `Master the ${selectedTech.name} technique with our professional step-by-step guide and expert tips.`,
         keywords: `${selectedTech.name}, bar technique, bartending, mixology`,
-        structuredData: techniqueSchema(selectedTech)
+        structuredData: techniqueSchema(selectedTech),
+        breadcrumbs: [
+          { name: 'Techniques', item: '/techniques' },
+          { name: selectedTech.name, item: `/techniques/${selectedTech.slug || getSlug(selectedTech.name)}` }
+        ]
       };
     }
     return {
       title: "Bar Techniques & Glassware Guide",
-      description: "Master professional bartending techniques, explore our complete glassware guide, and browse the A-Z beverage glossary."
+      description: "Master professional bartending techniques, explore our complete glassware guide, and browse the A-Z beverage glossary.",
+      breadcrumbs: [{ name: 'Techniques', item: '/techniques' }]
     };
   }, [selectedTech]);
 
