@@ -63,8 +63,8 @@ function generateSlug(name) {
 async function generateSitemap() {
   console.log('📄 Generating sitemap...');
   
-  let allUrls = [...staticPages];
   const today = new Date().toISOString().split('T')[0];
+  let allUrls = staticPages.map(page => ({ ...page, lastmod: today }));
 
   // Helper to add items to URL list
   const addItems = (items, prefix, priority = 0.8) => {
