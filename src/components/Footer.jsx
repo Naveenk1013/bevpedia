@@ -10,7 +10,7 @@ export default function Footer() {
           <a href="https://naveen-kr1.netlify.app/" target="_blank" rel="noopener noreferrer">
             Naveen Kumar
           </a>
-          . All rights reserved. | <a href="/about" style={{ color: 'var(--clr-accent)', fontWeight: 'bold' }}>About the Creators</a> | <a href="/sponsors" style={{ color: 'var(--clr-accent)', fontWeight: 'bold' }}>Sponsorship & Partners</a>
+          . All rights reserved. | <a href="/legal" style={{ color: 'var(--clr-accent)', fontWeight: 'bold' }}>Privacy & Terms</a> | <a href="/about" style={{ color: 'var(--clr-accent)', fontWeight: 'bold' }}>About the Creators</a> | <a href="/sponsors" style={{ color: 'var(--clr-accent)', fontWeight: 'bold' }}>Sponsorship & Partners</a>
         </p>
       </div>
     </footer>

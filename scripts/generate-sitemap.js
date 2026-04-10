@@ -33,6 +33,7 @@ const staticPages = [
   { url: '/food-production', priority: 0.9, changefreq: 'weekly' },
   { url: '/sathi', priority: 0.8, changefreq: 'monthly' },
   { url: '/about', priority: 0.6, changefreq: 'monthly' },
+  { url: '/legal', priority: 0.5, changefreq: 'monthly' },
   { url: '/sponsors', priority: 0.7, changefreq: 'monthly' },
   { url: '/yap/login', priority: 0.6, changefreq: 'monthly' },
 ];

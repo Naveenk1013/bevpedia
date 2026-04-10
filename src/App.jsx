@@ -32,6 +32,7 @@ const PrivateChatPage = lazy(() => import('./yap/pages/PrivateChatPage'));
 const ProfileSettingsPage = lazy(() => import('./yap/pages/ProfileSettingsPage'));
 const PublicProfilePage = lazy(() => import('./yap/pages/PublicProfilePage'));
 const YapLoginPage = lazy(() => import('./yap/pages/YapLoginPage'));
+const LegalPage = lazy(() => import('./pages/LegalPage'));
 
 const ProtectedYapRoute = ({ user, loading, children }) => {
   const location = useLocation();
@@ -129,6 +130,7 @@ export default function App() {
             <Route path="/notebook" element={<NotebookPage />} />
             <Route path="/food-production" element={<FoodProductionPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/legal" element={<LegalPage />} />
             <Route path="/sponsors" element={<SponsorshipPage />} />
             <Route path="/sathi" element={<SathiPage user={user} onLoginClick={() => setShowAuthModal(true)} onLogout={() => supabase.auth.signOut()} />} />
             
