@@ -1,27 +1,54 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { beers } from '../data/beers.js';
 import BeverageModal from '../components/BeverageModal';
 import SEO from '../components/SEO';
+import { beerSchema } from '../schemas/index.js';
 
 const BEER_TYPES = ['all', 'lager', 'ale'];
 const TYPE_COLOURS = { lager: '#c9963a', ale: '#d97b30' };
 
+// Helper to generate slug for comparison
+const getSlug = (name) => name.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+
 export default function BeerPage({ toggleFavourite, isFavourite }) {
+  const { slug } = useParams();
   const [beerType, setBeerType] = useState('all');
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(null);
+
+  // Sync with URL params
+  useEffect(() => {
+    if (slug && !BEER_TYPES.includes(slug)) {
+      const found = beers.find(b => b.slug === slug || getSlug(b.name) === slug);
+      if (found) setSelected(found);
+    }
+  }, [slug]);
 
   const filtered = useMemo(() => beers.filter(b =>
     (beerType === 'all' || b.type === beerType) &&
     (!query || b.name.toLowerCase().includes(query.toLowerCase()) || b.origin.toLowerCase().includes(query.toLowerCase()))
   ), [beerType, query]);
 
+  // SEO logic
+  const seoProps = useMemo(() => {
+    if (selected) {
+      return {
+        title: selected.name,
+        description: selected.tastingNotes?.substring(0, 160) || `Deep dive into ${selected.name} style. Learn about IBU, ABV, historical origins, and food pairings.`,
+        keywords: `${selected.name}, beer style, brewing, ${selected.type}`,
+        structuredData: beerSchema(selected)
+      };
+    }
+    return {
+      title: "Beer Styles & Brewing Guide",
+      description: "The ultimate guide to the world of beer. Explore detailed profiles of lagers, ales, IPAs, and stouts."
+    };
+  }, [selected]);
+
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
-      <SEO 
-        title="Beer Styles & Brewing Guide" 
-        description="The ultimate guide to the world of beer. Explore detailed profiles of lagers, ales, IPAs, and stouts with professional insights on IBU, ABV, historical origins, and food pairings."
-      />
+      <SEO {...seoProps} />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>🍺 Beer Guide</h1>
         <p className="page-hero-subtitle">Lagers, IPAs, stouts, wheat beers, Belgians, sours & more — styles, IBU, ABV, history & food pairings.</p>

@@ -1,14 +1,28 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { spirits } from '../data/spirits.js';
 import BeverageModal from '../components/BeverageModal';
 import SEO from '../components/SEO';
+import { spiritSchema } from '../schemas/index.js';
 
 const SUBTYPES = ['all', 'vodka', 'gin', 'rum', 'tequila', 'mezcal', 'whisky', 'whiskey', 'brandy', 'absinthe', 'liqueur'];
 
+// Helper to generate slug for comparison
+const getSlug = (name) => name.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+
 export default function SpiritsPage({ toggleFavourite, isFavourite }) {
+  const { slug } = useParams();
   const [query, setQuery] = useState('');
   const [subtype, setSubtype] = useState('all');
   const [selected, setSelected] = useState(null);
+
+  // Sync with URL params
+  useEffect(() => {
+    if (slug && slug !== 'vodka' && slug !== 'gin' && slug !== 'rum') { // Simple check to avoid conflict if subtypes become routes
+      const found = spirits.find(s => s.slug === slug || getSlug(s.name) === slug);
+      if (found) setSelected(found);
+    }
+  }, [slug]);
 
   const filtered = useMemo(() => spirits.filter(s => {
     const matchType = subtype === 'all' || s.subtype === subtype;
@@ -16,12 +30,25 @@ export default function SpiritsPage({ toggleFavourite, isFavourite }) {
     return matchType && matchQ;
   }), [query, subtype]);
 
+  // SEO logic
+  const seoProps = useMemo(() => {
+    if (selected) {
+      return {
+        title: selected.name,
+        description: selected.tastingNotes?.substring(0, 160) || `Professional guide to ${selected.name}. Production methods, history, and tasting notes from Bevpedia.`,
+        keywords: `${selected.name}, ${selected.subtype}, spirits, distillation, bartending`,
+        structuredData: spiritSchema(selected)
+      };
+    }
+    return {
+      title: "Spirits & Distillation Encyclopedia",
+      description: "The definitive professional guide to global spirits. Explore deep-dive resources on vodka, gin, rum, tequila, whisky, and liqueurs."
+    };
+  }, [selected]);
+
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
-      <SEO 
-        title="Spirits & Distillation Encyclopedia" 
-        description="The definitive professional guide to global spirits. Explore deep-dive resources on vodka, gin, rum, tequila, whisky, and liqueurs with expert tasting notes and production history."
-      />
+      <SEO {...seoProps} />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>🥃 Spirits Encyclopedia</h1>
         <p className="page-hero-subtitle">

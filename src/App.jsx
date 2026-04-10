@@ -108,14 +108,19 @@ export default function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/beverages" element={<BeveragePage toggleFavourite={toggleFavourite} isFavourite={isFavourite} />} />
-            <Route path="/beverages/:section" element={<BeveragePage toggleFavourite={toggleFavourite} isFavourite={isFavourite} />} />
+            <Route path="/beverages/:slug" element={<BeveragePage toggleFavourite={toggleFavourite} isFavourite={isFavourite} />} />
             <Route path="/spirits" element={<SpiritsPage toggleFavourite={toggleFavourite} isFavourite={isFavourite} />} />
+            <Route path="/spirits/:slug" element={<SpiritsPage toggleFavourite={toggleFavourite} isFavourite={isFavourite} />} />
             <Route path="/wine" element={<WinePage toggleFavourite={toggleFavourite} isFavourite={isFavourite} />} />
+            <Route path="/wine/:slug" element={<WinePage toggleFavourite={toggleFavourite} isFavourite={isFavourite} />} />
             <Route path="/beer" element={<BeerPage toggleFavourite={toggleFavourite} isFavourite={isFavourite} />} />
+            <Route path="/beer/:slug" element={<BeerPage toggleFavourite={toggleFavourite} isFavourite={isFavourite} />} />
             <Route path="/techniques" element={<TechniquesPage />} />
+            <Route path="/techniques/:slug" element={<TechniquesPage />} />
             <Route path="/quiz" element={<QuizPage />} />
             <Route path="/wset" element={<WSETMockTestPage />} />
             <Route path="/glossary" element={<GlossaryPage />} />
+            <Route path="/glossary/:slug" element={<GlossaryPage />} />
             <Route path="/nchmct" element={<NCHMCTPage />} />
             <Route path="/students" element={<StudentHub />} />
             <Route path="/students/:uniId" element={<UniversityView />} />

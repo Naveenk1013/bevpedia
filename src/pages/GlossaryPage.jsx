@@ -1,14 +1,27 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { glossary } from '../data/glossary.js';
 import SEO from '../components/SEO';
+import { glossarySchema } from '../schemas/index.js';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
+// Helper to generate slug for comparison
+const getSlug = (name) => name.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+
 export default function GlossaryPage() {
+  const { slug } = useParams();
   const [query, setQuery] = useState('');
   const [letter, setLetter] = useState('');
 
+  const selectedTerm = useMemo(() => {
+    if (!slug) return null;
+    return glossary.find(g => g.slug === slug || getSlug(g.term) === slug);
+  }, [slug]);
+
   const filtered = useMemo(() => {
+    if (selectedTerm) return [selectedTerm];
+    
     const q = query.toLowerCase();
     return glossary
       .filter(g =>
@@ -16,14 +29,27 @@ export default function GlossaryPage() {
         (!q || g.term.toLowerCase().includes(q) || g.definition.toLowerCase().includes(q))
       )
       .sort((a, b) => a.term.localeCompare(b.term));
-  }, [query, letter]);
+  }, [query, letter, selectedTerm]);
+
+  // SEO logic
+  const seoProps = useMemo(() => {
+    if (selectedTerm) {
+      return {
+        title: `${selectedTerm.term} - Definition & Meaning`,
+        description: selectedTerm.definition?.substring(0, 160) || `Meaning of ${selectedTerm.term} in hospitality and beverage industry.`,
+        keywords: `${selectedTerm.term}, definition, glossary, bartending, beverage`,
+        structuredData: glossarySchema(selectedTerm)
+      };
+    }
+    return {
+      title: "Hospitality & Beverage Glossary | A-Z Terminology",
+      description: "A comprehensive A-Z glossary of bar, beverage, and service terminology with professional definitions."
+    };
+  }, [selectedTerm]);
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
-      <SEO 
-        title="Hospitality & Beverage Glossary | A-Z Terminology" 
-        description="The ultimate reference for hospitality professionals. A comprehensive A-Z glossary of bar, beverage, and service terminology with professional definitions."
-      />
+      <SEO {...seoProps} />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>📖 Bar &amp; Beverage Glossary</h1>
         <p className="page-hero-subtitle">{glossary.length}+ professional terms — from ABV to Zest. Essential for every hospitality student and practitioner.</p>

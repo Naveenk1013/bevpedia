@@ -1,12 +1,17 @@
-import { useState, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import { techniques, glassware } from '../data/techniques.js';
 import { glossary } from '../data/glossary.js';
 import SEO from '../components/SEO';   
+import { techniqueSchema } from '../schemas/index.js';
 
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
+// Helper to generate slug for comparison
+const getSlug = (name) => name.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+
 export default function TechniquesPage() {
+  const { slug } = useParams();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const initialTab = queryParams.get('tab') || 'techniques';
@@ -15,6 +20,17 @@ export default function TechniquesPage() {
   const [expanded, setExpanded] = useState(null);
   const [query, setQuery] = useState('');
   const [letter, setLetter] = useState('');
+
+  // Sync with URL params
+  useEffect(() => {
+    if (slug) {
+      const found = techniques.find(t => t.slug === slug || getSlug(t.name) === slug);
+      if (found) {
+        setExpanded(found.id);
+        setTab('techniques');
+      }
+    }
+  }, [slug]);
 
   const filteredGlossary = useMemo(() => {
     const q = query.toLowerCase();
@@ -26,12 +42,30 @@ export default function TechniquesPage() {
       .sort((a, b) => a.term.localeCompare(b.term));
   }, [query, letter]);
 
+  // SEO logic
+  const selectedTech = useMemo(() => {
+    if (!slug) return null;
+    return techniques.find(t => t.slug === slug || getSlug(t.name) === slug);
+  }, [slug]);
+
+  const seoProps = useMemo(() => {
+    if (selectedTech) {
+      return {
+        title: `${selectedTech.name} Technique - Pro Bartending Guide`,
+        description: selectedTech.description || `Master the ${selectedTech.name} technique with our professional step-by-step guide and expert tips.`,
+        keywords: `${selectedTech.name}, bar technique, bartending, mixology`,
+        structuredData: techniqueSchema(selectedTech)
+      };
+    }
+    return {
+      title: "Bar Techniques & Glassware Guide",
+      description: "Master professional bartending techniques, explore our complete glassware guide, and browse the A-Z beverage glossary."
+    };
+  }, [selectedTech]);
+
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
-      <SEO 
-        title="Techniques, Glassware & Glossary" 
-        description="Master professional bartending techniques, explore our complete glassware guide, and browse the A-Z beverage glossary for essential industry terminology."
-      />
+      <SEO {...seoProps} />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>⚗️ Techniques &amp; Glassware</h1>
         <p className="page-hero-subtitle">Professional bartending methods with step-by-step instructions, plus the complete glassware guide and glossary.</p>

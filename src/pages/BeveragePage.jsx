@@ -5,6 +5,7 @@ import { mocktails } from '../data/mocktails.js';
 import drinkImages from '../data/drink-images.json';
 import BeverageModal from '../components/BeverageModal';
 import SEO from '../components/SEO';
+import { cocktailSchema } from '../schemas/index.js';
 
 const ALL = [...cocktails, ...mocktails];
 const CATEGORIES = [
@@ -22,6 +23,11 @@ const CATEGORIES = [
   { key: 'liqueur', label: 'Liqueur' },
   { key: 'multi-spirit', label: 'Multi-Spirit' },
 ];
+
+const CAT_KEYS = CATEGORIES.map(c => c.key);
+
+// Helper to generate slug for comparison
+const getSlug = (name) => name.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
 
 const DIFFICULTIES = [
   { key: 0, label: 'Any Level' },
@@ -72,8 +78,10 @@ function BeverageCard({ bev, onClick, toggleFavourite, isFavourite }) {
 }
 
 export default function BeveragePage({ toggleFavourite, isFavourite }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const initCat = searchParams.get('cat') || 'all';
+  const [searchParams] = useSearchParams();
+  const { slug } = useParams();
+  
+  const initCat = searchParams.get('cat') || (CAT_KEYS.includes(slug) ? slug : 'all');
   const initQ = searchParams.get('q') || '';
 
   const [query, setQuery] = useState(initQ);
@@ -81,7 +89,13 @@ export default function BeveragePage({ toggleFavourite, isFavourite }) {
   const [difficulty, setDifficulty] = useState(0);
   const [selected, setSelected] = useState(null);
 
-  useEffect(() => { setCategory(searchParams.get('cat') || 'all'); setQuery(searchParams.get('q') || ''); }, [searchParams]);
+  // Sync with URL params
+  useEffect(() => {
+    if (slug && !CAT_KEYS.includes(slug)) {
+      const found = ALL.find(b => b.slug === slug || getSlug(b.name) === slug);
+      if (found) setSelected(found);
+    }
+  }, [slug]);
 
   const filtered = useMemo(() => {
     return ALL.filter(b => {
@@ -92,12 +106,26 @@ export default function BeveragePage({ toggleFavourite, isFavourite }) {
     });
   }, [category, query, difficulty]);
 
+  // SEO logic
+  const seoProps = useMemo(() => {
+    if (selected) {
+      return {
+        title: selected.name,
+        description: selected.description || `Learn how to make the perfect ${selected.name}. Professional recipe, ingredients, and expert tips from Bevpedia.`,
+        image: drinkImages[selected.name],
+        keywords: `${selected.name}, cocktail recipe, ${selected.spirit || ''}, mixology`,
+        structuredData: cocktailSchema(selected)
+      };
+    }
+    return {
+      title: "Mixology & Beverage Library | Classic & Modern Recipes",
+      description: "Master the art of the bar with our curated collection of cocktails and mocktails. Professional recipes, historical context, and step-by-step mixology guides."
+    };
+  }, [selected]);
+
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
-      <SEO 
-        title="Mixology & Beverage Library | Classic & Modern Recipes" 
-        description="Master the art of the bar with our curated collection of cocktails and mocktails. Professional recipes, historical context, and step-by-step mixology guides for every skill level."
-      />
+      <SEO {...seoProps} />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>🍸 Cocktails &amp; Mocktails</h1>
         <p className="page-hero-subtitle">

@@ -1,30 +1,57 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { wines } from '../data/wines.js';
 import BeverageModal from '../components/BeverageModal';
 import WineRegionMap from '../components/wine/WineRegionMap';
 import { Globe } from 'lucide-react';
 import SEO from '../components/SEO';
+import { wineSchema } from '../schemas/index.js';
 
 const WINE_TYPES = ['all', 'red', 'white', 'rosé', 'sparkling', 'fortified'];
 const TYPE_ICONS = { red:'🍷', white:'🥂', rosé:'🌸', sparkling:'✨', fortified:'🍾', all:'🍷' };
 const TYPE_COLOURS = { red:'#c0407a', white:'#c9963a', rosé:'#e8607a', sparkling:'#7c5cfc', fortified:'#d97b30' };
 
+// Helper to generate slug for comparison
+const getSlug = (name) => name.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
+
 export default function WinePage({ toggleFavourite, isFavourite }) {
+  const { slug } = useParams();
   const [type, setType] = useState('all');
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(null);
+
+  // Sync with URL params
+  useEffect(() => {
+    if (slug && !WINE_TYPES.includes(slug)) {
+      const found = wines.find(w => w.slug === slug || getSlug(w.name) === slug);
+      if (found) setSelected(found);
+    }
+  }, [slug]);
 
   const filtered = useMemo(() => wines.filter(w =>
     (type === 'all' || w.type === type) &&
     (!query || w.name.toLowerCase().includes(query.toLowerCase()) || w.origin.toLowerCase().includes(query.toLowerCase()) || w.grapeVariety.toLowerCase().includes(query.toLowerCase()))
   ), [type, query]);
 
+  // SEO logic
+  const seoProps = useMemo(() => {
+    if (selected) {
+      return {
+        title: selected.name,
+        description: selected.tastingNotes?.substring(0, 160) || `Comprehensive guide to ${selected.name}. Discover grape varieties, origin, tasting notes, and food pairings.`,
+        keywords: `${selected.name}, ${selected.type} wine, ${selected.grapeVariety}, viticulture`,
+        structuredData: wineSchema(selected)
+      };
+    }
+    return {
+      title: "Wine Guide & Global Terroir Encyclopedia",
+      description: "Explore global wine varieties, regions, and tasting notes. From red and white to sparkling and fortified wines."
+    };
+  }, [selected]);
+
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '2rem' }}>
-      <SEO 
-        title="Wine Guide" 
-        description="Comprehensive wine guide covering red, white, rosé, sparkling, and fortified wines. Discover grape varieties, prestigious regions, tasting notes, and food pairings."
-      />
+      <SEO {...seoProps} />
       <div className="page-hero" style={{ textAlign: 'left', paddingLeft: 0 }}>
         <h1>🍷 Wine Guide</h1>
         <p className="page-hero-subtitle">Red, white, rosé, sparkling & fortified — grape varieties, regions, tasting notes, food pairing &amp; winemaking.</p>
