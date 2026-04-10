@@ -7,14 +7,26 @@
     --yap-glass-border: rgba(255, 255, 255, 0.08);
 }
 
+/* Root constraints for app-like behavior */
+html, body {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
 .yap-container {
     display: flex;
-    flex: 1;
+    flex-direction: row;
     height: 100dvh;
+    width: 100vw;
     background: #050505;
     color: var(--clr-text);
     overflow: hidden;
     font-family: var(--font-body);
+    position: fixed; /* Extra lock for mobile */
+    top: 0;
+    left: 0;
 }
 
 /* Sidebar Rail (Desktop) */
@@ -621,16 +633,32 @@
 }
 
 @media (max-width: 768px) {
+    .yap-container {
+        flex-direction: column;
+    }
+
     .yap-sidebar { display: none; }
-    .yap-mobile-nav { display: flex; }
+    .yap-mobile-nav { 
+        display: flex; 
+        position: relative; /* In-flow on mobile for better stability */
+        z-index: 1000;
+    }
+
     .yap-content { 
-        padding-bottom: env(safe-area-inset-bottom);
-        height: 100dvh;
+        flex: 1;
+        height: auto;
+        padding-bottom: 0;
+        overflow: hidden;
     }
     
-    /* Ensure the chat input area accounts for the mobile nav */
+    /* On mobile, chat-input stays above nav via flex flow */
     .chat-input-area {
-        padding-bottom: calc(16px + 64px + env(safe-area-inset-bottom));
+        padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    }
+    
+    .chat-window {
+        flex: 1;
+        min-height: 0;
     }
     
     .discovery-header {
