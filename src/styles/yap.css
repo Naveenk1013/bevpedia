@@ -26,6 +26,7 @@
     flex-direction: column;
     z-index: 110;
     transition: width 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    overflow-x: hidden;
 }
 
 @media (min-width: 1024px) {
@@ -99,6 +100,7 @@
     white-space: nowrap;
     transition: opacity 0.2s;
     font-size: 0.9rem;
+    overflow: hidden;
 }
 
 .yap-sidebar:hover .yap-nav-item span:not(.icon) {
