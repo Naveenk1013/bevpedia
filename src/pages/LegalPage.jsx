@@ -58,8 +58,8 @@ export default function LegalPage() {
           <section style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '15px', border: '1px solid var(--clr-border)' }}>
             <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Contact Us</h2>
             <p style={{ fontSize: '0.95rem', color: 'var(--clr-text-muted)' }}>
-              If you have any questions about our Privacy Policy or Terms of Service, please contact us at: <br/>
-              <strong>Email: contact@bevpedia.in</strong>
+              If you have any questions about our Privacy Policy or Terms of Service, please contact me at: <br/>
+              <strong>Email: naveen.k1013@gmail.com</strong>
             </p>
           </section>
         </div>
