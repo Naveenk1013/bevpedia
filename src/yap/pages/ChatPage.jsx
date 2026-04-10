@@ -20,6 +20,7 @@ const ChatPage = ({ user }) => {
     const [activeUsers, setActiveUsers] = useState([]);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [showMembers, setShowMembers] = useState(false);
+    const [showClearConfirm, setShowClearConfirm] = useState(false);
     const [groupMembers, setGroupMembers] = useState([]);
     const messagesEndRef = useRef(null);
     const chatContainerRef = useRef(null);
@@ -174,6 +175,18 @@ const ChatPage = ({ user }) => {
         }, 2000);
     };
 
+    const handleClearChat = async () => {
+        try {
+            await yapService.clearGroupMessages(groupId);
+            setMessages([]);
+            setShowClearConfirm(false);
+            playSend();
+        } catch (err) {
+            console.error("Failed to clear chat:", err);
+            alert("Failed to clear lounge history.");
+        }
+    };
+
     return (
         <YapLayout user={user}>
             <motion.div 
@@ -181,51 +194,62 @@ const ChatPage = ({ user }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
             >
-                <header className="chat-header">
+                <header className="chat-header sticky-header">
                     <div className="chat-header-info">
+                        <motion.button 
+                            whileTap={{ scale: 0.9 }}
+                            className="btn-icon mobile-only" 
+                            style={{ background: 'transparent', marginRight: '8px' }}
+                            onClick={() => navigate('/yap/community')}
+                        >
+                            <span style={{ fontSize: '1.2rem' }}>←</span>
+                        </motion.button>
                         <div className="status-avatar-wrapper" style={{ width: 40, height: 40, padding: 2 }}>
                             <div className="status-avatar">
                                 <MessageSquare size={16} color="var(--clr-accent)" />
                             </div>
                         </div>
-                        <div>
-                            <h3 style={{ textTransform: 'capitalize' }}>{group?.name || 'Loading...'}</h3>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div className="header-text">
+                            <h3>{group?.name || 'Loading...'}</h3>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <motion.span 
                                     className={`presence-dot ${activeUsers.length > 0 ? 'online' : 'offline'}`}
                                 ></motion.span>
-                                <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>
-                                    {activeUsers.length} members active
+                                <p className="header-subtitle">
+                                    {activeUsers.length} active
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <div className="chat-header-actions">
                          <motion.button 
                             whileTap={{ scale: 0.9 }}
                             className="btn-icon" 
                             onClick={() => { playSend(); setShowMembers(true); }}
                             title="View Members"
                          >
-                            <Users size={20} />
+                            <Users size={18} />
                          </motion.button>
                          {group?.created_by === user?.id && (
-                             <motion.button 
-                                whileTap={{ scale: 0.9 }}
-                                className="btn-icon" 
-                                onClick={() => { playSend(); setIsSettingsOpen(true); }} title="Admin Lounge Controls"
-                             >
-                                 <Settings size={20} color="var(--clr-accent)" />
-                             </motion.button>
+                             <>
+                                 <motion.button 
+                                    whileTap={{ scale: 0.9 }}
+                                    className="btn-icon" 
+                                    onClick={() => { playSend(); setShowClearConfirm(true); }}
+                                    title="Clear All Messages"
+                                    style={{ color: '#ff6b6b' }}
+                                 >
+                                    <span style={{ fontSize: '1.2rem' }}>🗑️</span>
+                                 </motion.button>
+                                 <motion.button 
+                                    whileTap={{ scale: 0.9 }}
+                                    className="btn-icon" 
+                                    onClick={() => { playSend(); setIsSettingsOpen(true); }} title="Lounge Settings"
+                                 >
+                                     <Settings size={18} color="var(--clr-accent)" />
+                                 </motion.button>
+                             </>
                          )}
-                         <motion.button 
-                            whileTap={{ scale: 0.9 }}
-                            className="btn-icon" 
-                            onClick={() => { playSend(); navigate('/yap/community'); }}
-                            title="Exit Lounge"
-                         >
-                            X
-                         </motion.button>
                     </div>
                 </header>
 
@@ -321,6 +345,33 @@ const ChatPage = ({ user }) => {
                 onClose={() => setIsSettingsOpen(false)} 
                 group={group} 
             />
+
+            <AnimatePresence>
+                {showClearConfirm && (
+                    <div className="yap-modal-overlay" onClick={() => setShowClearConfirm(false)}>
+                        <motion.div 
+                            className="yap-modal-content"
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            onClick={e => e.stopPropagation()}
+                            style={{ maxWidth: '400px', textAlign: 'center', padding: '30px' }}
+                        >
+                            <div className="yap-auth-logo" style={{ marginBottom: '20px', background: 'rgba(255, 107, 107, 0.1)', color: '#ff6b6b' }}>
+                                🗑️
+                            </div>
+                            <h3 style={{ margin: '0 0 10px 0', color: 'white' }}>Clear Lounge History?</h3>
+                            <p className="text-muted" style={{ fontSize: '0.9rem', marginBottom: '25px' }}>
+                                This will permanently delete all messages in this lounge for everyone. This action cannot be undone.
+                            </p>
+                            <div style={{ display: 'flex', gap: '12px' }}>
+                                <button className="btn btn-outline" style={{ flex: 1 }} onClick={() => setShowClearConfirm(false)}>Cancel</button>
+                                <button className="btn" style={{ flex: 1, background: '#ff6b6b', color: 'white' }} onClick={handleClearChat}>Clear All</button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
 
             <AnimatePresence>
                 {showMembers && (

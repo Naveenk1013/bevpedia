@@ -113,16 +113,16 @@ const CommunityPage = ({ user }) => {
                 
                 {/* PREMIUM DISCOVERY HEADER */}
                 <header className="discovery-header sticky-header">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                    <div className="discovery-header-main">
                         <div>
                             <h1>Network</h1>
-                            <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.5 }}>{filteredGroups.length} active hospitality lounges</p>
+                            <p className="header-subtitle">{filteredGroups.length} active hospitality lounges</p>
                         </div>
                         <motion.button 
                             whileTap={{ scale: 0.9 }}
                             onClick={() => setShowCreateModal(true)}
                             className="btn-icon mobile-only"
-                            style={{ background: 'var(--clr-accent)', color: '#000', borderRadius: '16px', width: 44, height: 44 }}
+                            style={{ background: 'var(--clr-accent)', color: '#000', borderRadius: '14px', width: 44, height: 44, boxShadow: '0 4px 12px rgba(201, 150, 58, 0.3)' }}
                         >
                             <Plus size={24} />
                         </motion.button>

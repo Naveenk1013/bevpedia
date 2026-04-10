@@ -16,6 +16,7 @@ const PrivateChatPage = ({ user }) => {
     const [loading, setLoading] = useState(true);
     const [isOnline, setIsOnline] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
+    const [showClearConfirm, setShowClearConfirm] = useState(false);
     const messagesEndRef = useRef(null);
     const chatContainerRef = useRef(null);
     const channelRef = useRef(null);
@@ -154,6 +155,18 @@ const PrivateChatPage = ({ user }) => {
         }, 2000);
     };
 
+    const handleClearChat = async () => {
+        try {
+            await yapService.clearPrivateChat(user.id, otherUserId);
+            setMessages([]);
+            setShowClearConfirm(false);
+            playSend();
+        } catch (err) {
+            console.error("Failed to clear private chat:", err);
+            alert("Failed to clear conversation history.");
+        }
+    };
+
     return (
         <YapLayout user={user}>
             <motion.div 
@@ -161,12 +174,12 @@ const PrivateChatPage = ({ user }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
             >
-                <header className="chat-header">
+                <header className="chat-header sticky-header">
                     <div className="chat-header-info">
                         <motion.button 
                             whileTap={{ scale: 0.9 }}
                             className="btn-icon" 
-                            style={{ background: 'transparent', marginRight: '10px' }}
+                            style={{ background: 'transparent', marginRight: '8px' }}
                             onClick={() => navigate('/yap/messages')}
                         >
                             <ChevronLeft size={24} />
@@ -185,19 +198,31 @@ const PrivateChatPage = ({ user }) => {
                             </div>
                         </div>
                         <div 
+                            className="header-text"
                             onClick={() => navigate(`/yap/user/${otherUserId}`)}
                             style={{ cursor: 'pointer' }}
                         >
                             <h3>{otherUser?.full_name || (otherUser?.username ? `@${otherUser.username}` : 'Elite Member')}</h3>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <motion.span 
                                     className={`presence-dot ${isOnline ? 'online' : 'offline'}`}
                                 ></motion.span>
-                                <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.7 }}>
+                                <p className="header-subtitle">
                                     {isOnline ? 'Active Now' : 'Offline'}
                                 </p>
                             </div>
                         </div>
+                    </div>
+                    <div className="chat-header-actions">
+                        <motion.button 
+                            whileTap={{ scale: 0.9 }}
+                            className="btn-icon" 
+                            onClick={() => { playSend(); setShowClearConfirm(true); }}
+                            title="Clear Conversation History"
+                            style={{ color: '#ff6b6b' }}
+                         >
+                            <span style={{ fontSize: '1.2rem' }}>🗑️</span>
+                         </motion.button>
                     </div>
                 </header>
 
@@ -281,6 +306,33 @@ const PrivateChatPage = ({ user }) => {
                     </div>
                 </form>
             </motion.div>
+
+            <AnimatePresence>
+                {showClearConfirm && (
+                    <div className="yap-modal-overlay" onClick={() => setShowClearConfirm(false)}>
+                        <motion.div 
+                            className="yap-modal-content"
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            onClick={e => e.stopPropagation()}
+                            style={{ maxWidth: '400px', textAlign: 'center', padding: '30px' }}
+                        >
+                            <div className="yap-auth-logo" style={{ marginBottom: '20px', background: 'rgba(255, 107, 107, 0.1)', color: '#ff6b6b' }}>
+                                🗑️
+                            </div>
+                            <h3 style={{ margin: '0 0 10px 0', color: 'white' }}>Clear Conversation?</h3>
+                            <p className="text-muted" style={{ fontSize: '0.9rem', marginBottom: '25px' }}>
+                                This will remove the message history from your view. The other person will still be able to see their copy of the conversation.
+                            </p>
+                            <div style={{ display: 'flex', gap: '12px' }}>
+                                <button className="btn btn-outline" style={{ flex: 1 }} onClick={() => setShowClearConfirm(false)}>Cancel</button>
+                                <button className="btn" style={{ flex: 1, background: '#ff6b6b', color: 'white' }} onClick={handleClearChat}>Clear History</button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </YapLayout>
     );
 };

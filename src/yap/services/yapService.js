@@ -486,5 +486,33 @@ export const yapService = {
         const { error } = await supabase.rpc('delete_own_account');
         if (error) throw error;
         return true;
+    },
+
+    async clearGroupMessages(groupId) {
+        const { error } = await supabase
+            .from('community_messages')
+            .delete()
+            .eq('group_id', groupId);
+        if (error) throw error;
+        return true;
+    },
+
+    async clearPrivateChat(userId, otherUserId) {
+        // Mark all messages as deleted for the current user
+        const { error: senderErr } = await supabase
+            .from('private_messages')
+            .update({ deleted_by_sender: true })
+            .eq('sender_id', userId)
+            .eq('receiver_id', otherUserId);
+            
+        const { error: receiverErr } = await supabase
+            .from('private_messages')
+            .update({ deleted_by_receiver: true })
+            .eq('sender_id', otherUserId)
+            .eq('receiver_id', userId);
+
+        if (senderErr) throw senderErr;
+        if (receiverErr) throw receiverErr;
+        return true;
     }
 };
