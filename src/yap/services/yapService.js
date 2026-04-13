@@ -80,7 +80,7 @@ export const yapService = {
                 user_id,
                 role,
                 joined_at,
-                profiles:user_id(full_name, avatar_url, username)
+                profile:profiles!group_members_user_id_fkey(full_name, avatar_url, username)
             `)
             .eq('group_id', groupId);
         if (error) throw error;
@@ -244,7 +244,7 @@ export const yapService = {
     subscribeToMessages(groupId, userProfile, onMessage, onDelete, onPresence, onTyping) {
         const channel = supabase.channel(`group-${groupId}`);
         
-        return channel
+        channel
             .on('postgres_changes', {
                 event: 'INSERT',
                 schema: 'public',
@@ -308,7 +308,7 @@ export const yapService = {
         const channelId = this.getSharedPrivateChannelId(userId, otherUserId);
         const channel = supabase.channel(channelId);
         
-        return channel
+        channel
             .on('postgres_changes', {
                 event: 'INSERT',
                 schema: 'public',
@@ -345,16 +345,6 @@ export const yapService = {
         return channel;
     },
 
-    sendPrivateTyping(recipientId, userId, fullName, isTyping, activeChannel = null) {
-        // Send typing to the recipient's private channel
-        const channel = activeChannel || supabase.channel(`private-${recipientId}`);
-        return channel.send({
-            type: 'broadcast',
-            event: 'typing',
-            payload: { userId, fullName, isTyping },
-        });
-    },
-
     async deleteGroupMessage(messageId) {
         const { error } = await supabase
             .from('community_messages')
@@ -364,14 +354,12 @@ export const yapService = {
         if (error) throw error;
     },
 
-    async getGroupMembers(groupId) {
-        const { data, error } = await supabase
-            .from('group_members')
-            .select('role, user:profiles(*)')
-            .eq('group_id', groupId);
-        if (error) throw error;
-        return data;
-    },
+    // Note: getGroupMembers is defined once above (line 76) with the data shape
+    // that includes user_id, role, joined_at, and profiles join.
+    // The ChatPage uses a second call (line 367 originally) with 'role, user:profiles(*)'
+    // — we keep only the version used by ChatPage's member list here:
+    // Standardized getGroupMembers is defined above (line 76)
+
 
     async deletePrivateMessage(messageId, userId) {
         const { data: msg, error: fetchErr } = await supabase

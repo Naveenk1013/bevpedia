@@ -261,14 +261,14 @@ const GroupSettingsModal = ({ group, isOpen, onClose, onUpdate, onDelete, curren
                             {members.map(m => (
                                 <div key={m.user_id} className="yap-user-brief" style={{ padding: '12px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
                                     <div className="avatar" style={{ width: 32, height: 32 }}>
-                                        {m.profiles?.avatar_url ? (
-                                            <img src={m.profiles.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+                                        {m.profile?.avatar_url ? (
+                                            <img src={m.profile.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
                                         ) : (
-                                            (m.profiles?.full_name?.[0] || m.profiles?.username?.[0] || 'U').toUpperCase()
+                                            (m.profile?.full_name?.[0] || m.profile?.username?.[0] || 'U').toUpperCase()
                                         )}
                                     </div>
                                     <div className="info" style={{ opacity: 1, flex: 1 }}>
-                                        <p style={{ fontSize: '0.85rem' }}>{m.profiles?.full_name || `@${m.profiles?.username}` || 'Member'}</p>
+                                        <p style={{ fontSize: '0.85rem' }}>{m.profile?.full_name || `@${m.profile?.username}` || 'Member'}</p>
                                         <p style={{ fontSize: '0.65rem', color: 'var(--clr-accent)' }}>{m.role === 'admin' ? 'Founder' : 'Elite Member'}</p>
                                     </div>
                                     {m.role !== 'admin' && (

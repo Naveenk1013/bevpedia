@@ -389,25 +389,25 @@ const ChatPage = ({ user }) => {
                             </div>
                             <div style={{ padding: '20px', maxHeight: '50vh', overflowY: 'auto' }}>
                                 {groupMembers.map(member => {
-                                    const isUserOnline = activeUsers.some(u => u.id === member.user.id);
+                                    const isUserOnline = activeUsers.some(u => u.id === member.user_id);
                                     return (
                                         <div 
-                                            key={member.user.id} 
-                                            onClick={() => navigate(`/yap/user/${member.user.id}`)}
+                                            key={member.user_id} 
+                                            onClick={() => navigate(`/yap/user/${member.user_id}`)}
                                             style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', borderRadius: '12px', background: 'rgba(255,255,255,0.03)', marginBottom: '8px', cursor: 'pointer' }}
                                         >
                                             <div className="status-avatar-wrapper" style={{ width: 44, height: 44, padding: '2px' }}>
                                                 <div className="status-avatar">
-                                                    {member.user.avatar_url ? (
-                                                        <img src={member.user.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
+                                                    {member.profile.avatar_url ? (
+                                                        <img src={member.profile.avatar_url} alt="" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
                                                     ) : (
-                                                        <span style={{ fontSize: '1.2rem' }}>{(member.user.full_name?.[0] || 'U').toUpperCase()}</span>
+                                                        <span style={{ fontSize: '1.2rem' }}>{(member.profile.full_name?.[0] || 'U').toUpperCase()}</span>
                                                     )}
                                                 </div>
                                             </div>
                                             <div style={{ flex: 1 }}>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                    <span style={{ fontWeight: 'bold', color: 'white', fontSize: '0.9rem' }}>{member.user.full_name}</span>
+                                                    <span style={{ fontWeight: 'bold', color: 'white', fontSize: '0.9rem' }}>{member.profile.full_name}</span>
                                                     {member.role === 'admin' ? (
                                                         <span style={{ fontSize: '0.7rem', color: '#000', background: 'var(--clr-accent)', padding: '2px 8px', borderRadius: '10px', textTransform: 'uppercase', fontWeight: 'bold' }}>Founder</span>
                                                     ) : (
