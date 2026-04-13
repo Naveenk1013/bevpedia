@@ -55,117 +55,121 @@ const PublicProfilePage = ({ user }) => {
 
     return (
         <YapLayout user={user}>
-            <div style={{ padding: '0px 20px 100px', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
-                
-                {/* Header Actions */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px 0' }}>
-                    <motion.button 
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => navigate(-1)} 
-                        className="btn-icon"
-                        style={{ background: 'rgba(255,255,255,0.05)', color: 'white', borderRadius: '50%' }}
-                    >
-                        <ArrowLeft size={20} />
-                    </motion.button>
-                </div>
-
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="glass-morphism profile-card"
-                    style={{ 
-                        overflow: 'hidden', 
-                        position: 'relative', 
-                        marginTop: '20px',
-                        padding: '0'
-                    }}
-                >
-                    {/* Abstract Banner Component */}
-                    <div style={{ 
-                        height: '140px', 
-                        background: 'linear-gradient(135deg, rgba(88, 101, 242, 0.2), rgba(124, 92, 252, 0.4))',
-                        position: 'relative'
-                    }}>
-                        <div style={{ position: 'absolute', bottom: '-40px', left: '30px' }}>
-                            <div style={{ 
-                                width: '80px', height: '80px', 
-                                borderRadius: '50%', 
-                                border: '4px solid #0a0a0a',
-                                background: '#1a1a1a',
-                                overflow: 'hidden',
-                                display: 'flex', justifyContent: 'center', alignItems: 'center'
-                            }}>
-                                {profile.avatar_url ? (
-                                    <img src={profile.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                ) : (
-                                    <span style={{ fontSize: '2rem', color: 'var(--clr-accent)', fontWeight: 'bold' }}>
-                                        {(profile.full_name?.[0] || 'U').toUpperCase()}
-                                    </span>
-                                )}
-                            </div>
+            <div className="community-page-wrapper">
+                <div className="community-scroll-content">
+                    <div style={{ padding: '0px 20px 100px', maxWidth: '800px', margin: '0 auto', width: '100%' }}>
+                        
+                        {/* Header Actions */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px 0' }}>
+                            <motion.button 
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => navigate(-1)} 
+                                className="btn-icon"
+                                style={{ background: 'rgba(255,255,255,0.05)', color: 'white', borderRadius: '50%' }}
+                            >
+                                <ArrowLeft size={20} />
+                            </motion.button>
                         </div>
-                    </div>
 
-                    {/* Content Container */}
-                    <div style={{ padding: '50px 30px 40px' }}>
-                        
-                        {!isVisible ? (
-                            <div style={{ textAlign: 'center', padding: '40px 0', opacity: 0.7 }}>
-                                <Lock size={48} style={{ marginBottom: '20px', color: 'rgba(255,255,255,0.4)' }} />
-                                <h3>Account is Private</h3>
-                                <p style={{ fontSize: '0.9rem' }}>This member has isolated their identity from the public network.</p>
-                            </div>
-                        ) : (
-                            <>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                    <div>
-                                        <h1 style={{ margin: '0 0 4px', fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            {profile.full_name} 
-                                            {isOwner && <ShieldCheck size={20} color="var(--clr-accent)" title="This is you" />}
-                                        </h1>
-                                        {profile.username && <p style={{ margin: 0, color: 'var(--clr-accent)', fontWeight: 'bold', fontSize: '1rem' }}>@{profile.username}</p>}
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4 }}
+                            className="glass-morphism profile-card"
+                            style={{ 
+                                overflow: 'hidden', 
+                                position: 'relative', 
+                                marginTop: '20px',
+                                padding: '0'
+                            }}
+                        >
+                            {/* Abstract Banner Component */}
+                            <div style={{ 
+                                height: '140px', 
+                                background: 'linear-gradient(135deg, rgba(88, 101, 242, 0.2), rgba(124, 92, 252, 0.4))',
+                                position: 'relative'
+                            }}>
+                                <div style={{ position: 'absolute', bottom: '-40px', left: '30px' }}>
+                                    <div style={{ 
+                                        width: '80px', height: '80px', 
+                                        borderRadius: '50%', 
+                                        border: '4px solid #0a0a0a',
+                                        background: '#1a1a1a',
+                                        overflow: 'hidden',
+                                        display: 'flex', justifyContent: 'center', alignItems: 'center'
+                                    }}>
+                                        {profile.avatar_url ? (
+                                            <img src={profile.avatar_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        ) : (
+                                            <span style={{ fontSize: '2rem', color: 'var(--clr-accent)', fontWeight: 'bold' }}>
+                                                {(profile.full_name?.[0] || 'U').toUpperCase()}
+                                            </span>
+                                        )}
                                     </div>
-                                    
-                                    {!isOwner && (
-                                        <motion.button 
-                                            whileTap={{ scale: 0.95 }}
-                                            onClick={() => navigate(`/yap/messages/${userId}`)}
-                                            className="btn" 
-                                            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: '30px' }}
-                                        >
-                                            <MessageSquare size={16} /> Direct Message
-                                        </motion.button>
-                                    )}
                                 </div>
+                            </div>
 
-                                {/* Details / Bio */}
-                                {profile.bio && (
-                                    <div style={{ marginTop: '30px' }}>
-                                        <p style={{ lineHeight: '1.6', fontSize: '0.95rem', color: 'rgba(255,255,255,0.85)' }}>{profile.bio}</p>
+                            {/* Content Container */}
+                            <div style={{ padding: '50px 30px 40px' }}>
+                                
+                                {!isVisible ? (
+                                    <div style={{ textAlign: 'center', padding: '40px 0', opacity: 0.7 }}>
+                                        <Lock size={48} style={{ marginBottom: '20px', color: 'rgba(255,255,255,0.4)' }} />
+                                        <h3>Account is Private</h3>
+                                        <p style={{ fontSize: '0.9rem' }}>This member has isolated their identity from the public network.</p>
                                     </div>
-                                )}
+                                ) : (
+                                    <>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                            <div>
+                                                <h1 style={{ margin: '0 0 4px', fontSize: '1.8rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    {profile.full_name} 
+                                                    {isOwner && <ShieldCheck size={20} color="var(--clr-accent)" title="This is you" />}
+                                                </h1>
+                                                {profile.username && <p style={{ margin: 0, color: 'var(--clr-accent)', fontWeight: 'bold', fontSize: '1rem' }}>@{profile.username}</p>}
+                                            </div>
+                                            
+                                            {!isOwner && (
+                                                <motion.button 
+                                                    whileTap={{ scale: 0.95 }}
+                                                    onClick={() => navigate(`/yap/messages/${userId}`)}
+                                                    className="btn" 
+                                                    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', borderRadius: '30px' }}
+                                                >
+                                                    <MessageSquare size={16} /> Direct Message
+                                                </motion.button>
+                                            )}
+                                        </div>
 
-                                {/* Meta Info (Location / Company) */}
-                                {(profile.location || profile.company) && (
-                                    <div style={{ display: 'flex', gap: '20px', marginTop: '24px', flexWrap: 'wrap' }}>
-                                        {profile.location && (
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
-                                                <MapPin size={16} /> {profile.location}
+                                        {/* Details / Bio */}
+                                        {profile.bio && (
+                                            <div style={{ marginTop: '30px' }}>
+                                                <p style={{ lineHeight: '1.6', fontSize: '0.95rem', color: 'rgba(255,255,255,0.85)' }}>{profile.bio}</p>
                                             </div>
                                         )}
-                                        {profile.company && (
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
-                                                <Briefcase size={16} /> {profile.company}
+
+                                        {/* Meta Info (Location / Company) */}
+                                        {(profile.location || profile.company) && (
+                                            <div style={{ display: 'flex', gap: '20px', marginTop: '24px', flexWrap: 'wrap' }}>
+                                                {profile.location && (
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
+                                                        <MapPin size={16} /> {profile.location}
+                                                    </div>
+                                                )}
+                                                {profile.company && (
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem' }}>
+                                                        <Briefcase size={16} /> {profile.company}
+                                                    </div>
+                                                )}
                                             </div>
                                         )}
-                                    </div>
+                                    </>
                                 )}
-                            </>
-                        )}
-                        
+                                
+                            </div>
+                        </motion.div>
                     </div>
-                </motion.div>
+                </div>
             </div>
         </YapLayout>
     );

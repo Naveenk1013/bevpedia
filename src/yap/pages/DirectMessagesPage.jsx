@@ -55,12 +55,17 @@ const DirectMessagesPage = ({ user }) => {
 
     return (
         <YapLayout user={user}>
-            <header className="community-header">
-                <h1 className="community-title">Direct Messages</h1>
-                <p className="community-subtitle">Private conversations with the elite network.</p>
-            </header>
+            <div className="community-page-wrapper">
+                <header className="discovery-header sticky-header">
+                    <div className="discovery-header-main">
+                        <div>
+                            <h1>Messages</h1>
+                            <p className="header-subtitle">Private conversations with the network.</p>
+                        </div>
+                    </div>
+                </header>
 
-            <div className="chat-messages" style={{ padding: '0 20px', gap: '0' }}>
+                <div className="community-scroll-content" style={{ padding: '0 20px 24px' }}>
                 <div style={{ paddingBottom: '20px' }}>
                     <div className="chat-input-wrapper">
                         <Search size={18} color="#555" />
@@ -160,6 +165,7 @@ const DirectMessagesPage = ({ user }) => {
                         <p style={{ fontSize: '0.8rem' }}>Click "Direct" on a member profile to start chatting.</p>
                     </div>
                 )}
+                </div>
             </div>
         </YapLayout>
     );

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Globe, Users, GraduationCap, MessageSquare, Coffee, Wine, GlassWater, Hotel, Check, X, Bell, Plus, Search, Filter } from 'lucide-react';
+import { Globe, Users, GraduationCap, MessageSquare, Coffee, Wine, GlassWater, Hotel, Check, X, Bell, Plus, Search, LayoutGrid, List, Rows3 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSound } from '../utils/soundEngine';
 import YapLayout from '../components/YapLayout';
@@ -16,26 +16,26 @@ const CATEGORIES = [
     { id: 'Front Office', name: 'Front Office', icon: Hotel, color: '#e05c5c' }
 ];
 
+const VIEW_MODES = [
+    { id: 'card', icon: Rows3, label: 'Card' },
+    { id: 'grid', icon: LayoutGrid, label: 'Grid' },
+    { id: 'list', icon: List, label: 'List' },
+];
+
 const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        transition: {
-            staggerChildren: 0.05
-        }
+        transition: { staggerChildren: 0.04 }
     }
 };
 
 const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+    hidden: { y: 16, opacity: 0 },
     visible: {
         y: 0,
         opacity: 1,
-        transition: {
-            type: "spring",
-            stiffness: 100,
-            damping: 15
-        }
+        transition: { type: "spring", stiffness: 120, damping: 18 }
     }
 };
 
@@ -47,6 +47,10 @@ const CommunityPage = ({ user }) => {
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchTerm, setSearchTerm] = useState("");
     const [isSearchFocused, setIsSearchFocused] = useState(false);
+    const [viewMode, setViewMode] = useState('card');
+    const [isHeaderCollapsed, setIsHeaderCollapsed] = useState(false);
+    const scrollRef = useRef(null);
+    const lastScrollTop = useRef(0);
     const navigate = useNavigate();
     const { play } = useSound('ui/click_1');
 
@@ -67,6 +71,30 @@ const CommunityPage = ({ user }) => {
         };
         fetchData();
     }, [user]);
+
+    // Scroll-aware header collapse
+    const handleScroll = useCallback(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        const st = el.scrollTop;
+        const threshold = 40;
+
+        if (st > threshold && st > lastScrollTop.current) {
+            // Scrolling down past threshold → collapse
+            setIsHeaderCollapsed(true);
+        } else if (st < lastScrollTop.current - 10) {
+            // Scrolling up → expand
+            setIsHeaderCollapsed(false);
+        }
+        lastScrollTop.current = st;
+    }, []);
+
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        el.addEventListener('scroll', handleScroll, { passive: true });
+        return () => el.removeEventListener('scroll', handleScroll);
+    }, [handleScroll]);
 
     const filteredGroups = useMemo(() => {
         return groups.filter(g => {
@@ -107,13 +135,17 @@ const CommunityPage = ({ user }) => {
         }
     };
 
+    // Grid class based on view mode
+    const gridClassName = `groups-grid ${viewMode === 'grid' ? 'view-grid' : viewMode === 'list' ? 'view-list' : 'view-card'}`;
+
     return (
         <YapLayout user={user}>
             <div className="community-page-wrapper">
                 
-                {/* PREMIUM DISCOVERY HEADER */}
-                <header className="discovery-header sticky-header">
-                    <div className="discovery-header-main">
+                {/* RETRACTABLE DISCOVERY HEADER */}
+                <header className={`discovery-header sticky-header ${isHeaderCollapsed ? 'collapsed' : ''}`}>
+                    {/* Title Row — hides on collapse */}
+                    <div className={`discovery-header-main ${isHeaderCollapsed ? 'header-row-hidden' : ''}`}>
                         <div>
                             <h1>Network</h1>
                             <p className="header-subtitle">{filteredGroups.length} active hospitality lounges</p>
@@ -128,8 +160,8 @@ const CommunityPage = ({ user }) => {
                         </motion.button>
                     </div>
 
-                    {/* SEARCH & FILTERS */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    {/* Persistent Controls — search + categories + view switcher */}
+                    <div className="discovery-controls">
                         <div className={`search-bar glass-morphism ${isSearchFocused ? 'focused' : ''}`}>
                             <Search size={18} className="search-icon" style={{ opacity: 0.5, color: isSearchFocused ? 'var(--clr-accent)' : 'inherit', transition: 'color 0.3s' }} />
                             <input 
@@ -140,9 +172,23 @@ const CommunityPage = ({ user }) => {
                                 onFocus={() => setIsSearchFocused(true)}
                                 onBlur={() => setIsSearchFocused(false)}
                             />
+                            {/* View Mode Switcher */}
+                            <div className="view-switcher">
+                                {VIEW_MODES.map(mode => (
+                                    <button
+                                        key={mode.id}
+                                        className={`view-switcher-btn ${viewMode === mode.id ? 'active' : ''}`}
+                                        onClick={() => { play(); setViewMode(mode.id); }}
+                                        title={mode.label}
+                                    >
+                                        <mode.icon size={16} />
+                                    </button>
+                                ))}
+                            </div>
                         </div>
 
-                        <div className="status-bar">
+                        {/* Category Bar — hides on collapse */}
+                        <div className={`status-bar ${isHeaderCollapsed ? 'header-row-hidden' : ''}`}>
                             {CATEGORIES.map(cat => (
                                 <motion.div 
                                     key={cat.id} 
@@ -170,7 +216,7 @@ const CommunityPage = ({ user }) => {
                     </div>
                 </header>
 
-                <div className="community-scroll-content">
+                <div className="community-scroll-content" ref={scrollRef}>
 
                     <AnimatePresence>
                         {invitations.length > 0 && (
@@ -225,11 +271,11 @@ const CommunityPage = ({ user }) => {
                     </AnimatePresence>
 
                     <motion.div 
-                        className="groups-grid"
+                        className={gridClassName}
                         variants={containerVariants}
                         initial="hidden"
                         animate="visible"
-                        key={`${selectedCategory}-${searchTerm}`}
+                        key={`${selectedCategory}-${searchTerm}-${viewMode}`}
                     >
                         {loading ? (
                             <div className="text-muted">Analyzing legacy channels...</div>
@@ -238,7 +284,8 @@ const CommunityPage = ({ user }) => {
                                 <motion.div key={group.id} variants={itemVariants} whileTap={{ scale: 0.98 }}>
                                     <GroupCard 
                                         group={group} 
-                                        onJoin={handleJoin} 
+                                        onJoin={handleJoin}
+                                        viewMode={viewMode}
                                     />
                                 </motion.div>
                             ))
@@ -259,7 +306,7 @@ const CommunityPage = ({ user }) => {
                     </motion.div>
                 </div>
 
-                {/* MOBILE FAB - Refined for safe distance from nav */}
+                {/* MOBILE FAB */}
                 <motion.button 
                     className="mobile-fab"
                     whileTap={{ scale: 0.9 }}

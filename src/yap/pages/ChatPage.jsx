@@ -341,11 +341,6 @@ const ChatPage = ({ user }) => {
                     </div>
                 </form>
             </motion.div>
-            <GroupSettingsModal 
-                isOpen={isSettingsOpen} 
-                onClose={() => setIsSettingsOpen(false)} 
-                group={group} 
-            />
 
             <AnimatePresence>
                 {showClearConfirm && (

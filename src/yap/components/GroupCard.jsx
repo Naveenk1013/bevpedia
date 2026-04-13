@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Lock } from 'lucide-react';
+import { Users, Lock, ArrowRight } from 'lucide-react';
 import { yapService } from '../services/yapService';
 
-const GroupCard = ({ group, onJoin }) => {
+const GroupCard = ({ group, onJoin, viewMode = 'card' }) => {
     const navigate = useNavigate();
     const [showPinEntry, setShowPinEntry] = React.useState(false);
     const [pin, setPin] = React.useState('');
@@ -38,6 +38,76 @@ const GroupCard = ({ group, onJoin }) => {
         }
     };
 
+    /* ═══════ LIST VIEW — Compact single row ═══════ */
+    if (viewMode === 'list') {
+        return (
+            <div className="yap-card yap-card-list" onClick={handleJoinClick}>
+                <div className="list-card-left">
+                    <div className="list-card-icon">
+                        {group.name?.[0]?.toUpperCase() || 'G'}
+                    </div>
+                    <div className="list-card-info">
+                        <h4 className="list-card-title">{group.name}</h4>
+                        <span className="list-card-meta">
+                            <Users size={12} />
+                            {group.member_count || 0}/{group.max_members || 100}
+                            {group.category && <> · {group.category}</>}
+                        </span>
+                    </div>
+                </div>
+                <div className="list-card-right">
+                    {group.pin && <Lock size={14} color="var(--clr-accent)" />}
+                    <button 
+                        className={`btn ${isFull ? 'btn-outline' : 'btn-primary'}`}
+                        disabled={isFull}
+                        style={{ 
+                            height: '32px', minWidth: '72px', borderRadius: '10px', fontSize: '0.75rem',
+                            opacity: isFull ? 0.5 : 1, cursor: isFull ? 'not-allowed' : 'pointer'
+                        }}
+                    >
+                        {isFull ? 'Full' : 'Join'}
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    /* ═══════ GRID VIEW — Compact 2-column card ═══════ */
+    if (viewMode === 'grid') {
+        return (
+            <div className="yap-card yap-card-grid" onClick={handleJoinClick}>
+                <div className="grid-card-top">
+                    <div className="grid-card-icon">
+                        {group.name?.[0]?.toUpperCase() || 'G'}
+                    </div>
+                    {group.pin && (
+                        <div style={{ background: 'rgba(201, 150, 58, 0.15)', padding: '4px', borderRadius: '8px' }}>
+                            <Lock size={12} color="var(--clr-accent)" />
+                        </div>
+                    )}
+                </div>
+                <h4 className="grid-card-title">{group.name}</h4>
+                <div className="grid-card-footer">
+                    <span className="grid-card-meta">
+                        <Users size={13} /> {group.member_count || 0}
+                    </span>
+                    <button 
+                        className={`btn ${isFull ? 'btn-outline' : 'btn-primary'}`}
+                        disabled={isFull}
+                        style={{ 
+                            height: '30px', minWidth: '60px', borderRadius: '10px', fontSize: '0.7rem',
+                            opacity: isFull ? 0.5 : 1, cursor: isFull ? 'not-allowed' : 'pointer',
+                            padding: '0 12px'
+                        }}
+                    >
+                        {isFull ? 'Full' : 'Join'}
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    /* ═══════ CARD VIEW — Default full card (original) ═══════ */
     return (
         <div className="yap-card" style={{ height: 'auto', display: 'flex', flexDirection: 'column' }}>
             <div style={{ flex: 1 }}>
