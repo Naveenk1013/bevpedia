@@ -13,11 +13,23 @@
   position: relative;
 }
 
+@supports (-webkit-touch-callout: none) {
+  .sathi-page {
+    height: -webkit-fill-available;
+  }
+}
+
 /* Force Body Lock */
 body.sathi-lock {
   overflow: hidden !important;
   height: 100dvh !important;
   position: relative;
+}
+
+@supports (-webkit-touch-callout: none) {
+  body.sathi-lock {
+    height: -webkit-fill-available !important;
+  }
 }
 
 
@@ -27,6 +39,14 @@ body.sathi-lock {
   height: 100dvh !important;
   min-height: 100dvh !important;
   overflow: hidden !important;
+}
+
+.sathi-header {
+  padding: 0.9rem 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  z-index: 10;
+  flex-shrink: 0;
 }
 
 .sathi-main-layout {
@@ -413,7 +433,7 @@ body.sathi-lock {
 .sathi-messages-scroll {
   flex: 1;
   overflow-y: auto;
-  padding: 2rem 1.5rem 120px !important; /* Extra bottom padding for floating input */
+  padding: 2rem 1.5rem 1rem !important; /* Changed to use standard bottom padding */
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -422,12 +442,11 @@ body.sathi-lock {
 }
 
 .sathi-input-area {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
+  margin: 0 auto 1.5rem auto;
   width: 90%;
   max-width: 900px;
+  flex-shrink: 0;
   display: flex;
   gap: 1rem;
   background: rgba(15, 18, 22, 0.7);
@@ -442,8 +461,8 @@ body.sathi-lock {
 }
 
 @keyframes sathi-slide-up {
-  from { opacity: 0; transform: translate(-50%, 20px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .sathi-welcome-container {
@@ -454,17 +473,241 @@ body.sathi-lock {
   z-index: 5;
 }
 
-/* Mobile Overrides (Optimized) */
+.sathi-welcome-title {
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 500;
+}
+
+.sathi-welcome-chips {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.sathi-chip {
+  font-size: 0.85rem;
+  padding: 0.6rem 1.2rem;
+  background: rgba(240, 161, 19, 0.1);
+  border: 1px solid rgba(240, 161, 19, 0.3);
+  color: var(--clr-accent);
+  cursor: pointer;
+}
+
+/* ── Message Bubbles ── */
+.sathi-msg-bubble {
+  max-width: 85%;
+  padding: 1.2rem 1.8rem;
+  border-radius: 1.5rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.sathi-msg-user {
+  background: var(--clr-accent);
+  color: #000;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 8px 32px rgba(240, 161, 19, 0.3);
+}
+
+.sathi-msg-assistant {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.95);
+  border-bottom-left-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+}
+
+.sathi-reasoning-block {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  border-left: 3px solid var(--clr-accent);
+  padding-left: 1.2rem;
+  margin-bottom: 1.2rem;
+  font-style: italic;
+}
+
+/* ── Input & Send Button ── */
+.sathi-text-input {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border-radius: 30px;
+  border: none;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  outline: none;
+  min-width: 0;
+  font-size: 1.1rem;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.sathi-text-input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.sathi-send-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 0;
+  flex-shrink: 0;
+  background: var(--clr-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ══════ Mobile Overrides ══════ */
 @media (max-width: 768px) {
+
+  .sathi-page {
+    overflow: hidden;
+    /* Ensure no vertical overflow on phones */
+  }
+
+  .sathi-header {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .sathi-main-layout {
+    min-height: 0;
+  }
+
+  .sathi-chat-layout {
+    min-height: 0;
+  }
+
   .sathi-input-area {
-    bottom: 1rem;
-    width: 95%;
-    padding: 0.6rem;
-    gap: 0.5rem;
-    border-radius: 30px;
+    margin-bottom: 0.6rem;
+    width: 96%;
+    padding: 0.5rem;
+    gap: 0.4rem;
+    border-radius: 28px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4),
+                inset 0 1px 1px rgba(255, 255, 255, 0.04);
+  }
+
+  .sathi-text-input {
+    padding: 0.7rem 1rem;
+    font-size: 1rem;
+    border-radius: 24px;
+  }
+
+  .sathi-send-btn {
+    width: 42px;
+    height: 42px;
   }
 
   .sathi-messages-scroll {
-    padding-bottom: 100px !important;
+    padding: 1rem 0.8rem 0.6rem !important;
+    gap: 1rem;
+  }
+
+  .sathi-msg-bubble {
+    max-width: 92%;
+    padding: 0.9rem 1.1rem;
+    border-radius: 1.2rem;
+  }
+
+  .sathi-msg-user {
+    border-bottom-right-radius: 4px;
+  }
+
+  .sathi-msg-assistant {
+    border-bottom-left-radius: 4px;
+  }
+
+  .sathi-welcome-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .sathi-welcome-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .sathi-chip {
+    font-size: 0.78rem;
+    padding: 0.5rem 0.9rem;
+  }
+
+  .markdown-body {
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+
+  .markdown-body h1 { font-size: 1.3rem; }
+  .markdown-body h2 { font-size: 1.15rem; }
+  .markdown-body h3 { font-size: 1.05rem; }
+
+  .markdown-body pre {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.82rem;
+    border-radius: 8px;
+  }
+
+  .markdown-body pre code {
+    font-size: 0.82rem;
+  }
+
+  .markdown-body code {
+    font-size: 0.82em;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  /* Table horizontal scroll on mobile */
+  .markdown-body table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .markdown-body thead th,
+  .markdown-body tbody td {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.82rem;
+  }
+
+  .sathi-reasoning-block {
+    font-size: 0.8rem;
+    padding-left: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+}
+
+/* Extra-small phones (e.g. iPhone SE, Galaxy S8) */
+@media (max-width: 380px) {
+  .sathi-input-area {
+    padding: 0.4rem;
+    gap: 0.3rem;
+  }
+
+  .sathi-text-input {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.92rem;
+  }
+
+  .sathi-send-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .sathi-msg-bubble {
+    max-width: 95%;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  .sathi-welcome-title {
+    font-size: 1.05rem;
+  }
+
+  .sathi-chip {
+    font-size: 0.72rem;
+    padding: 0.4rem 0.7rem;
   }
 }

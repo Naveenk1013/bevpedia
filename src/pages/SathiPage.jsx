@@ -22,6 +22,8 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
   const [conversations, setConversations] = useState([]);
   const [conversationId, setConversationId] = useState(null);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
+  const sathiPageRef = useRef(null);
 
   // New states for UI and AI
   const [aiState, setAiState] = useState('idle'); // 'idle' | 'thinking' | 'speaking'
@@ -48,6 +50,34 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
       document.body.classList.remove('sathi-lock');
     };
   }, []);
+
+  // Virtual Keyboard Viewport Handler
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const handleResize = () => {
+      const pageEl = sathiPageRef.current;
+      if (!pageEl) return;
+      // Set height to the visual viewport height (shrinks when keyboard opens)
+      pageEl.style.height = `${vv.height}px`;
+      // Scroll to bottom when keyboard opens so user sees latest messages
+      requestAnimationFrame(() => scrollToBottom());
+    };
+
+    vv.addEventListener('resize', handleResize);
+    vv.addEventListener('scroll', handleResize);
+
+    return () => {
+      vv.removeEventListener('resize', handleResize);
+      vv.removeEventListener('scroll', handleResize);
+    };
+  }, []);
+
+  // Handle input focus — ensure scroll to bottom on mobile
+  const handleInputFocus = () => {
+    setTimeout(() => scrollToBottom(), 300);
+  };
 
   const fetchConversations = async () => {
     const { data } = await supabase
@@ -222,22 +252,22 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
   }
 
   return (
-    <div className="sathi-page">
+    <div className="sathi-page" ref={sathiPageRef}>
       <SEO 
         title="SATHI AI | Your Intelligent Hospitality Assistant" 
         description="Meet SATHI: The Smart Assistant for Tourism & Hospitality Innovation. Get instant, expert answers to complex mixology, viticulture, and hospitality management queries using advanced AI."
       />
       
       {/* Unified Header Bar (All Devices) */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-800 bg-black/60 backdrop-blur-md" style={{ zIndex: 10 }}>
+      <div className="sathi-header flex items-center justify-between border-b border-gray-800">
         <div className="flex items-center gap-3">
           <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="sathi-icon-btn">
-            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+            {isSidebarOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
           <button onClick={() => navigate('/')} className="sathi-icon-btn hidden md:flex" title="Go Home">
-             <Home size={22} />
+             <Home size={20} />
           </button>
-          <h2 style={{ fontFamily: 'var(--font-display)', color: 'var(--clr-accent)', margin: 0, fontSize: '1.2rem', marginLeft: '0.5rem' }}>SATHI</h2>
+          <h2 style={{ fontFamily: 'var(--font-display)', color: 'var(--clr-accent)', margin: 0, fontSize: '1.1rem', marginLeft: '0.4rem' }}>SATHI</h2>
         </div>
         <div className="hidden md:block text-muted" style={{ fontSize: '0.85rem', opacity: 0.7 }}>Smart Assistant for Tourism & Hospitality Innovation</div>
         <div className="flex md:hidden">
@@ -347,12 +377,12 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
                   transition={{ delay: 0.5 }} 
                   className="sathi-welcome-container"
                 >
-                  <p style={{ fontSize: '1.6rem', marginBottom: '1.5rem', color: 'rgba(255,255,255,0.95)', fontWeight: '500' }}>
+                  <p className="sathi-welcome-title">
                     How can I help you today?
                   </p>
-                  <div style={{ display: 'flex', gap: '0.8rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-                    <span className="btn outline" style={{ fontSize: '0.85rem', padding: '0.6rem 1.2rem', background: 'rgba(240,161,19,0.1)', border: '1px solid rgba(240,161,19,0.3)', color: 'var(--clr-accent)', cursor: 'pointer' }} onClick={() => setInput("Can you generate a standard SOP for hotel morning check-outs?")}>Suggest an SOP</span>
-                    <span className="btn outline" style={{ fontSize: '0.85rem', padding: '0.6rem 1.2rem', background: 'rgba(240,161,19,0.1)', border: '1px solid rgba(240,161,19,0.3)', color: 'var(--clr-accent)', cursor: 'pointer' }} onClick={() => setInput("What is the Angel's Share in whisky production?")}>Define Angel's Share</span>
+                  <div className="sathi-welcome-chips">
+                    <span className="btn outline sathi-chip" onClick={() => setInput("Can you generate a standard SOP for hotel morning check-outs?")}>Suggest an SOP</span>
+                    <span className="btn outline sathi-chip" onClick={() => setInput("What is the Angel's Share in whisky production?")}>Define Angel's Share</span>
                   </div>
                 </motion.div>
               )}
@@ -362,29 +392,17 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   key={i} 
-                  className={m.role === 'user' ? 'self-end' : 'self-start'}
-                  style={{ 
-                    maxWidth: '85%',
-                    background: m.role === 'user' ? 'var(--clr-accent)' : 'rgba(255,255,255,0.08)',
-                    color: m.role === 'user' ? '#000' : 'rgba(255,255,255,0.95)',
-                    padding: '1.2rem 1.8rem',
-                    borderRadius: '1.5rem',
-                    borderBottomRightRadius: m.role === 'user' ? '4px' : '1.5rem',
-                    borderBottomLeftRadius: m.role === 'assistant' ? '4px' : '1.5rem',
-                    border: m.role === 'assistant' ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                    backdropFilter: m.role === 'assistant' ? 'blur(12px)' : 'none',
-                    boxShadow: m.role === 'user' ? '0 8px 32px rgba(240,161,19,0.3)' : 'none'
-                  }}
+                  className={`sathi-msg-bubble ${m.role === 'user' ? 'sathi-msg-user self-end' : 'sathi-msg-assistant self-start'}`}
                 >
                   {m.reasoning && (
-                    <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', borderLeft: '3px solid var(--clr-accent)', paddingLeft: '1.2rem', marginBottom: '1.2rem', fontStyle: 'italic' }}>
+                    <div className="sathi-reasoning-block">
                       <div style={{ marginBottom: '0.4rem' }}>
                           <ShinyText text="SATHI is analyzing..." speed={1.5} color="var(--clr-accent)" shineColor="white" />
                       </div>
                       {m.reasoning}
                     </div>
                   )}
-                  <div className="markdown-body" style={{ color: 'inherit', fontSize: '1rem', lineHeight: '1.8' }}>
+                  <div className="markdown-body">
                     <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>
                       {m.content?.replace(/<br\s*\/?>/gi, '\n')}
                     </ReactMarkdown>
@@ -402,13 +420,17 @@ export default function SathiPage({ user, onLoginClick, onLogout }) {
             {/* 4. Input Area (Fixed/Pinned Bottom) */}
             <form onSubmit={handleSubmit} className="sathi-input-area">
                 <input 
+                  ref={inputRef}
                   type="text" 
                   value={input} 
                   onChange={(e) => setInput(e.target.value)} 
+                  onFocus={handleInputFocus}
                   placeholder="Ask SATHI a question..." 
-                  style={{ flex: 1, padding: '1rem 1.5rem', borderRadius: '30px', border: 'none', background: 'rgba(255,255,255,0.05)', color: 'white', outline: 'none', minWidth: 0, fontSize: '1.1rem' }}
+                  className="sathi-text-input"
+                  enterKeyHint="send"
+                  autoComplete="off"
                 />
-                <button type="submit" disabled={isLoading} className="btn flex items-center justify-center" style={{ width: '50px', height: '50px', borderRadius: '50%', padding: 0, flexShrink: 0, background: 'var(--clr-accent)' }}>
+                <button type="submit" disabled={isLoading} className="btn sathi-send-btn" aria-label="Send message">
                   <Send size={20} color="#000" />
                 </button>
             </form>
