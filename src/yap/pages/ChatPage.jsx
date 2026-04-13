@@ -22,6 +22,7 @@ const ChatPage = ({ user }) => {
     const [showMembers, setShowMembers] = useState(false);
     const [showClearConfirm, setShowClearConfirm] = useState(false);
     const [groupMembers, setGroupMembers] = useState([]);
+    const [currentUserProfile, setCurrentUserProfile] = useState(null);
     const messagesEndRef = useRef(null);
     const chatContainerRef = useRef(null);
     const channelRef = useRef(null);
@@ -48,13 +49,15 @@ const ChatPage = ({ user }) => {
         const loadData = async () => {
             try {
                 // Fetch messages, group info, and members
-                const [msgData, groupData, membersData] = await Promise.all([
+                const [msgData, groupData, membersData, profileData] = await Promise.all([
                     yapService.getMessages(groupId),
                     supabase.from('groups').select('*, member_count:group_members(count)').eq('id', groupId).single(),
-                    yapService.getGroupMembers(groupId)
+                    yapService.getGroupMembers(groupId),
+                    yapService.getProfile(user.id)
                 ]);
 
                 setMessages(msgData);
+                setCurrentUserProfile(profileData);
                 if (groupData.data) {
                     const g = groupData.data;
                     setGroup({ ...g, member_count: g.member_count?.[0]?.count || 0 });
@@ -74,7 +77,7 @@ const ChatPage = ({ user }) => {
         // Subscribe to messages, presence, and typing
         const userProfile = { 
             id: user.id, 
-            full_name: user.email?.split('@')[0] || 'Member' 
+            full_name: currentUserProfile?.full_name || user.email?.split('@')[0] || 'Member' 
         };
 
         const subscription = yapService.subscribeToMessages(
@@ -118,10 +121,10 @@ const ChatPage = ({ user }) => {
         channelRef.current = subscription;
 
         return () => {
-            subscription.unsubscribe();
+            if (subscription) subscription.unsubscribe();
             channelRef.current = null;
         };
-    }, [groupId, user, navigate]);
+    }, [groupId, user, navigate, currentUserProfile?.full_name]);
 
     const handleSend = async (e) => {
         e.preventDefault();
@@ -163,14 +166,16 @@ const ChatPage = ({ user }) => {
     const handleInputChange = (val) => {
         setInput(val);
         
+        const myName = currentUserProfile?.full_name || user.email?.split('@')[0] || 'Member';
+        
         if (!typingTimeoutRef.current) {
-            yapService.sendTyping(groupId, user.id, user.email?.split('@')[0], true, channelRef.current);
+            yapService.sendTyping(groupId, user.id, myName, true, channelRef.current);
         }
 
         if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
         
         typingTimeoutRef.current = setTimeout(() => {
-            yapService.sendTyping(groupId, user.id, user.email?.split('@')[0], false, channelRef.current);
+            yapService.sendTyping(groupId, user.id, myName, false, channelRef.current);
             typingTimeoutRef.current = null;
         }, 2000);
     };

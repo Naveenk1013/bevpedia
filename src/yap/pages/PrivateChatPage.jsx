@@ -12,6 +12,7 @@ const PrivateChatPage = ({ user }) => {
     const navigate = useNavigate();
     const [messages, setMessages] = useState([]);
     const [otherUser, setOtherUser] = useState(null);
+    const [currentUserProfile, setCurrentUserProfile] = useState(null);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(true);
     const [isOnline, setIsOnline] = useState(false);
@@ -42,13 +43,15 @@ const PrivateChatPage = ({ user }) => {
 
         const loadData = async () => {
             try {
-                // Load other user's profile
-                const profile = await yapService.getProfile(otherUserId);
-                setOtherUser(profile);
-
-                // Load messages
-                const data = await yapService.getPrivateMessages(user.id, otherUserId);
-                setMessages(data);
+                const [msgData, uData, myProfileData] = await Promise.all([
+                    yapService.getPrivateMessages(user.id, otherUserId),
+                    yapService.getProfile(otherUserId),
+                    yapService.getProfile(user.id)
+                ]);
+                
+                setMessages(msgData);
+                setOtherUser(uData);
+                setCurrentUserProfile(myProfileData);
                 setLoading(false);
                 setTimeout(() => scrollToBottom("auto"), 100);
             } catch (err) {
@@ -61,7 +64,7 @@ const PrivateChatPage = ({ user }) => {
         // Subscribe to messages, presence, and typing
         const userProfile = { 
             id: user.id, 
-            full_name: user.email?.split('@')[0] || 'Member' 
+            full_name: currentUserProfile?.full_name || user.email?.split('@')[0] || 'Member' 
         };
 
         const subscription = yapService.subscribeToPrivateMessages(
@@ -97,10 +100,10 @@ const PrivateChatPage = ({ user }) => {
         channelRef.current = subscription;
 
         return () => {
-            subscription.unsubscribe();
+            if (subscription) subscription.unsubscribe();
             channelRef.current = null;
         };
-    }, [otherUserId, user, navigate, otherUser]);
+    }, [otherUserId, user, navigate, otherUser, currentUserProfile?.full_name]);
 
     const handleSend = async (e) => {
         e.preventDefault();
@@ -143,14 +146,16 @@ const PrivateChatPage = ({ user }) => {
     const handleInputChange = (val) => {
         setInput(val);
         
+        const myName = currentUserProfile?.full_name || user.email?.split('@')[0] || 'Member';
+        
         if (!typingTimeoutRef.current) {
-            yapService.sendPrivateTyping(otherUserId, user.id, user.email?.split('@')[0], true, channelRef.current);
+            yapService.sendPrivateTyping(otherUserId, user.id, myName, true, channelRef.current);
         }
 
         if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
         
         typingTimeoutRef.current = setTimeout(() => {
-            yapService.sendPrivateTyping(otherUserId, user.id, user.email?.split('@')[0], false, channelRef.current);
+            yapService.sendPrivateTyping(otherUserId, user.id, myName, false, channelRef.current);
             typingTimeoutRef.current = null;
         }, 2000);
     };
