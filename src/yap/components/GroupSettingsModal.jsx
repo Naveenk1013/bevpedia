@@ -129,7 +129,7 @@ const GroupSettingsModal = ({ group, isOpen, onClose, onUpdate, onDelete, curren
 
     return (
         <div className="yap-modal-overlay">
-            <div className="yap-modal-content" style={{ maxWidth: '600px', height: '600px', display: 'flex', flexDirection: 'column' }}>
+            <div className="yap-modal-content" style={{ maxWidth: '600px', maxHeight: 'min(600px, calc(100vh - 40px))', height: 'auto', display: 'flex', flexDirection: 'column' }}>
                 <header className="yap-modal-header" style={{ borderBottom: '1px solid var(--yap-glass-border)', flexShrink: 0 }}>
                     <div style={{ display: 'flex', gap: '15px', overflowX: 'auto', scrollbarWidth: 'none' }}>
                         {[

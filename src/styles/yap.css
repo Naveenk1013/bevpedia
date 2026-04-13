@@ -1086,12 +1086,13 @@ body.yap-active {
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2000;
     padding: 20px;
+    overflow-y: auto; /* Allow overlay to scroll if modal is too tall */
 }
 
 .yap-modal-content {
@@ -1100,8 +1101,24 @@ body.yap-active {
     border-radius: 24px;
     width: 100%;
     max-width: 500px;
-    overflow: hidden;
+    max-height: calc(100vh - 40px); /* Limit height to viewport minus padding */
+    overflow-y: auto; /* Enable scrolling for modal content */
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 768px) {
+    .yap-modal-overlay {
+        padding: 10px;
+        align-items: flex-start; /* Align to top on mobile for better scroll behavior */
+    }
+
+    .yap-modal-content {
+        border-radius: 20px;
+        max-height: calc(100svh - 20px); /* Use svh for better mobile support */
+    }
 }
 
 .yap-modal-header {
@@ -1110,6 +1127,10 @@ body.yap-active {
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--yap-glass-border);
+    position: sticky;
+    top: 0;
+    background: #111;
+    z-index: 20;
 }
 
 .yap-form {
