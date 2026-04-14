@@ -2,15 +2,15 @@ export const subjects_sem_gtu_2 = [
   {
     "id": "sub_1774627774868",
     "semesterId": "sem_gtu_2",
-    "code": "SUB1",
-    "name": "",
+    "code": "BH02000011",
+    "name": "Fundamentals of Food Production",
     "units": [],
     "resources": []
   },
   {
     "id": "sub_1774627775497",
     "semesterId": "sem_gtu_2",
-    "code": "SUB2",
+    "code": "BH02000021",
     "name": "Fundamentals of Rooms Division Management-2",
     "units": [
       {
@@ -121,16 +121,16 @@ export const subjects_sem_gtu_2 = [
   {
     "id": "sub_1774627776858",
     "semesterId": "sem_gtu_2",
-    "code": "SUB5",
-    "name": "",
+    "code": "BH02000051",
+    "name": "Personality Skills for Hospitality Industry",
     "units": [],
     "resources": []
   },
   {
     "id": "sub_1774627777377",
     "semesterId": "sem_gtu_2",
-    "code": "SUB6",
-    "name": "",
+    "code": "BH02000061",
+    "name": " Indian Knowledge System",
     "units": [],
     "resources": []
   }

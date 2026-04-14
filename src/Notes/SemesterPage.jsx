@@ -208,6 +208,33 @@ const SemesterPage = () => {
                     <span className="subject-code" style={{ color: uni.themeColor }}>{sub.code}</span>
                     {sub.name}
                   </div>
+                  {sub.name.toLowerCase().includes('indian knowledge system') && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate('/students/iks/module_1');
+                      }}
+                      style={{
+                        background: 'linear-gradient(135deg, #c8621a 0%, #b8860b 100%)',
+                        color: '#fff',
+                        border: 'none',
+                        padding: '6px 16px',
+                        borderRadius: '20px',
+                        fontSize: '0.8rem',
+                        fontWeight: '700',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        boxShadow: '0 4px 12px rgba(200,98,26,0.3)',
+                        marginRight: '12px'
+                      }}
+                    >
+                      <BookOpen size={14} /> Enter Realm
+                    </motion.button>
+                  )}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span style={{ fontSize: '0.8rem', color: 'var(--student-text-muted)' }}>
                       {(sub.units?.length || 0)} unit{(sub.units?.length || 0) !== 1 ? 's' : ''}{sub.resources?.length ? ` • ${sub.resources.length} file${sub.resources.length !== 1 ? 's' : ''}` : ''}

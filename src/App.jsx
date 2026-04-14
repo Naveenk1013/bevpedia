@@ -33,6 +33,8 @@ const ProfileSettingsPage = lazy(() => import('./yap/pages/ProfileSettingsPage')
 const PublicProfilePage = lazy(() => import('./yap/pages/PublicProfilePage'));
 const YapLoginPage = lazy(() => import('./yap/pages/YapLoginPage'));
 const LegalPage = lazy(() => import('./pages/LegalPage'));
+const IKSModuleView = lazy(() => import('./Notes/IKS/IKSModuleView'));
+
 
 const ProtectedYapRoute = ({ user, loading, children }) => {
   const location = useLocation();
@@ -144,6 +146,8 @@ export default function App() {
             <Route path="/yap/messages/:otherUserId" element={<ProtectedYapRoute user={user} loading={authLoading}><PrivateChatPage user={user} /></ProtectedYapRoute>} />
             <Route path="/yap/user/:userId" element={<ProtectedYapRoute user={user} loading={authLoading}><PublicProfilePage user={user} /></ProtectedYapRoute>} />
             <Route path="/yap/profile" element={<ProtectedYapRoute user={user} loading={authLoading}><ProfileSettingsPage user={user} /></ProtectedYapRoute>} />
+            <Route path="/students/iks/:moduleId" element={<IKSModuleView />} />
+
           </Routes>
         </Suspense>
       </main>
