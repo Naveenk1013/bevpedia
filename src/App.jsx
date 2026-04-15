@@ -100,13 +100,14 @@ export default function App() {
   const isFavourite = (id) => favourites.includes(id);
 
   const location = useLocation();
-  const isSpecialPage = location.pathname === '/sathi' || location.pathname.startsWith('/yap');
+  const isSpecialPage = location.pathname === '/sathi' || location.pathname.startsWith('/yap') || location.pathname.startsWith('/students/iks');
+  const isFixedLayout = location.pathname === '/sathi' || location.pathname.startsWith('/yap');
 
   return (
     <>
       {!isSpecialPage && <Navbar theme={theme} onToggleTheme={toggleTheme} />}
       {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
-      <main className={`page-wrapper ${isSpecialPage ? 'special-route no-padding' : ''}`}>
+      <main className={`page-wrapper ${isFixedLayout ? 'special-route no-padding' : ''} ${isSpecialPage && !isFixedLayout ? 'no-padding' : ''}`}>
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
