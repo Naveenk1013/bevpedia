@@ -18,6 +18,15 @@
 
     <!-- Google Tag Manager & AdSense: deferred to reduce TBT -->
     <script>
+      // Clear stale service workers causing "no-response" errors
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+          }
+        });
+      }
+
       window.addEventListener('load', function() {
         setTimeout(function() {
           // GTM
