@@ -16,17 +16,18 @@ const SEO = ({
   type = 'website',
   noindex = false,
   structuredData = null,
-  breadcrumbs = [] // Array of { name, item }
+  breadcrumbs = [], // Array of { name, item }
+  canonical // Manual override
 }) => {
   const { pathname } = useLocation();
   const siteUrl = 'https://bevpedia.in';
   
-  // Canonical URL - clean, no trailing slash
+  // Canonical URL - force lowercase, clean trailing slash
   const cleanPathname = pathname.endsWith('/') && pathname !== '/' 
     ? pathname.slice(0, -1) 
-    : pathname;
+    : pathname === '/' ? '' : pathname;
     
-  const canonicalUrl = `${siteUrl}${cleanPathname}`;
+  const canonicalUrl = (canonical || `${siteUrl}${cleanPathname}`).toLowerCase();
   
   // Full title with branding
   const fullTitle = title 
@@ -40,8 +41,8 @@ const SEO = ({
   // Default keywords
   const fullKeywords = keywords || 'beverage, cocktail, spirit, wine, beer, hospitality';
   
-  // Default Open Graph image
-  const shareImage = image || `${siteUrl}/images/og-main.jpg`;
+  // Default Open Graph image - fix path to /image/
+  const shareImage = image || `${siteUrl}/image/logo.jpg`;
 
   return (
     <Helmet>

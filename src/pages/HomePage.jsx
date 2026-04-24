@@ -22,6 +22,7 @@ import {
 import LightPillar from '../components/LightPillar';
 import ShinyText from '../components/ShinyText';
 import SEO from '../components/SEO';
+import EzoicAd from '../components/EzoicAd';
 const ContributorsMarquee = lazy(() => import('../components/ContributorsMarquee'));
 
 const CATEGORY_CARDS = [
@@ -230,6 +231,9 @@ export default function HomePage() {
           <span key={factIdx} className="animate-fade-in">{FUN_FACTS[factIdx]}</span>
         </div>
 
+        {/* ── Ezoic Ad: Mid-Content ── */}
+        <EzoicAd placeholderId={101} />
+
         {/* ── Category Cards ── */}
         <section className="section">
           <div className="section-header">
@@ -265,6 +269,9 @@ export default function HomePage() {
             })}
           </div>
         </section>
+
+        {/* ── Ezoic Ad: Below Categories ── */}
+        <EzoicAd placeholderId={102} />
 
         {/* ── Quick Academic Note ── */}
         <section className="section" style={{ paddingTop: 0 }}>

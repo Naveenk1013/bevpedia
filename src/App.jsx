@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import AuthModal from './components/AuthModal';
 import { supabase } from './lib/supabaseClient';
+import useEzoicRefresh from './hooks/useEzoicRefresh';
 const HomePage = lazy(() => import('./pages/HomePage'));
 const BeveragePage = lazy(() => import('./pages/BeveragePage'));
 const SpiritsPage = lazy(() => import('./pages/SpiritsPage'));
@@ -59,6 +60,7 @@ const PageLoader = () => (
 
 
 export default function App() {
+  useEzoicRefresh(); // Refresh Ezoic ads on route change
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
   const [favourites, setFavourites] = useState(() => {
     try { return JSON.parse(localStorage.getItem('bevFavourites') || '[]'); }

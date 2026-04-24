@@ -153,8 +153,12 @@ async function generateSitemap() {
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
   uniqueUrls.forEach(page => {
+    // Standardize URL: no trailing slash for root, and force lowercase
+    const cleanUrl = page.url === '/' ? '' : page.url;
+    const finalLoc = `${SITE_URL}${cleanUrl}`.toLowerCase();
+
     xml += '  <url>\n';
-    xml += `    <loc>${SITE_URL}${page.url}</loc>\n`;
+    xml += `    <loc>${finalLoc}</loc>\n`;
     xml += `    <lastmod>${page.lastmod}</lastmod>\n`;
     xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
     xml += `    <priority>${page.priority}</priority>\n`;

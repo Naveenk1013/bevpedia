@@ -15,6 +15,8 @@ const PAGE_TITLES = {
     '/yap/profile': 'Profile',
 };
 
+import SEO from '../../components/SEO';
+
 const YapLayout = ({ children, user }) => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -58,6 +60,7 @@ const YapLayout = ({ children, user }) => {
 
     return (
         <div className="yap-container">
+            <SEO title={getPageTitle()} noindex={true} />
             {/* ════ Desktop Sidebar Rail (unchanged) ════ */}
             <aside className="yap-sidebar">
                 <div className="yap-sidebar-header" onClick={() => window.location.href = 'https://bevpedia.in'}>

@@ -1,6 +1,9 @@
+import EzoicAd from './EzoicAd';
+
 export default function Footer() {
   return (
     <footer className="footer">
+      <EzoicAd placeholderId={103} />
       <div className="container">
         <p>
           🍸 <strong>Beverage Encyclopedia</strong> — The complete reference for cocktails, mocktails, spirits, wine & beer.

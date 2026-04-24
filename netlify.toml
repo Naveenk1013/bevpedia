@@ -20,6 +20,13 @@
   status = 200
   force = true
 
+# 3. EZOIC ADS.TXT (managed by Ezoic)
+[[redirects]]
+  from = "/ads.txt"
+  to = "https://srv.adstxtmanager.com/19390/bevpedia.in"
+  status = 301
+  force = true
+
 # All other routes to index.html
 [[redirects]]
   from = "/*"
