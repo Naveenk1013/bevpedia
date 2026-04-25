@@ -1,8 +1,14 @@
 {
+  "redirects": [
+    {
+      "source": "/ads.txt",
+      "destination": "https://srv.adstxtmanager.com/19390/bevpedia.in",
+      "statusCode": 301
+    }
+  ],
   "rewrites": [
     { "source": "/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
-    { "source": "/ads.txt", "destination": "/ads.txt" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
